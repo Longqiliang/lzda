@@ -24,7 +24,7 @@
         </el-table-column>
       </el-table>
       <div class="table-footer">
-        <el-pagination background :total="total" :current-page="1" :page-size="20" layout="total, pager, ->, jumper">
+        <el-pagination background :total="total" :current-page="listQuery.pageIndex" :page-size="listQuery.pageSize" layout="total, pager, ->, jumper">
         </el-pagination>
       </div>
       <QuestionDialog :DialogVisible.sync="dialogTableVisible" />
@@ -60,9 +60,10 @@ export default {
       dialogTableVisible: false,
       archive_type_id: 1,
       listQuery: {
-        limit: 10,
-        index: 1
-      }
+        pageIndex: 1,
+        pageSize: 10
+      },
+      total: null,
     }
   },
   created() {

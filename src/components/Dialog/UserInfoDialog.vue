@@ -9,7 +9,7 @@
         </el-col>
         <el-col :span="11" :offset="1">
           <el-form-item label="身份证号码" prop="idCard">
-            <el-input v-model="formVal.idCard"></el-input>
+            <el-input v-model="formVal.idcard"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -17,14 +17,14 @@
         <el-col :span="11">
           <el-form-item label="工作单位" prop="unit_id">
             <el-select v-model="formVal.unit_id" placeholder="请选择工作单位">
-              <el-option v-for="se in sex" :key="se.label" :label="se.label" :value="se.label"></el-option>
+              <el-option v-for="se in sex" :key="se.label" :label="se.label" :value="se.value"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
           <el-form-item label="性别" prop="sex">
             <el-select v-model="formVal.sex" placeholder="请选择性别">
-              <el-option v-for="se in sex" :key="se.label" :label="se.label" :value="se.label"></el-option>
+              <el-option v-for="se in sex" :key="se.value" :label="se.label" :value="se.value"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -44,7 +44,7 @@
       <el-row>
         <el-col :span="11">
           <el-form-item label="出生日期" prop="bornTime">
-            <el-date-picker type="date" placeholder="选择日期" v-model="formVal.bornTime" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" placeholder="选择日期" v-model="formVal.borntime" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
@@ -56,7 +56,7 @@
       <el-row>
         <el-col :span="11">
           <el-form-item label="政治面貌" prop="politicalStatus">
-            <el-input v-model="formVal.politicalStatus"></el-input>
+            <el-input v-model="formVal.politicalstatus"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
@@ -68,24 +68,25 @@
       <el-row>
         <el-col :span="11">
           <el-form-item label="参加工作时间" prop="joinWorkTime">
-            <el-date-picker type="date" placeholder="选择日期" v-model="formVal.joinWorkTime" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" placeholder="选择日期" v-model="formVal.joinworktime" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
           <el-form-item label="任现职时间" prop="workTime">
-            <el-date-picker type="date" placeholder="选择日期" v-model="formVal.workTime" style="width: 100%;"></el-date-picker>
+            <el-input-number v-model="formVal.worktime" placeholder=""></el-input-number>年
+            <!-- <el-date-picker type="date" placeholder="选择日期" v-model="formVal.worktime" style="width: 100%;"></el-date-picker> -->
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="11">
           <el-form-item label="联系电话" prop="contactNumber">
-            <el-input v-model="formVal.contactNumber"></el-input>
+            <el-input v-model="formVal.contactnumber"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
           <el-form-item label="手机" prop="cellPhone">
-            <el-input v-model="formVal.cellPhone"></el-input>
+            <el-input v-model="formVal.cellphone"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -106,7 +107,7 @@
       <el-row>
         <el-col :span="23">
           <el-form-item label="档案编号" prop="recordNumber">
-            <el-input v-model="formVal.recordNumber"></el-input>
+            <el-input v-model="formVal.recordnumber"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -155,22 +156,22 @@ export default {
       default() {
         return {
           name: '',
-          idCard: '',
+          idcard: '',
           sex: '',
           position: '',
           rank: '',
           deptId: '',
-          bornTime: '',
+          borntime: '',
           education: '',
-          politicalStatus: '',
+          politicalstatus: '',
           ethnic: '',
-          joinWorkTime: '',
-          workTime: '',
-          contactNumber: '',
-          cellPhone: '',
+          joinworktime: '',
+          worktime: '',
+          contactnumber: '',
+          cellphone: '',
           origin: '',
           address: '',
-          recordNumber: '',
+          recordnumber: '',
           remark: '',
           unit_id: '',
           deptname: ''
@@ -190,10 +191,12 @@ export default {
     return {
       sex: [
         {
-          label: '男'
+          label: '男',
+          value: '1'
         },
         {
-          label: '女'
+          label: '女',
+          value: '2'
         }
       ],
       rules: {
@@ -272,7 +275,7 @@ export default {
           {
             required: true,
             message: '请输入任现职时间',
-            trigger: 'change'
+            trigger: 'blur'
           }
         ],
         contactNumber: [
@@ -322,7 +325,10 @@ export default {
   },
   watch: {
     status() {
-      this.clearValidate()
+      if (this.$refs['dataForm']){
+        this.clearValidate()
+      }
+      
     }
   },
   methods: {

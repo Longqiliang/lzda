@@ -21,7 +21,7 @@
         </el-table-column>
       </el-table>
       <div class="table-footer">
-        <el-pagination background :total="total" :current-page="1" :page-size="20" layout="total, pager, ->, jumper">
+        <el-pagination background :total="total" :current-page="listQuery.pageIndex" :page-size="listQuery.pageSize" layout="total, pager, ->, jumper">
         </el-pagination>
       </div>
       <IncorruptDialog :DialogVisible.sync="dialogTableVisible" />
@@ -53,7 +53,12 @@ export default {
   },
   data() {
     return {
-      dialogTableVisible: false
+      dialogTableVisible: false,
+      listQuery: {
+        pageIndex: 1,
+        pageSize: 10
+      },
+      total: null,
     }
   },
   computed: {},

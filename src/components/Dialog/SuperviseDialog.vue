@@ -37,13 +37,12 @@ export default {
   },
   computed: {
     formComponent() {
-      return 'SuperviseForm' + (this.recordSelect ? this.recordSelect : 1)
+      let obj = this.compareParam('archive_id', this.recordSelect)
+      return 'SuperviseForm' + obj.type
     },
     titleChange() {
-      let titleObj = this.recordNumber.find(i => {
-        return i.archive_id === this.recordSelect
-      })
-      return titleObj.name
+      let obj = this.compareParam('archive_id', this.recordSelect)
+      return obj.name
     }
   },
   props: {
@@ -57,18 +56,21 @@ export default {
       recordNumber: [
         {
           name: '巡察情况及巡察问题整改情况',
-          archive_id: 15
+          archive_id: 15,
+          type: 1
         },
         {
           name: '舆论监督情况（新闻媒体、自媒体、网络等）',
-          archive_id: 16
+          archive_id: 16,
+          type: 2
         },
         {
           name: '会议监督情况（参加或列席会议时发现的情况）',
-          archive_id: 17
+          archive_id: 17,
+          type: 3
         }
       ],
-      recordSelect: 1,
+      recordSelect: 15,
       status: {
         type: String,
         default: 'detail'
@@ -76,6 +78,13 @@ export default {
     }
   },
   methods: {
+    compareParam(param, comparam) {
+      let titleObj = this.recordNumber.find(i => {
+        return i[param] === comparam
+      })
+      //console.log(titleObj)
+      return titleObj
+    },
     closeDialog() {
       this.$emit('update:DialogVisible', false)
     },
