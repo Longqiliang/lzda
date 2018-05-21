@@ -69,7 +69,7 @@
         <el-form-item label="附件">
           <el-upload action="https://jsonplaceholder.typicode.com/posts/" ref="upload" :on-error="errorUpload" :on-success="successUpload" :on-remove="removeFile">
             <el-col :span="15">
-              <el-input v-model="fileUpload" readonly ></el-input>
+              <el-input v-model="fileUpload" readonly></el-input>
             </el-col>
             <el-col :span="9">
               <el-button>上传附件</el-button>

@@ -63,24 +63,24 @@ export default {
       dialogStatus: null,
       formVal: {
         name: '',
-        idCard: '',
+        idcard: '',
         sex: '',
         position: '',
         rank: '',
-        deptId: '',
-        bornTime: '',
+        deptid: '',
+        borntime: '',
         education: '',
-        politicalStatus: '',
+        politicalstatus: '',
         ethnic: '',
-        joinWorkTime: '',
-        workTime: '',
-        contactNumber: '',
-        cellPhone: '',
+        joinworktime: '',
+        worktime: '',
+        contactnumber: '',
+        cellphone: '',
         origin: '',
         address: '',
-        recordNumber: '',
+        recordnumber: '',
         remark: '',
-        unitId: '',
+        unit_id: '',
         deptname: ''
       },
       listQuery: {
@@ -107,16 +107,20 @@ export default {
         }
       })
     },
-    getPersonInfo(id) {
+    getPersonInfo(id, status) {
       let param = {
         personId: id
       }
       queryPerson(param).then(res => {
         console.log(res.data)
-        let data = res.data 
+        let data = res.data
         if (data.success) {
           // 问题: 返回信息不是对象，对象数据没有
           this.formVal = data.data[0]
+          if (status) {
+            this.dialogStatus = status
+          }
+          this.handleClick()
         }
       })
     },
@@ -147,12 +151,10 @@ export default {
     handleCreate() {
       this.resertForm()
       this.dialogStatus = 'create'
-      this.handleClick()
     },
     handleUpdate(id) {
-      this.getPersonInfo(id)
-      this.dialogStatus = 'update'
-      this.handleClick()
+      this.resertForm()
+      this.getPersonInfo(id, 'update')
     },
     handleLook() {
       this.dialogStatus = 'detail'

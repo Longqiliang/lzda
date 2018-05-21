@@ -33,7 +33,7 @@
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="时任职务">
-                    <el-input v-model="reportForm.position"></el-input>
+          <el-input v-model="reportForm.position"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -56,7 +56,7 @@
         <el-form-item label="附件上传">
           <el-upload action="https://jsonplaceholder.typicode.com/posts/" ref="upload" :on-error="errorUpload" :on-success="successUpload" :on-remove="removeFile">
             <el-col :span="15">
-              <el-input v-model="fileUpload" readonly ></el-input>
+              <el-input v-model="fileUpload" readonly></el-input>
             </el-col>
             <el-col :span="9">
               <el-button>上传附件</el-button>
@@ -75,46 +75,46 @@ export default {
   props: {
     reportForm: {
       type: Object,
-        default() {
-          return {
-          "born_time": "",
-          "education": "",
-          "speech_material": "",
-          "origin": "",
-          "record_number": "",
-          "id_card": "",
-          "remark": "",
-          "join_time": "",
-          "update_time": "",
-          "political_status": "",
-          "file_type": "",
-          "rank": "",
-          "personid": "",
-          "id": "",
-          "unit_id": "",
-          "person_id": "",
-          "fileid": "",
-          "archive_type_name": "",
-          "join_work_time": "",
-          "create_user_id": "",
-          "ethnic": "",
-          "address": "",
-          "create_time": "",
-          "file_name": "",
-          "sex": "",
-          "dept_name": "",
-          "life_comment": "",
-          "contact_number": "",
-          "file_size": "",
-          "cell_phone": "",
-          "unit_name": "",
-          "archive_name": "",
-          "file_id": "",
-          "name": "",
-          "position": "",
-          "work_time": "",
-          "dept_id": "",
-          "archive_id": ""
+      default() {
+        return {
+          born_time: '',
+          education: '',
+          speech_material: '',
+          origin: '',
+          record_number: '',
+          id_card: '',
+          remark: '',
+          join_time: '',
+          update_time: '',
+          political_status: '',
+          file_type: '',
+          rank: '',
+          personid: '',
+          id: '',
+          unit_id: '',
+          person_id: '',
+          fileid: '',
+          archive_type_name: '',
+          join_work_time: '',
+          create_user_id: '',
+          ethnic: '',
+          address: '',
+          create_time: '',
+          file_name: '',
+          sex: '',
+          dept_name: '',
+          life_comment: '',
+          contact_number: '',
+          file_size: '',
+          cell_phone: '',
+          unit_name: '',
+          archive_name: '',
+          file_id: '',
+          name: '',
+          position: '',
+          work_time: '',
+          dept_id: '',
+          archive_id: ''
         }
       }
     }

@@ -8,7 +8,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
-          <el-form-item label="身份证号码" prop="idCard">
+          <el-form-item label="身份证号码" prop="idcard">
             <el-input v-model="formVal.idcard"></el-input>
           </el-form-item>
         </el-col>
@@ -43,7 +43,7 @@
       </el-row>
       <el-row>
         <el-col :span="11">
-          <el-form-item label="出生日期" prop="bornTime">
+          <el-form-item label="出生日期" prop="borntime">
             <el-date-picker type="date" placeholder="选择日期" v-model="formVal.borntime" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
@@ -55,7 +55,7 @@
       </el-row>
       <el-row>
         <el-col :span="11">
-          <el-form-item label="政治面貌" prop="politicalStatus">
+          <el-form-item label="政治面貌" prop="politicalstatus">
             <el-input v-model="formVal.politicalstatus"></el-input>
           </el-form-item>
         </el-col>
@@ -67,25 +67,25 @@
       </el-row>
       <el-row>
         <el-col :span="11">
-          <el-form-item label="参加工作时间" prop="joinWorkTime">
+          <el-form-item label="参加工作时间" prop="joinworktime">
             <el-date-picker type="date" placeholder="选择日期" v-model="formVal.joinworktime" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
-          <el-form-item label="任现职时间" prop="workTime">
-            <el-input-number v-model="formVal.worktime" placeholder=""></el-input-number>年
+          <el-form-item label="任现职时间" prop="worktime">
+            <el-input-number v-model="formVal.worktime"></el-input-number> 年
             <!-- <el-date-picker type="date" placeholder="选择日期" v-model="formVal.worktime" style="width: 100%;"></el-date-picker> -->
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="11">
-          <el-form-item label="联系电话" prop="contactNumber">
+          <el-form-item label="联系电话" prop="contactnumber">
             <el-input v-model="formVal.contactnumber"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
-          <el-form-item label="手机" prop="cellPhone">
+          <el-form-item label="手机" prop="cellphone">
             <el-input v-model="formVal.cellphone"></el-input>
           </el-form-item>
         </el-col>
@@ -106,7 +106,7 @@
       </el-row>
       <el-row>
         <el-col :span="23">
-          <el-form-item label="档案编号" prop="recordNumber">
+          <el-form-item label="档案编号" prop="recordnumber">
             <el-input v-model="formVal.recordnumber"></el-input>
           </el-form-item>
         </el-col>
@@ -365,6 +365,11 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate(v => {
         if (v) {
+          console.log(this.formVal)
+          return
+          updatePerson(this.formVal).then(res => {
+            console.log(res.data)
+          })
         }
       })
     },

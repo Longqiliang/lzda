@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import APP from './modules/app'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
-  state: {
-    sider: {} 
+const store = new Vuex.Store({
+  modules: {
+    APP
   }
 })
+
+export default store
