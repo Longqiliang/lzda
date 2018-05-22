@@ -2,11 +2,11 @@
   <div class="table">
     <TableSearch/>
     <div class="table-container">
-      <!-- <div class="table-tit">
+      <div class="table-tit">
         <el-button type="danger" @click="handleCreate">新增</el-button>
-      </div> -->
+      </div>
       <el-table v-loading="loading" :data="tableVal" border width="100%">
-        <el-table-column label="序号" prop="rowno" min-width="50" align="center"></el-table-column>
+        <el-table-column label="序号" prop="rowno" align="center" width="60"></el-table-column>
         <el-table-column label="姓名" prop="name" align="center"></el-table-column>
         <el-table-column label="单位" prop="unitname" align="center"></el-table-column>
         <el-table-column label="部门" prop="deptname" align="center"></el-table-column>
@@ -24,12 +24,12 @@
           <template slot-scope="scope">
             <el-button type="text" @click="handleUpdate(scope.row.id)">修改</el-button>
             <el-button type="text" @click="handleLook">详情</el-button>
-            <el-button type="text" @click="handleRemove">删除</el-button>
+            <el-button type="text" @click="handleRemove(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="table-footer">
-        <el-pagination background :total="total" :current-page="listQuery.pageIndex" :page-size="listQuery.pageSize" layout="total, pager, ->, jumper">
+        <el-pagination background :total="total" :current-page="listQuery.pageIndex" :page-size="listQuery.pageSize" layout="total, pager, ->, jumper" @current-change="handleCurrentChange">
         </el-pagination>
       </div>
       <UserInfoDialog @update-table="getPersonList" :DialogVisible.sync="dialogTableVisible" :status="dialogStatus" :formVal="formVal" />
@@ -41,19 +41,13 @@
 <script>
 import TableSearch from './TableSearch'
 import UserInfoDialog from '@/components/Dialog/UserInfoDialog'
-import { queryTermPerson, queryPerson } from '@/api/article'
+import { queryTermPerson, queryPerson, deletePerson } from '@/api/article'
 
 export default {
   name: 'UserInfoTable',
   components: {
     TableSearch,
     UserInfoDialog
-  },
-  props: {
-    total: {
-      type: Number,
-      default: 100
-    }
   },
   watch: {
     $route() {
@@ -69,30 +63,31 @@ export default {
       dialogStatus: null,
       formVal: {
         name: '',
-        idCard: '',
+        idcard: '',
         sex: '',
         position: '',
         rank: '',
-        deptId: '',
-        bornTime: '',
+        deptid: '',
+        borntime: '',
         education: '',
-        politicalStatus: '',
+        politicalstatus: '',
         ethnic: '',
-        joinWorkTime: '',
-        workTime: '',
-        contactNumber: '',
-        cellPhone: '',
+        joinworktime: '',
+        worktime: '',
+        contactnumber: '',
+        cellphone: '',
         origin: '',
         address: '',
-        recordNumber: '',
+        recordnumber: '',
         remark: '',
-        unitId: '',
+        unit_id: '',
         deptname: ''
       },
       listQuery: {
         pageIndex: 1,
         pageSize: 10
       },
+      total: null,
       loading: true,
       tableVal: null
     }
@@ -108,16 +103,24 @@ export default {
         let data = res.data
         if (data.success) {
           this.tableVal = data.data
+          this.total = data.allsize
         }
       })
     },
-    getPersonInfo(id) {
-      queryPerson(id).then(res => {
+    getPersonInfo(id, status) {
+      let param = {
+        personId: id
+      }
+      queryPerson(param).then(res => {
         console.log(res.data)
         let data = res.data
         if (data.success) {
           // 问题: 返回信息不是对象，对象数据没有
-          // this.formVal = data.data
+          this.formVal = data.data[0]
+          if (status) {
+            this.dialogStatus = status
+          }
+          this.handleClick()
         }
       })
     },
@@ -148,28 +151,55 @@ export default {
     handleCreate() {
       this.resertForm()
       this.dialogStatus = 'create'
-      this.handleClick()
     },
     handleUpdate(id) {
-      this.getPersonInfo(id)
-      this.dialogStatus = 'update'
-      this.handleClick()
+      this.resertForm()
+      this.getPersonInfo(id, 'update')
     },
     handleLook() {
       this.dialogStatus = 'detail'
       this.handleClick()
     },
-    handleRemove() {
-      this.$notify({
-        title: '成功',
-        message: '删除成功',
-        type: 'success',
-        duration: 2000
+    handleRemove(id) {
+      this.$confirm('是否删除该人员信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
+        .then(() => {
+          deletePerson({
+            personId: id
+          })
+            .then(res => {
+              let data = res.data
+              if (data.success) {
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                })
+              } else {
+                this.$message({
+                  type: 'warning',
+                  message: '删除失败，请重新删除!'
+                })
+              }
+            })
+            .catch(res => {
+              this.$message({
+                type: 'warning',
+                message: '删除失败，请重新删除!'
+              })
+            })
+        })
+        .catch(() => {})
     },
     handleClick() {
       this.dialogTableVisible = !this.dialogTableVisible
       console.log(this.formVal)
+    },
+    handleCurrentChange(val) {
+      this.listQuery.pageIndex = val
+      this.getPersonList()
     }
   }
 }

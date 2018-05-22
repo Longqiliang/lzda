@@ -57,13 +57,12 @@ export default {
   },
   computed: {
     formComponent() {
-      return 'ReportForm' + (this.recordSelect ? this.recordSelect : 1)
+      let obj = this.compareParam('archive_id', this.recordSelect)
+      return 'ReportForm' + obj.type
     },
     titleChange() {
-      let titleObj = this.recordNumber.find(i => {
-        return i.archive_id === this.recordSelect
-      })
-      return titleObj.name
+      let obj = this.compareParam('archive_id', this.recordSelect)
+      return obj.name
     }
   },
   props: {
@@ -77,31 +76,38 @@ export default {
       recordNumber: [
         {
           name: '领导干部任期或离任经济责任审计报告',
-          archive_id: 8
+          archive_id: 8,
+          type: 1
         },
         {
           name: '领导干部民主生活会发言材料及民主评议、民主测评情况',
-          archive_id: 10
+          archive_id: 10,
+          type: 2
         },
         {
           name: '述责述廉报告',
-          archive_id: 11
+          archive_id: 11,
+          type: 3
         },
         {
           name: '出国、赴台港澳备案情况',
-          archive_id: 14
+          archive_id: 14,
+          type: 4
         },
         {
           name: '个人事项报告',
-          archive_id: 9
+          archive_id: 9,
+          type: 5
         },
         {
           name: '婚嫁事宜报告表',
-          archive_id: 12
+          archive_id: 12,
+          type: 6
         },
         {
           name: '丧事办理报告表',
-          archive_id: 13
+          archive_id: 13,
+          type: 7
         }
       ],
       recordSelect: 1,
@@ -112,6 +118,13 @@ export default {
     }
   },
   methods: {
+    compareParam(param, comparam) {
+      let titleObj = this.recordNumber.find(i => {
+        return i[param] === comparam
+      })
+      //console.log(titleObj)
+      return titleObj
+    },
     closeDialog() {
       this.$emit('update:DialogVisible', false)
     },

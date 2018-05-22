@@ -3,45 +3,45 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="姓名">
-          <el-input v-model="reportForm.creat_user_id"></el-input>
+          <el-input v-model="reportForm.name"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="身份证号码">
-          <el-input v-model="reportForm.record_user_id"></el-input>
+          <el-input v-model="reportForm.id_card"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
         <el-form-item label="工作单位">
-          <el-input v-model="reportForm.talk_time"></el-input>
+          <el-input v-model="reportForm.unit_name"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="职位">
-          <el-input v-model="reportForm.talk_type"></el-input>
+          <el-input v-model="reportForm.position"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
         <el-form-item label="会议时间">
-          <el-date-picker type="date" placeholder="选择日期" v-model="reportForm.talk_time" style="width: 100%;"></el-date-picker>
+          <el-date-picker type="date" placeholder="选择日期" v-model="reportForm.meeting_time" style="width: 100%;"></el-date-picker>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
         <el-form-item label="会议内容">
-          <el-input type="textarea" :autosize="{ minRows: 5 }" v-model="reportForm.remark"></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 5 }" v-model="reportForm.meeting_content"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
         <el-form-item label="发现的问题">
-          <el-input type="textarea" :autosize="{ minRows: 5 }" v-model="reportForm.remark"></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 5 }" v-model="reportForm.meeting_problem"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -71,15 +71,18 @@ export default {
       type: Object,
       default() {
         return {
-          talk_time: '',
-          talk_type: '',
-          remark: '',
-          talk_user_id: '',
-          record_user_id: '',
-          create_time: '',
-          update_time: '',
-          upload_user_id: '',
-          talk_reason: ''
+          name: '',
+          id_card: '',
+          unit_name: '',
+          position: '',
+          meeting_time: '',
+          meeting_content: '',
+          meeting_problem: '',
+          person_id: '',
+          unit_id: '',
+          fileId: '',
+          file_name:'',
+          id : ''
         }
       }
     }

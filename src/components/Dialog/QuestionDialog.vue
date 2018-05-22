@@ -57,7 +57,6 @@ export default {
       return 'QuestionForm' + obj.type
     },
     titleChange() {
-      console.log(this.recordSelect)
       let obj = this.compareParam('archive_id', this.recordSelect)
       return obj.name
     }
@@ -119,7 +118,7 @@ export default {
       let titleObj = this.recordNumber.find(i => {
         return i[param] === comparam
       })
-      console.log(titleObj)
+      //console.log(titleObj)
       return titleObj
     },
     closeDialog() {
