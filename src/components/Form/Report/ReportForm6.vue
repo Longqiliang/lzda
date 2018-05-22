@@ -3,12 +3,12 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="姓名">
-          <el-input v-model="reportForm.creat_user_id"></el-input>
+          <el-input v-model="reportForm.name"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="政治面貌">
-          <el-input v-model="reportForm.record_user_id"></el-input>
+          <el-input v-model="reportForm.political_status"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -20,26 +20,26 @@
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="联系方式">
-          <el-input v-model="reportForm.talk_type"></el-input>
+          <el-input v-model="reportForm.contact_number"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
         <el-form-item label="举办时间">
-          <el-date-picker type="date" placeholder="选择日期" v-model="reportForm.talk_time" style="width: 100%;"></el-date-picker>
+          <el-date-picker type="date" placeholder="选择日期" v-model="reportForm.holding_time" style="width: 100%;"></el-date-picker>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="举办事宜">
-          <el-input v-model="reportForm.record_user_id"></el-input>
+          <el-input v-model="reportForm.holding_matter"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
         <el-form-item label="举办地点">
-          <el-input v-model="reportForm.remark"></el-input>
+          <el-input v-model="reportForm.holding_address"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -50,12 +50,12 @@
       </el-col>
       <el-col :span="11">
         <el-form-item label="参加人数">
-          <el-input v-model="reportForm.remark"></el-input>
+          <el-input v-model="reportForm.unilateral_people"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="桌数">
-          <el-input v-model="reportForm.remark"></el-input>
+          <el-input v-model="reportForm.unilateral_number"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -65,19 +65,42 @@
       </el-col>
       <el-col :span="11">
         <el-form-item label="参加人数">
-          <el-input v-model="reportForm.remark"></el-input>
+          <el-input v-model="reportForm.bilateral_people"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="桌数">
-          <el-input v-model="reportForm.remark"></el-input>
+          <el-input v-model="reportForm.bilateral_number"></el-input>
+        </el-form-item>
+      </el-col>
+    </el-row>
+
+    <el-row>
+      <el-col :span="23">
+        <el-form-item label="其他需要说明的情况（如车辆信息、首次报告方式等）">
+          <el-input type="textarea" :autosize="{ minRows: 5 }" v-model="reportForm.other_info"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
-        <el-form-item label="其他需要说明的情况（如车辆信息、首次报告方式等）">
-          <el-input type="textarea" :autosize="{ minRows: 5 }" v-model="reportForm.remark"></el-input>
+        <div>审核意见</div>
+      </el-col>
+      <el-col :span="11">
+        <el-form-item label="单位意见">
+          <el-input  type="textarea" :autosize="{ minRows: 3 }" v-model="reportForm.dept_suggest"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="11" :offset="1">
+        <el-form-item label="上级意见">
+          <el-input type="textarea" :autosize="{ minRows: 3 }" v-model="reportForm.superior_suggest"></el-input>
+        </el-form-item>
+      </el-col>
+    </el-row>
+     <el-row>
+      <el-col :span="23">
+        <el-form-item label="纪检监察机关备案意见">
+          <el-input type="textarea" :autosize="{ minRows: 5 }" v-model="reportForm.record_suggest"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -107,15 +130,27 @@ export default {
       type: Object,
       default() {
         return {
-          talk_time: '',
-          talk_type: '',
-          remark: '',
-          talk_user_id: '',
-          record_user_id: '',
-          create_time: '',
-          update_time: '',
-          upload_user_id: '',
-          talk_reason: ''
+          name: '',
+          political_status: '',
+          unit_name: '',
+          rank: '',
+          contact_number: '',
+          holding_time: '',
+          holding_matter: '',
+          holding_address: '',
+          unilateral_people: '',
+          unilateral_number: '',
+          bilateral_people: '',
+          bilateral_number: '',
+          other_info: '',
+          dept_suggest: '',
+          superior_suggest: '',
+          record_suggest: '',
+          person_id: '',
+          unit_id: '',
+          fileId: '',
+          file_name:'',
+          id : ''
         }
       }
     }

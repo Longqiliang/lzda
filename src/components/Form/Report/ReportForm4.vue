@@ -3,55 +3,67 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="姓名">
-          <el-input v-model="reportForm.creat_user_id"></el-input>
+          <el-input v-model="reportForm.name"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="身份证号码">
-          <el-input v-model="reportForm.record_user_id"></el-input>
+          <el-input v-model="reportForm.id_card"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
         <el-form-item label="备案时间">
-          <el-input v-model="reportForm.talk_time"></el-input>
+          <el-input v-model="reportForm.filing_time"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="出访目的地">
-          <el-input v-model="reportForm.talk_type"></el-input>
+          <el-input v-model="reportForm.destination"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
         <el-form-item label="出访事由">
-          <el-input v-model="reportForm.talk_user_id"></el-input>
+          <el-input v-model="reportForm.reason"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="发证机关">
-          <el-input v-model="reportForm.record_user_id"></el-input>
+          <el-input v-model="reportForm.organ"></el-input>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="11">
+        <el-form-item label="证件名称">
+          <el-input v-model="reportForm.credentials_name"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="11" :offset="1">
+        <el-form-item label="证件号码">
+          <el-input v-model="reportForm.credentials_number"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
         <el-form-item label="证件有效期">
-          <el-input v-model="reportForm.talk_user_id"></el-input>
+          <el-input v-model="reportForm.credentials_period"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="停留时间">
-          <el-date-picker type="date" placeholder="选择日期" v-model="reportForm.talk_time" style="width: 100%;"></el-date-picker>
+          <el-date-picker type="date" placeholder="选择日期" v-model="reportForm.stay_time" style="width: 100%;"></el-date-picker>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
         <el-form-item label="个人在国（境）外情况">
-          <el-input type="textarea" autosize v-model="reportForm.remark"></el-input>
+          <el-input type="textarea" autosize v-model="reportForm.situation"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -81,15 +93,22 @@ export default {
       type: Object,
       default() {
         return {
-          talk_time: '',
-          talk_type: '',
-          remark: '',
-          talk_user_id: '',
-          record_user_id: '',
-          create_time: '',
-          update_time: '',
-          upload_user_id: '',
-          talk_reason: ''
+          name: '',
+          id_card: '',
+          filing_time: '',
+          destination: '',
+          reason: '',
+          organ: '',
+          credentials_name : '',
+          credentials_number : '',
+          credentials_period : '',
+          stay_time : '',
+          situation : '',
+          person_id: '',
+          unit_id: '',
+          fileId: '',
+          file_name:'',
+          id : ''
         }
       }
     }
