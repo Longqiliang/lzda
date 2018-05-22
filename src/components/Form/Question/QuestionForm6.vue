@@ -3,24 +3,24 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="姓名">
-          <el-input v-model="questionForm.creat_user_id"></el-input>
+          <el-input v-model="questionForm.name"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="身份证号码">
-          <el-input v-model="questionForm.record_user_id"></el-input>
+          <el-input v-model="questionForm.id_card"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
         <el-form-item label="工作单位">
-          <el-input v-model="questionForm.talk_time"></el-input>
+          <el-input v-model="questionForm.unit_name"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="职位">
-          <el-input v-model="questionForm.talk_type"></el-input>
+          <el-input v-model="questionForm.position"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -86,13 +86,46 @@ export default {
       type: Object,
       default() {
         return {
-          interviews_time: '',
-          interviews_type: '',
-          interviews_cause: '',
-          interviews_context: '',
-          interviews_result: '',
-          create_time: '',
-          update_time: ''
+           born_time : "", 
+           education :  "" , 
+           origin :  "" , 
+           record_number :  "" , 
+           id_card :  "" , 
+           interviews_type : "", 
+           remark : "", 
+           update_time : "", 
+           political_status :  "" , 
+           interviews_time : "", 
+           interviews_result : "", 
+           file_type : "", 
+           rank :  "" , 
+           personid :  "" , 
+           id :  "" , 
+           unit_id :  "" , 
+           person_id :  "" , 
+           fileid : "", 
+           archive_type_name :  "" , 
+           join_work_time : "", 
+           create_user_id : "", 
+           ethnic :  "" , 
+           address :  "" , 
+           create_time : "", 
+           file_name : "", 
+           sex :  "" , 
+           interviews_context : "", 
+           dept_name :  "" , 
+           contact_number :  "" , 
+           file_size : "", 
+           cell_phone :  "" , 
+           unit_name :  "" , 
+           archive_name :  "" , 
+           file_id : "", 
+           name :  "" , 
+           position :  "" , 
+           work_time :  "" , 
+           interviews_cause : "", 
+           dept_id :  "" , 
+           archive_id :  "" 
         }
       }
     }

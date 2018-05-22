@@ -3,19 +3,19 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="信访编号">
-          <el-input v-model="questionForm.creat_user_id"></el-input>
+          <el-input v-model="questionForm.letter_number"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="信访时间">
-          <el-date-picker v-model="questionForm.creat_user_id" placeholder="请选择信访时间" style="width: 100%;"></el-date-picker>
+          <el-date-picker v-model="questionForm.letter_time" placeholder="请选择信访时间" style="width: 100%;"></el-date-picker>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
         <el-form-item label="信访来源">
-          <el-input v-model="questionForm.creat_user_id"></el-input>
+          <el-input v-model="questionForm.letter_source"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
@@ -27,38 +27,38 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="被反映人职务">
-          <el-input v-model="questionForm.talk_time"></el-input>
+          <el-input v-model="questionForm.rank"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="被反映人单位">
-          <el-input v-model="questionForm.talk_type"></el-input>
+          <el-input v-model="questionForm.unit_name"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
         <el-form-item label="反映人姓名">
-          <el-input v-model="questionForm.talk_user_id"></el-input>
+          <el-input v-model="questionForm.name"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="反映人电话">
-          <el-input v-model="questionForm.record_user_id"></el-input>
+          <el-input v-model="questionForm.cell_phone"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
         <el-form-item label="调查情况及结论">
-          <el-input type="textarea" :autosize="{ minRows: 2 }" v-model="questionForm.remark"></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 2 }" v-model="questionForm.investigation"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
         <el-form-item label="处理结果">
-          <el-input type="textarea" autosize v-model="questionForm.remark"></el-input>
+          <el-input type="textarea" autosize v-model="questionForm.result"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -94,16 +94,47 @@ export default {
     questionForm: {
       type: Object,
       default() {
-        return {
-          talk_time: '',
-          talk_type: '',
-          remark: '',
-          talk_user_id: '',
-          record_user_id: '',
-          create_time: '',
-          update_time: '',
-          upload_user_id: '',
-          talk_reason: ''
+        return  {
+           born_time : "",
+           education :  "" ,
+           origin :  "" ,
+           record_number :  "" ,
+           id_card :  "" ,
+           letter_time : "",
+           remark : "",
+           result : "",
+           letter_number : "",
+           update_time : "",
+           political_status :  "" ,
+           file_type : "",
+           rank :  "" ,
+           personid :  "" ,
+           id :  "" ,
+           unit_id :  "" ,
+           letter_source : "",
+           person_id :  "" ,
+           fileid : "",
+           archive_type_name :  "" ,
+           join_work_time : "",
+           ethnic :  "" ,
+           address :  "" ,
+           create_time : "",
+           file_name : "",
+           sex :  "" ,
+           dept_name :  "" ,
+           record_user_id : "",
+           contact_number :  "" ,
+           file_size : "",
+           cell_phone :  "" ,
+           unit_name :  "" ,
+           archive_name :  "" ,
+           file_id : "",
+           name :  "" ,
+           investigation : "",
+           position :  "" ,
+           work_time :  "" ,
+           dept_id :  "" ,
+           archive_id :  "" 
         }
       }
     }

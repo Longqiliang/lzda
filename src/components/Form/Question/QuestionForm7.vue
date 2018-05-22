@@ -3,12 +3,12 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="姓名">
-          <el-input v-model="questionForm.creat_user_id"></el-input>
+          <el-input v-model="questionForm.name"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="身份证号码">
-          <el-input v-model="questionForm.record_user_id"></el-input>
+          <el-input v-model="questionForm.id_card"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -100,18 +100,51 @@ export default {
       type: Object,
       default() {
         return {
-          disciplinary_action: '',
-          illegal_action: '',
-          disciplinary_type: '',
-          cause_natrue: '',
-          agency: '',
-          disciplinary_number: '',
-          start_time: '',
-          end_time: '',
-          disciplinary_facts: '',
-          situation: '',
-          create_time: '',
-          update_time: ''
+            born_time: "", 
+            education: "", 
+            origin: "", 
+            record_number: "", 
+            disciplinary_type: "", 
+            id_card: "", 
+            remark: "", 
+            update_time: "", 
+            political_status: "", 
+            file_type: "", 
+            rank: "", 
+            personid: "", 
+            id: "", 
+            disciplinary_number: "", 
+            illegal_action: "", 
+            unit_id: "", 
+            situation: "", 
+            person_id: "", 
+            fileid: "", 
+            archive_type_name: "", 
+            join_work_time: "", 
+            create_user_id: "", 
+            ethnic: "", 
+            address: "", 
+            agency: "", 
+            create_time: "", 
+            cause_natrue: "", 
+            file_name: "", 
+            sex: "", 
+            disciplinary_action: "", 
+            end_time: "", 
+            dept_name: "", 
+            contact_number: "", 
+            file_size: "", 
+            cell_phone: "", 
+            unit_name: "", 
+            start_time: "", 
+            disciplinary_facts: "", 
+            archive_name: "", 
+            file_id: "", 
+            name: "", 
+            position: "", 
+            work_time: "", 
+            dept_id: "", 
+            archive_id: ""
         }
       }
     }

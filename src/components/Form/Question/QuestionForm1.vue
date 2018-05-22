@@ -3,12 +3,12 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="姓名">
-          <el-input v-model="questionForm.talk_user_id"></el-input>
+          <el-input v-model="questionForm.name"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="单位职务">
-          <el-input v-model="questionForm.record_user_id"></el-input>
+          <el-input v-model="questionForm.position"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -39,19 +39,19 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="职级">
-          <el-input v-model="questionForm.talk_user_id"></el-input>
+          <el-input v-model="questionForm.rank"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="政治面貌">
-          <el-input v-model="questionForm.record_user_id"></el-input>
+          <el-input v-model="questionForm.political_status"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
         <el-form-item label="谈话方式">
-          <el-select v-model="questionForm.type">
+          <el-select v-model="questionForm.talk_type">
             <el-option v-for="ta in talkType" :key="ta.label" :label="ta.label" :value="ta.label"></el-option>
           </el-select>
         </el-form-item>
@@ -60,7 +60,7 @@
     <el-row>
       <el-col :span="23">
         <el-form-item label="谈话内容">
-          <el-input type="textarea" :autosize="{ minRows: 3}" v-model="questionForm.remark"></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 3}" v-model="questionForm.talk_reason"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -91,15 +91,46 @@ export default {
       type: Object,
       default() {
         return {
-          talk_time: '',
-          talk_type: '',
-          remark: '',
-          talk_user_id: '',
-          record_user_id: '',
-          create_time: '',
-          update_time: '',
-          upload_user_id: '',
-          talk_reason: ''
+            born_time: "", 
+            education: "", 
+            origin: "", 
+            record_number: "", 
+            id_card: "", 
+            remark: "", 
+            talk_type: "", 
+            talk_reason: "", 
+            update_time: "", 
+            political_status: "", 
+            file_type: "", 
+            rank: "", 
+            personid: "", 
+            id: "", 
+            unit_id: "", 
+            person_id: "", 
+            fileid: "", 
+            archive_type_name: "", 
+            join_work_time: "", 
+            ethnic: "", 
+            address: "", 
+            create_time: "", 
+            file_name: "", 
+            sex: "", 
+            dept_name: "", 
+            record_user_id: "", 
+            contact_number: "", 
+            file_size: "", 
+            cell_phone: "", 
+            unit_name: "", 
+            upload_user_id: "", 
+            archive_name: "", 
+            file_id: "", 
+            name: "", 
+            position: "", 
+            work_time: "", 
+            talk_user_id: "", 
+            dept_id: "", 
+            talk_time: "", 
+            archive_id: ""
         }
       }
     }
