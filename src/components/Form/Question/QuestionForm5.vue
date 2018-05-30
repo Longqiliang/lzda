@@ -60,12 +60,12 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="反映人姓名">
-          <el-input v-model="questionForm.talk_user_id"></el-input>
+          <el-input v-model="questionForm.name"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="反映人电话">
-          <el-input v-model="questionForm.record_user_id"></el-input>
+          <el-input v-model="questionForm.cell_phone"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
