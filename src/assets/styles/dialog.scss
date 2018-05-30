@@ -3,10 +3,13 @@
   color: $black;
   font-weight: 700;
 }
+.txt-number{
+  word-wrap: break-word;
+}
 .explain {
   color: $black;
   text-align: left;
-  padding: 20px 10px;
+  padding: 0 10px 20px;
   font-size: 14px;
   &-txt {
     margin: 0;

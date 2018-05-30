@@ -9,9 +9,14 @@ import ReportTable from '@/components/Table/ReportTable'
 import IncorruptTable from '@/components/Table/IncorruptTable'
 Vue.use(Router)
 
-export default new Router({
-  routes: [
-    {
+function propsFn(route) {
+  return {
+    type: route.query.id
+  }
+}
+
+const router = new Router({
+  routes: [{
       path: '/',
       name: 'Index',
       meta: {
@@ -22,7 +27,7 @@ export default new Router({
     },
     {
       path: '/information',
-      redirect: '/information/all',
+      redirect: '/information/index',
       meta: {
         title: '个人信息',
         icon: 'userInfo',
@@ -32,9 +37,11 @@ export default new Router({
       children: [{
         path: '/information/:type',
         component: Main,
+        props: propsFn,
         children: [{
           path: '',
-          component: UserInfoTable
+          component: UserInfoTable,
+          props: propsFn
         }]
       }]
     },
@@ -61,6 +68,7 @@ export default new Router({
       component: LayOut,
       children: [{
         path: '/question/:type',
+        name: '/question',
         component: Main,
         children: [{
           path: '',
@@ -147,3 +155,6 @@ export default new Router({
     }
   ]
 })
+
+
+export default router

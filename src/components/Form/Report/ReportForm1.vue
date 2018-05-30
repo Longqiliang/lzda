@@ -19,7 +19,7 @@
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
-        <el-form-item label="职位">
+        <el-form-item label="职务">
           <el-input v-model="reportForm.rank"></el-input>
         </el-form-item>
       </el-col>
@@ -44,7 +44,7 @@
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="时任职务">
-          <el-date-picker type="date" placeholder="选择日期" v-model="reportForm.position" style="width: 100%;"></el-date-picker>
+          <el-date-picker type="date" placeholder="选择日期" v-model="reportForm.position" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
       </el-col>
     </el-row>
@@ -105,13 +105,13 @@ export default {
           political_status: '',
           file_type: '',
           rank: '',
-          personid: '1',
-          id: '1',
-          unit_id: '2',
-          person_id: '1',
+          personid: '',
+          id: '',
+          unit_id: '',
+          person_id: '',
           fileid: '',
           archive_type_name: '',
-          join_work_time: 1336233600000,
+          join_work_time: '',
           create_user_id: '',
           ethnic: '',
           address: '',
@@ -137,7 +137,8 @@ export default {
   },
   data() {
     return {
-      fileUpload: ''
+      fileUpload: '',
+      archive_id: 8
     }
   },
   methods: {
@@ -155,6 +156,65 @@ export default {
     },
     removeFile(file, fileList) {
       console.log(file, fileList)
+    },
+    createData() {
+      let param = {
+        archive_id: this.archive_id
+      }
+      let query = Object.assign(this.questionForm, param)
+      addRecord(query)
+        .then(res => {
+          const data = res.data
+          if (data.success) {
+            this.$notify({
+              title: '成功',
+              message: '创建成功',
+              type: 'success',
+              duration: 2000
+            })
+          } else {
+            this.$notify({
+              title: '失败',
+              message: '创建失败，请重试！',
+              type: 'error',
+              duration: 2000
+            })
+          }
+        })
+        .catch(err => {
+          this.$notify({
+            title: '失败',
+            message: '创建失败，请重试！',
+            type: 'error',
+            duration: 2000
+          })
+        })
+    },
+    updateData() {
+      let param = {
+        archive_id: this.archive_id
+      }
+      let query = Object.assign(this.questionForm, param)
+      console.log(query)
+      return
+      updateRecord(query).then(res => {
+        const data = res.data
+        if (data.success) {
+          this.$notify({
+            title: '成功',
+            message: '修改成功',
+            type: 'success',
+            duration: 2000
+          })
+        } else {
+          this.$notify({
+            title: '失败',
+            message: '修改失败，请重试',
+            type: 'error',
+            duration: 2000
+          })
+        }
+      })
     }
   }
 }

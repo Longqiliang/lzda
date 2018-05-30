@@ -1,6 +1,6 @@
 <template>
   <el-dialog title="个人信息" :visible.sync="DialogVisible" width="40%" center :before-close="closeDialog">
-    <el-form :model="formVal" size="mini" label-width="100px" label-position="left" class="demo-form-inline" :rules="rules" ref="dataForm">
+    <el-form :model="formVal" size="mini" label-width="100px" label-position="left" class="demo-form-inline" :rules="rules" :disabled="formStatus" ref="dataForm">
       <el-row>
         <el-col :span="11">
           <el-form-item label="姓名" prop="name">
@@ -15,10 +15,8 @@
       </el-row>
       <el-row>
         <el-col :span="11">
-          <el-form-item label="工作单位" prop="unit_id">
-            <el-select v-model="formVal.unit_id" placeholder="请选择工作单位">
-              <el-option v-for="se in sex" :key="se.label" :label="se.label" :value="se.value"></el-option>
-            </el-select>
+          <el-form-item label="工作单位" prop="organizesOptions">
+            <el-cascader placeholder="请选择工作单位" :options="organizes" :props="organizesProps" @change="handleChange" filterable v-model="formVal.organizesOptions"></el-cascader>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
@@ -31,7 +29,7 @@
       </el-row>
       <el-row>
         <el-col :span="11">
-          <el-form-item label="职位" prop="position">
+          <el-form-item label="职务" prop="position">
             <el-input v-model="formVal.position"></el-input>
           </el-form-item>
         </el-col>
@@ -44,7 +42,7 @@
       <el-row>
         <el-col :span="11">
           <el-form-item label="出生日期" prop="borntime">
-            <el-date-picker type="date" placeholder="选择日期" v-model="formVal.borntime" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="formVal.borntime" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
@@ -68,7 +66,7 @@
       <el-row>
         <el-col :span="11">
           <el-form-item label="参加工作时间" prop="joinworktime">
-            <el-date-picker type="date" placeholder="选择日期" v-model="formVal.joinworktime" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="formVal.joinworktime" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
@@ -148,34 +146,15 @@
 
 <script>
 import { addPerson, updatePerson } from '@/api/article'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'UserInfoDialog',
   props: {
     formVal: {
       type: Object,
       default() {
-        return {
-          name: '',
-          idcard: '',
-          sex: '',
-          position: '',
-          rank: '',
-          deptId: '',
-          borntime: '',
-          education: '',
-          politicalstatus: '',
-          ethnic: '',
-          joinworktime: '',
-          worktime: '',
-          contactnumber: '',
-          cellphone: '',
-          origin: '',
-          address: '',
-          recordnumber: '',
-          remark: '',
-          unit_id: '',
-          deptname: ''
-        }
+        return {}
       }
     },
     status: {
@@ -189,6 +168,11 @@ export default {
   },
   data() {
     return {
+      organizesProps: {
+        label: 'name',
+        children: 'children',
+        value: 'id'
+      },
       sex: [
         {
           label: '男',
@@ -218,7 +202,7 @@ export default {
         position: [
           {
             required: true,
-            message: '请输入职位',
+            message: '请输入职务',
             trigger: 'blur'
           }
         ],
@@ -227,13 +211,6 @@ export default {
             required: true,
             message: '请输入职级',
             trigger: 'blur'
-          }
-        ],
-        deptId: [
-          {
-            required: true,
-            message: '请选择部门',
-            trigger: 'change'
           }
         ],
         bornTime: [
@@ -313,11 +290,11 @@ export default {
             trigger: 'blur'
           }
         ],
-        unit_id: [
+        organizesOptions: [
           {
             required: true,
-            message: '请选择部门',
-            trigger: 'change'
+            message: '请选择工作单位',
+            trigger: 'blur'
           }
         ]
       }
@@ -325,13 +302,28 @@ export default {
   },
   watch: {
     status() {
-      if (this.$refs['dataForm']){
+      if (this.$refs['dataForm']) {
         this.clearValidate()
       }
-      
+    }
+  },
+  computed: {
+    ...mapGetters({
+      organizes: 'organizes'
+    }),
+    formStatus() {
+      if (this.status === 'detail') {
+        return true
+      } else {
+        return false
+      }
     }
   },
   methods: {
+    handleChange(value) {
+      this.formVal.unit_id = value[0]
+      this.formVal.dept_id = value[1]
+    },
     updateTable() {
       this.$emit('update-table')
     },
@@ -348,27 +340,50 @@ export default {
       this.$refs['dataForm'].validate(v => {
         if (v) {
           addPerson(this.formVal).then(res => {
-            console.log(res.data)
+            const data = res.data
+            if (data.success) {
+              this.$notify({
+                title: '成功',
+                message: '创建成功',
+                type: 'success',
+                duration: 2000
+              })
+              this.updateTable()
+              this.closeDialog()
+            } else {
+              this.$notify({
+                title: '失败',
+                message: '创建失败，请重试！',
+                type: 'error',
+                duration: 2000
+              })
+            }
           })
-          this.$notify({
-            title: '成功',
-            message: '创建成功',
-            type: 'success',
-            duration: 2000
-          })
-          this.closeDialog()
-          this.updateTable()
-          console.log(this.formVal)
         }
       })
     },
     updateData() {
       this.$refs['dataForm'].validate(v => {
         if (v) {
-          console.log(this.formVal)
-          return
           updatePerson(this.formVal).then(res => {
-            console.log(res.data)
+            const data = res.data
+            if (data.success) {
+              this.$notify({
+                title: '成功',
+                message: '修改成功',
+                type: 'success',
+                duration: 2000
+              })
+              this.updateTable()
+            } else {
+              this.$notify({
+                title: '失败',
+                message: '修改失败，请重试',
+                type: 'error',
+                duration: 2000
+              })
+            }
+            this.closeDialog()
           })
         }
       })

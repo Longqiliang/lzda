@@ -1,24 +1,28 @@
 <template>
-  <el-dialog :visible.sync="DialogVisible" width="40%" center :before-close="closeDialog">
+  <el-dialog :visible.sync="dialogTableVisible" width="40%" center :before-close="closeDialog">
     <div slot="title">
-      <el-select v-model="recordSelect" placeholder="请选择档案名称" @change="handleSelect">
-        <el-option v-for="re in recordNumber" :key="re.name" :label="re.name" :value="re.archive_id"></el-option>
-      </el-select>
+      <template v-if="status === 'create'">
+        <el-select v-model="recordSelect" placeholder="请选择档案名称">
+          <el-option v-for="re in recordNumber" :key="re.name" :label="re.name" :value="re.archive_id"></el-option>
+        </el-select>
+      </template>
       <div class="form-tit">{{titleChange}}</div>
     </div>
-    <keep-alive>
-      <component :is="formComponent"></component>
-    </keep-alive>
+    <component :is="formComponent" :user="user" :status="status" ref="children" :reportForm="formVal"></component>
     <div slot="footer" class="dialog-footer">
       <template v-if="status === 'create'">
-        <el-button type="primary" @click="closeDialog">保 存</el-button>
+        <el-button type="primary" @click="handleCreate">保 存</el-button>
         <el-button @click="closeDialog">取 消</el-button>
       </template>
-      <template v-else>
+      <template v-else-if="status === 'update'">
+        <el-button type="primary" @click="handleUpdate">保 存</el-button>
+        <el-button @click="closeDialog">取 消</el-button>
+      </template>
+      <!-- <template v-else>
         <el-button type="primary" @click="closeDialog">预 览</el-button>
         <el-button @click="closeDialog">导 出</el-button>
         <el-button @click="closeDialog">关 闭</el-button>
-      </template>
+      </template> -->
       <template v-if="recordSelect === 6">
         <div class="explain">
           <h5 class="explain-txt">备注：</h5>
@@ -38,8 +42,10 @@ import {
   ReportForm4,
   ReportForm5,
   ReportForm6,
-  ReportForm7
+  ReportForm7,
+  ReportForm8
 } from '@/components/Form/Report/index'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
   name: 'ReportDialog',
@@ -50,25 +56,32 @@ export default {
     ReportForm4,
     ReportForm5,
     ReportForm6,
-    ReportForm7
-  },
-  mounted() {
-    this.recordSelect = this.recordNumber[0].archive_id
+    ReportForm7,
+    ReportForm8
   },
   computed: {
+    ...mapState({
+      dialogTableVisible: state => state.report.dialogShow,
+      status: state => state.report.status,
+      type: state => state.report.reportForm,
+      formVal: state => state.report.formVal,
+      user:state => state.app.info
+    }),
+    recordSelect: {
+      get() {
+        return parseInt(this.type)
+      },
+      set(value) {
+        return this.setReportForm(value)
+      }
+    },
     formComponent() {
-      let obj = this.compareParam('archive_id', this.recordSelect)
+      let obj = this.compareParam('archive_id', parseInt(this.type))
       return 'ReportForm' + obj.type
     },
     titleChange() {
-      let obj = this.compareParam('archive_id', this.recordSelect)
+      let obj = this.compareParam('archive_id', parseInt(this.type))
       return obj.name
-    }
-  },
-  props: {
-    DialogVisible: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
@@ -108,29 +121,32 @@ export default {
           name: '丧事办理报告表',
           archive_id: 13,
           type: 7
+        },
+        {
+          name: '社区党委领导干部个人有关事项报告表',
+          archive_id: 18,
+          type: 8
         }
-      ],
-      recordSelect: 1,
-      status: {
-        type: String,
-        default: 'detail'
-      }
+      ]
     }
   },
   methods: {
+    ...mapMutations({
+      closeDialog: 'report/toggleDialog',
+      setReportForm: 'report/setReportForm'
+    }),
+    getForm() {},
     compareParam(param, comparam) {
       let titleObj = this.recordNumber.find(i => {
         return i[param] === comparam
       })
-      //console.log(titleObj)
       return titleObj
     },
-    closeDialog() {
-      this.$emit('update:DialogVisible', false)
+    handleCreate() {
+      this.$refs.children.createData()
     },
-    handleSelect(e) {
-      // console.log(e)
-      // console.log(this.recordSelect)
+    handleUpdate() {
+      this.$refs.children.updateData()
     }
   }
 }

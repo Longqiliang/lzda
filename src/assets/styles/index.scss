@@ -47,47 +47,20 @@ a:hover {
   }
 }
 
-//全局重置element样式
-.el-dialog {
-  background-image: url(./assets/images/dialog-bg.jpg);
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  &--center {
-    .el-button {
-      padding: 8px 20px;
-    }
-    .el-dialog {
-      &__body {
-        padding: 0 20px 20px;
-        .el-form {
-          border: 1px solid #999;
-          background-color: rgba(255, 255, 255, .4);
-          .el-row {
-            padding-left: 5px;
-            &:not(:last-child) {
-              border-bottom: 1px solid #999;
-            }
-          }
-        }
+.flex {
+  display: flex;
+  &-center {
+    align-items: center;
+  }
+  &-jf {
+    @each $status,
+    $prop in (between, space-between),
+    (around, space-around),
+    (center, center) {
+      &-#{$status} {
+        justify-content: $prop;
       }
     }
-  }
-  &__body {
-    padding: 0 20px 20px;
-  }
-}
-
-.el-input {
-  &__prefix,
-  &__suffix {
-    color: #999 !important;
-  }
-}
-
-.el-input,
-.el-textarea {
-  &__inner {
-    border: 1px solid #999 !important;
   }
 }
 
@@ -97,7 +70,71 @@ a:hover {
   background-image: url(./assets/images/bg.png);
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  display: flex;
+  display: flex; //全局重置element样式
+  .el-dialog {
+    background-image: url(./assets/images/dialog-bg.jpg);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    &--center {
+      .el-button {
+        padding: 8px 20px;
+        &.mini {
+          padding: 6px;
+        }
+        &+.el-button {
+          margin-left: 5px;
+        }
+      }
+      .el-dialog {
+        &__body {
+          padding: 0 20px 20px;
+          .el-form {
+            border: 1px solid #999;
+            background-color: rgba(255, 255, 255, .4);
+            &.auto {
+              .el-row {
+                padding-left: 0;
+              }
+            }
+            .el-row {
+              padding-left: 5px;
+              &.padded-10 {
+                padding-bottom: 10px;
+                >.el-col {
+                  padding: 0 5px;
+                }
+              }
+              >.el-row {
+                border-bottom: none !important;
+              }
+              &:not(:last-child) {
+                border-bottom: 1px solid #999;
+              }
+            }
+          }
+        }
+      }
+    }
+    &__body {
+      padding: 0 20px 20px;
+      .footer {
+        text-align: center;
+        padding-top: 10px;
+      }
+    }
+  }
+  .el-input {
+    &__prefix,
+    &__suffix {
+      color: #999 !important;
+    }
+  }
+  .el-input,
+  .el-textarea {
+    &__inner {
+      border: 1px solid #999 !important;
+    }
+  }
   .main {
     padding: 0;
     display: flex;
@@ -195,6 +232,11 @@ a:hover {
   }
 }
 
+.detail-tit {
+  margin: 0;
+  padding: 5px 0;
+}
+
 .table {
   flex: 1;
   display: flex;
@@ -203,9 +245,8 @@ a:hover {
     border: 1px solid $black;
     padding: 15px 10px;
     margin-left: 12px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    flex: 1; // display: flex;
+    // flex-direction: column;
     .table-tit {
       .el-button {
         padding: 8px 20px;
@@ -264,6 +305,15 @@ a:hover {
           }
         }
       }
+    }
+    .form-label {
+      display: inline-block;
+      padding: 8px 0;
+      flex-basis: 60%;
+    }
+    .form-table-tit {
+      padding: 3px 0;
+      text-align: center;
     }
     .el-form-item {
       &--mini {

@@ -10,12 +10,12 @@
 
 <script>
 import { queryOrganize } from '@/api/article'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'SideBar',
   data() {
     return {
-      data: null,
       defaultProps: {
         children: 'children',
         label: 'name'
@@ -25,34 +25,41 @@ export default {
   },
   created() {
     this.getRoute()
-    this.organizeList()
+    this.getOrganize()
   },
   watch: {
     $route() {
       this.getRoute()
     }
   },
+  computed: {
+    ...mapGetters({
+      data: 'organizes'
+    })
+  },
   methods: {
-    organizeList() {
-      queryOrganize().then(res => {
-        let data = res.data
-        console.log(res.data)
-        if (data.success) {
-          this.data = data.data
-        }
-      })
-    },
+    ...mapActions({
+      getOrganize: 'GetOrganize'
+    }),
     getRoute() {
       let matched = this.$route.matched.filter(item => item.path)
+      console.log(matched)
       let first = matched[0].path
       this.path = first
     },
-    handleNodeClick(data) {
+    handleNodeClick(data, node) {
+      console.log(data)
+      console.log(node)
+      let id = data.id
+      // this.$router.push({
+      //   path: this.path,
+      //   query:　{ id : id}
+      // })
       // let path = `${this.path}/${data.name}`
-      this.$router.push({
-        name: this.path,
-        params: { id: 123 }
-        })
+      // this.$router.push({
+      //   name: this.path,
+      //   params: { id: 123 }
+      //   })
     }
   }
 }

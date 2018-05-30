@@ -15,18 +15,24 @@
 
 <script>
 import { SideBar, Breadcrumb } from './index'
+import { mapActions } from 'vuex'
+
 export default {
   name: 'Main',
   components: {
     SideBar,
     Breadcrumb
   },
-  mounted() {
+  created() {
+    this.getInfo()
   },
-  computed: {},
+  methods: {
+    ...mapActions({
+      getInfo: 'GetInfo'
+    })
+  },
   data() {
-    return {
-    }
+    return {}
   }
 }
 </script>

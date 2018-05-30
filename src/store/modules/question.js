@@ -1,0 +1,46 @@
+const namespaced = true
+
+const state = {
+  dialogShow: false,
+  detailShow: false,
+  status: 'create',
+  questionForm: 3,
+  formVal: {},
+  tableVal: null
+}
+
+const mutations = {
+  toggleDialog(state) {
+    state.dialogShow = !state.dialogShow
+  },
+  toggleDetail(state) {
+    state.detailShow = !state.detailShow
+  },
+  closeDetail(state) {
+    state.detailShow = false
+  },
+  setStatus(state, status) {
+    state.status = status
+  },
+  setQuestionForm(state, type) {
+    state.questionForm = type
+  },
+  setFormVal(state, val) {
+    state.formVal = val
+  },
+  setTableVal(state, val) {
+    state.tableVal = val
+  }
+}
+
+const actions = {
+  GetTableVal({commit}) {
+    return new Promise()
+  }
+}
+
+export default {
+  namespaced,
+  state,
+  mutations
+}

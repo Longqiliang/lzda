@@ -1,40 +1,62 @@
 <template>
-  <el-form :model="reportForm" size="mini" label-width="90px" label-position="left" class="demo-form-inline">
+  <el-form :model="superviseForm" size="mini" label-width="90px" label-position="left" class="demo-form-inline">
     <el-row>
       <el-col :span="11">
         <el-form-item label="姓名">
-          <el-input v-model="reportForm.name"></el-input>
+          <template v-if="status === 'create'">
+            <el-select v-model="superviseForm.person_id" filterable>
+              <el-option v-for="item in user" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
+          </template>
+          <template v-else>
+            <span>{{superviseForm.name}}</span>
+          </template>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="身份证号码">
-          <el-input v-model="reportForm.id_card"></el-input>
+          <template v-if="status === 'create'">
+            <span>{{superviseForm.person_id | showInfo(user, 'idcard')}}</span>
+          </template>
+          <template v-else>
+            <span>{{superviseForm.idcard}}</span>
+          </template>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
         <el-form-item label="工作单位">
-          <el-input v-model="reportForm.unit_name"></el-input>
+          <template v-if="status === 'create'">
+            <span>{{superviseForm.person_id | showInfo(user, 'unitname')}}</span>
+          </template>
+          <template v-else>
+            <span>{{superviseForm.unitname}}</span>
+          </template>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
-        <el-form-item label="职位">
-          <el-input v-model="reportForm.position"></el-input>
+        <el-form-item label="职务">
+          <template v-if="status === 'create'">
+            <span>{{superviseForm.person_id | showInfo(user, 'position')}}</span>
+          </template>
+          <template v-else>
+            <span>{{superviseForm.position}}</span>
+          </template>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
         <el-form-item label="巡查发现的问题">
-          <el-input type="textarea" :autosize="{ minRows : 5 }" v-model="reportForm.insp_problem"></el-input>
+          <el-input type="textarea" :autosize="{ minRows : 5 }" v-model="superviseForm.insp_problem"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
         <el-form-item label="整改情况">
-          <el-input type="textarea" :autosize="{ minRows : 5 }" v-model="reportForm.rect_situation"></el-input>
+          <el-input type="textarea" :autosize="{ minRows : 5 }" v-model="superviseForm.rect_situation"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -57,10 +79,20 @@
 </template>
 
 <script>
+import { addRecord, updateRecord } from '@/api/article'
+import { createNamespacedHelpers } from 'vuex'
+
+const { mapState, mapActions, mapMutations } = createNamespacedHelpers(
+  'supervise'
+)
+
 export default {
   name: 'SuperviseForm1',
   props: {
-    reportForm: {
+    user: {
+      type: Array
+    },
+    superviseForm: {
       type: Object,
       default() {
         return {
@@ -73,18 +105,39 @@ export default {
           person_id: '',
           unit_id: '',
           fileId: '',
-          file_name:'',
-          id : ''
+          file_name: '',
+          id: ''
         }
       }
+    },
+    status: {
+      type: String,
+      default: 'create'
     }
   },
+  filters: {
+    showInfo(id, user, arg) {
+      if (!id) {
+        return
+      }
+      const item = user.find(item => {
+        return item.id === id
+      })
+      return item[arg]
+    }
+  },
+  inject: ['getList'],
   data() {
     return {
-      fileUpload: ''
+      fileUpload: '',
+      archive_id: 15
     }
   },
   methods: {
+    ...mapMutations({
+      closeDialog: 'toggleDialog',
+      closeDetail: 'closeDetail'
+    }),
     successUpload(response, file, fileList) {
       console.log(file)
       console.log(fileList)
@@ -99,6 +152,73 @@ export default {
     },
     removeFile(file, fileList) {
       console.log(file, fileList)
+    },
+    createData() {
+      let param = {
+        archive_id: this.archive_id
+      }
+      let query = Object.assign(this.superviseForm, param)
+      // console.log(query)
+      // return
+      addRecord(query)
+        .then(res => {
+          const data = res.data
+          if (data.success) {
+            this.$notify({
+              title: '成功',
+              message: '创建成功',
+              type: 'success',
+              duration: 2000
+            })
+            this.getList()
+            this.closeDialog()
+            this.closeDetail()
+          } else {
+            this.$notify({
+              title: '失败',
+              message: '创建失败，请重试！',
+              type: 'error',
+              duration: 2000
+            })
+          }
+        })
+        .catch(err => {
+          this.$notify({
+            title: '失败',
+            message: '创建失败，请重试！',
+            type: 'error',
+            duration: 2000
+          })
+        })
+    },
+    updateData() {
+      let param = {
+        archive_id: this.archive_id
+      }
+      let query = Object.assign(this.superviseForm, param)
+      // console.log(query)
+      // return
+      updateRecord(query).then(res => {
+        const data = res.data
+        if (data.success) {
+          this.$notify({
+            title: '成功',
+            message: '修改成功',
+            type: 'success',
+            duration: 2000
+          })
+          this.getList()
+          this.closeDialog()
+          this.closeDetail()
+        } else {
+          this.$notify({
+            title: '失败',
+            message: '修改失败，请重试',
+            type: 'error',
+            duration: 2000
+          })
+        }
+      })
     }
   }
 }

@@ -48,11 +48,11 @@ import { parseTime } from '@/filter'
 import { createNamespacedHelpers } from 'vuex'
 
 const { mapState, mapActions, mapMutations } = createNamespacedHelpers(
-  'question'
+  'report'
 )
 
 export default {
-  name: 'QuestionDetail',
+  name: 'ReportDetail',
   props: {
     recordList: {
       type: Array
@@ -71,7 +71,7 @@ export default {
     ...mapMutations({
       toggleDialog: 'toggleDialog',
       setStatus: 'setStatus',
-      setQuestionForm: 'setQuestionForm',
+      setReportForm: 'setReportForm',
       setFormVal: 'setFormVal',
       closeDetail: 'closeDetail',
       toggleDetail: 'toggleDetail'
@@ -101,7 +101,7 @@ export default {
       queryRecordDetails(query).then(res => {
         const data = res.data
         if(data.success) {
-          this.setQuestionForm(row.archiveid)
+          this.setReportForm(row.archiveid)
           this.setFormVal(data.data)
           this.setStatus(status)
           this.toggleDialog()

@@ -5,7 +5,7 @@ import {
 // import store from '@/store'
 
 const SERVICE = axios.create({
-  timeout: 20000
+  timeout: 200000
 })
 
 SERVICE.interceptors.response.use(

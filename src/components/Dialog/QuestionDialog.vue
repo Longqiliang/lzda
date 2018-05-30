@@ -1,19 +1,24 @@
 <template>
-  <el-dialog :visible.sync="DialogVisible" width="40%" center :before-close="closeDialog">
+  <el-dialog :visible.sync="dialogTableVisible" width="40%" center :before-close="closeDialog">
     <div slot="title">
-      <el-select v-model="recordSelect" placeholder="请选择档案名称">
-        <el-option v-for="re in recordNumber" :key="re.name" :label="re.name" :value="re.archive_id"></el-option>
-      </el-select>
+      <template v-if="status === 'create'">
+        <el-select v-model="recordSelect" placeholder="请选择档案名称">
+          <el-option v-for="re in recordNumber" :key="re.name" :label="re.name" :value="re.archive_id"></el-option>
+        </el-select>
+      </template>
       <div class="form-tit">{{titleChange}}</div>
     </div>
-    <keep-alive>
-      <component :is="formComponent"></component>
-    </keep-alive>
+    <component :is="formComponent" :user="user" :status="status" ref="children" :questionForm="formVal"></component>
     <div slot="footer" class="dialog-footer">
       <template v-if="status === 'create'">
-        <el-button type="primary" @click="closeDialog">保 存</el-button>
+        <el-button type="primary" @click="handleCreate">保 存</el-button>
         <el-button @click="closeDialog">取 消</el-button>
       </template>
+      <template v-else-if="status === 'update'">
+        <el-button type="primary" @click="handleUpdate">保 存</el-button>
+        <el-button @click="closeDialog">取 消</el-button>
+      </template>
+      <template v-else-if="status === 'detail'"></template>
       <template v-if="recordSelect === 3">
         <div class="explain">
           <h5 class="explain-txt">填表说明:</h5>
@@ -36,6 +41,7 @@ import {
   QuestionForm6,
   QuestionForm7
 } from '@/components/Form/Question/index'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
   name: 'QuestionDialog',
@@ -48,23 +54,32 @@ export default {
     QuestionForm6,
     QuestionForm7
   },
-  mounted() {
-    this.recordSelect = this.recordNumber[0].archive_id
+  created() {
+    // this.recordSelect = this.recordNumber[0].archive_id
   },
   computed: {
+    ...mapState({
+      dialogTableVisible: state => state.question.dialogShow,
+      status: state => state.question.status,
+      type: state => state.question.questionForm,
+      formVal: state => state.question.formVal,
+      user:state => state.app.info
+    }),
+    recordSelect: {
+      get() {
+        return parseInt(this.type)
+      },
+      set(value) {
+        return this.setQuestionForm(value)
+      }
+    },
     formComponent() {
-      let obj = this.compareParam('archive_id', this.recordSelect)
+      let obj = this.compareParam('archive_id', parseInt(this.type))
       return 'QuestionForm' + obj.type
     },
     titleChange() {
-      let obj = this.compareParam('archive_id', this.recordSelect)
+      let obj = this.compareParam('archive_id', parseInt(this.type))
       return obj.name
-    }
-  },
-  props: {
-    DialogVisible: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
@@ -105,24 +120,26 @@ export default {
           archive_id: 7,
           type: 7
         }
-      ],
-      recordSelect: 3,
-      status: {
-        type: String,
-        default: 'detail'
-      }
+      ]
     }
   },
   methods: {
+    ...mapMutations({
+      closeDialog: 'question/toggleDialog',
+      setQuestionForm: 'question/setQuestionForm'
+    }),
+    getForm() {},
     compareParam(param, comparam) {
       let titleObj = this.recordNumber.find(i => {
         return i[param] === comparam
       })
-      //console.log(titleObj)
       return titleObj
     },
-    closeDialog() {
-      this.$emit('update:DialogVisible', false)
+    handleCreate() {
+      this.$refs.children.createData()
+    },
+    handleUpdate() {
+      this.$refs.children.updateData()
     }
   }
 }

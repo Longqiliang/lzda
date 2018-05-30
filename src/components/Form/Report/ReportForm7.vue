@@ -27,7 +27,7 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="举办时间">
-          <el-date-picker type="date" placeholder="选择日期" v-model="reportForm.holding_time" style="width: 100%;"></el-date-picker>
+          <el-date-picker type="date" placeholder="选择日期" v-model="reportForm.holding_time" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
@@ -113,20 +113,21 @@ export default {
           base_situation: '',
           report_method: '',
           report_principal: '',
-          audit_opinion : '',
+          audit_opinion: '',
           record_suggest: '',
           person_id: '',
           unit_id: '',
           fileId: '',
-          file_name:'',
-          id : ''
+          file_name: '',
+          id: ''
         }
       }
     }
   },
   data() {
     return {
-      fileUpload: ''
+      fileUpload: '',
+      archive_id: 13
     }
   },
   methods: {
@@ -144,6 +145,65 @@ export default {
     },
     removeFile(file, fileList) {
       console.log(file, fileList)
+    },
+    createData() {
+      let param = {
+        archive_id: this.archive_id
+      }
+      let query = Object.assign(this.questionForm, param)
+      console.log(query)
+      return
+      addRecord(query)
+        .then(res => {
+          const data = res.data
+          if (data.success) {
+            this.$notify({
+              title: '成功',
+              message: '创建成功',
+              type: 'success',
+              duration: 2000
+            })
+          } else {
+            this.$notify({
+              title: '失败',
+              message: '创建失败，请重试！',
+              type: 'error',
+              duration: 2000
+            })
+          }
+        })
+        .catch(err => {
+          this.$notify({
+            title: '失败',
+            message: '创建失败，请重试！',
+            type: 'error',
+            duration: 2000
+          })
+        })
+    },
+    updateData() {
+      let param = {
+        archive_id: this.archive_id
+      }
+      let query = Object.assign(this.questionForm, param)
+      updateRecord(query).then(res => {
+        const data = res.data
+        if (data.success) {
+          this.$notify({
+            title: '成功',
+            message: '修改成功',
+            type: 'success',
+            duration: 2000
+          })
+        } else {
+          this.$notify({
+            title: '失败',
+            message: '修改失败，请重试',
+            type: 'error',
+            duration: 2000
+          })
+        }
+      })
     }
   }
 }

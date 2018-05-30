@@ -1,14 +1,27 @@
 <template>
   <el-form :model="questionForm" size="mini" label-width="90px" label-position="left" class="demo-form-inline">
-    <el-row>
+     <el-row>
       <el-col :span="11">
         <el-form-item label="姓名">
-          <el-input v-model="questionForm.creat_user_id"></el-input>
+          <template v-if="status === 'create'">
+            <el-select v-model="questionForm.person_id" filterable >
+              <el-option v-for="item in user" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
+          </template>
+          <template v-else>
+            <span>{{questionForm.name}}</span>
+          </template>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="身份证号码">
-          <el-input v-model="questionForm.record_user_id"></el-input>
+          <template v-if="status === 'create'">
+            <span class="txt-number">{{questionForm.person_id | showInfo(user, 'idcard')}}</span>
+          </template>
+          <template v-else>
+            <span>{{questionForm.idcard}}</span>
+          </template>
+
         </el-form-item>
       </el-col>
     </el-row>
@@ -51,12 +64,12 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="处分起始时间">
-          <el-date-picker type="date" placeholder="选择日期" v-model="questionForm.start_time" style="width: 100%;"></el-date-picker>
+          <el-date-picker type="date" placeholder="选择日期" v-model="questionForm.start_time" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="处分终止时间">
-          <el-date-picker type="date" placeholder="选择日期" v-model="questionForm.end_time" style="width: 100%;"></el-date-picker>
+          <el-date-picker type="date" placeholder="选择日期" v-model="questionForm.end_time" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
       </el-col>
     </el-row>
@@ -93,9 +106,19 @@
 </template>
 
 <script>
+import { addRecord, updateRecord } from '@/api/article'
+import { mapState, mapActions, mapMutations } from 'vuex'
+
 export default {
   name: 'QuestionForm7',
   props: {
+    user: {
+      type: Array
+    },
+    status: {
+      type: String,
+      default: 'create'
+    },
     questionForm: {
       type: Object,
       default() {
@@ -118,10 +141,27 @@ export default {
   },
   data() {
     return {
-      fileUpload: ''
+      fileUpload: '',
+      archive_id: 7
     }
   },
+  filters: {
+    showInfo(id, user, arg) {
+      if (!id) {
+        return
+      }
+      const item = user.find(item => {
+        return item.id === id
+      })
+      return item[arg]
+    }
+  },
+  inject: ['getList'],
   methods: {
+    ...mapMutations({
+      closeDialog: 'question/toggleDialog',
+      closeDetail: 'question/closeDetail'
+    }),
     successUpload(response, file, fileList) {
       console.log(file)
       console.log(fileList)
@@ -136,6 +176,71 @@ export default {
     },
     removeFile(file, fileList) {
       console.log(file, fileList)
+    },
+    createData() {
+      let param = {
+        archive_id: this.archive_id
+      }
+      let query = Object.assign(this.questionForm, param)
+      addRecord(query)
+        .then(res => {
+          const data = res.data
+          if (data.success) {
+            this.getList()
+            this.$notify({
+              title: '成功',
+              message: '创建成功',
+              type: 'success',
+              duration: 2000
+            })
+            this.closeDialog()
+            this.closeDetail()
+          } else {
+            this.$notify({
+              title: '失败',
+              message: '创建失败，请重试！',
+              type: 'error',
+              duration: 2000
+            })
+          }
+        })
+        .catch(err => {
+          this.$notify({
+            title: '失败',
+            message: '创建失败，请重试！',
+            type: 'error',
+            duration: 2000
+          })
+        })
+    },
+    updateData() {
+      let param = {
+        archive_id: this.archive_id
+      }
+      let query = Object.assign(this.questionForm, param)
+      // console.log(query)
+      // return
+      updateRecord(query).then(res => {
+        const data = res.data
+        if (data.success) {
+          this.getList()
+          this.$notify({
+            title: '成功',
+            message: '修改成功',
+            type: 'success',
+            duration: 2000
+          })
+          this.closeDialog()
+          this.closeDetail()
+        } else {
+          this.$notify({
+            title: '失败',
+            message: '修改失败，请重试',
+            type: 'error',
+            duration: 2000
+          })
+        }
+      })
     }
   }
 }
