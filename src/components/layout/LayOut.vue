@@ -5,8 +5,10 @@
         <TagView/>
         <NavBar/>
       </el-header>
-      <el-main class="main">
-        <AppMain/>
+      <el-main class="main el-scrollbar">
+        <div class="scroll_wrap">
+          <AppMain/>
+        </div>
       </el-main>
     </el-container>
   </div>

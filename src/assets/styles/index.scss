@@ -1,16 +1,38 @@
 @import './_variables.scss';
 @import './navbar.scss';
 @import './dialog.scss';
+@import './person.scss';
+@import './view.scss';
+@import './charts.scss';
+html,
 body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
   margin: 0;
+  height: 100%;
+  box-sizing: border-box;
+  .is-component {
+    overflow: hidden;
+  }
 }
 
-html {
-  box-sizing: border-box;
+#app {
+  height: 100%;
+  .is-component {
+    overflow-y: hidden;
+  }
+  .scroll_wrap {
+    flex: 1;
+    width: 100%;
+    >.el-container {
+      height: 100%;
+      .el-aside {
+        height: 100%;
+      }
+    }
+  }
 }
 
 *,
@@ -64,17 +86,211 @@ a:hover {
   }
 }
 
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  &-2 {
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    white-space: normal !important;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical
+  }
+}
+
+.text-center {
+  text-align: center
+}
+
 //main-container全局样式
 .app-wrapper {
-  min-height: 100vh;
+  height: 100%;
   background-image: url(./assets/images/bg.png);
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  display: flex; //全局重置element样式
+  display: flex; // 图表样式
+  .v-charts-component-loading {
+    background-color: hsla(0, 0%, 100%, .1);
+  } //全局重置element样式
+  .container {
+    margin: 15px;
+    padding: 5px;
+    height: calc(100% - 30px);
+    background-color: rgba(125, 0, 0, .2);
+    &-main {
+      height: calc(100% - 40px);
+      display: flex;
+      .aside {
+        max-width: 325px;
+      }
+    }
+    .aside {
+      display: flex;
+    }
+    .tree {
+      width: 100%;
+      padding: 12px 0;
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      &-box {
+        border: 1px solid $view-color;
+        background-color: rgba(0, 0, 0, .15);
+        width: calc(100% - 12px);
+        margin: 0 0 12px 12px;
+        flex: 1;
+        display: flex;
+      }
+      &-scroll {
+        overflow-y: scroll;
+        margin-right: -18px;
+        width: calc(100% + 18px);
+      }
+      .el-tree {
+        background: transparent;
+        color: $black;
+        width: 100%;
+        &-node {
+          &__content {
+            &:hover {
+              background-color: #eee;
+            }
+          }
+          &:focus {
+            >.el-tree-node__content {
+              background-color: #eee;
+            }
+          }
+        }
+      }
+    }
+    .el-table {
+      color: $black;
+      background-color: inherit;
+      &--enable-row-hover,
+      &__body {
+        tr {
+          &:hover {
+            >td {
+              background-color: rgba(0, 0, 0, .1);
+            }
+          }
+        }
+      }
+      &__empty-text {
+        color: $black * 2;
+      }
+      thead {
+        color: $black;
+      }
+      tr {
+        background-color: rgba(0, 0, 0, .1);
+      }
+      th {
+        background-color: inherit;
+        &.is-leaf {
+          border-bottom: 1px solid $view-color;
+        }
+      }
+      &--border,
+      &--group {
+        border: 1px solid $view-color;
+        &::before,
+        &::after {
+          background-color: $view-color;
+        }
+      }
+      &--border {
+        border-right: none;
+        border-bottom: none;
+        th,
+        td {
+          border-right: 1px solid $view-color;
+        }
+        td,
+        th.is-leaf {
+          border-bottom: 1px solid $view-color;
+          padding:10px 0;
+        }
+      }
+    }
+  }
+  .content-tree {
+    height: 100%;
+    padding-bottom: 20px;
+    overflow: hidden;
+    &-scroll {
+      height: 100%; // width: 100%;
+      margin-right: -17px;
+      overflow-y: scroll;
+    }
+  }
+  .setting-dialog {
+    .el-dialog {
+      background-image: none !important;
+      border-radius: 10px;
+      &__title{
+        color: inherit;
+      }
+      &__header {
+        padding: 10px;
+        color: #fff;
+        background-color: $view-color;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+      &--center{
+        .el-dialog{
+          &__body{
+            padding: 20px;
+          }
+        }
+      }
+      &__body {
+        padding: 20px;
+      }
+      &__footer {
+        padding: 10px 20px;
+        background-color: #dfdfdf;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        .btn {
+          padding: 8px 15px;
+          &-primary {
+            border: 1px solid $view-color;
+            background-color: $view-color;
+            color: #fff;
+            &:focus,
+            &:hover {
+              color: #fff;
+              background-color: $view-color * 1.1;
+            }
+          }
+        }
+      }
+      &__headerbtn {
+        top: 12px;
+        right: 12px;
+        .el-dialog__close {
+          color: #fff;
+          font-weight: bold;
+        }
+      }
+    }
+  }
   .el-dialog {
+    margin: 0 auto;
     background-image: url(./assets/images/dialog-bg.jpg);
     background-repeat: no-repeat;
     background-size: 100% 100%;
+    &__header{
+      &btn{
+        top: 10px;
+      }
+    }
     &--center {
       .el-button {
         padding: 8px 20px;
@@ -135,20 +351,30 @@ a:hover {
       border: 1px solid #999 !important;
     }
   }
+  .el-form-item {
+    &--mini {
+      margin-top: 6px;
+    }
+  }
+
   .main {
     padding: 0;
     display: flex;
+    .aside {
+      display: flex;
+    }
     .content-aside {
       margin-top: 15px;
+      height: calc(100% - 15px);
       display: flex;
       flex-direction: column;
-      background-color: $view-color;
-      padding-right: 6px;
+      background-color: #fff; // margin-right: 6px;
       flex: 1;
       .aside-tit {
         line-height: 48px;
         color: #fff;
         position: relative;
+        background-color: $view-color;
         span {
           margin-left: 25%;
         }
@@ -167,7 +393,8 @@ a:hover {
         }
       }
       .el-tree {
-        padding: 15px 0 0 30px;
+        padding: 15px 20px 0 20px;
+        max-width: 280px; // overflow-x: scroll;
         flex: 1;
         color: $black;
         .el-tree-node__expand-icon {
@@ -179,9 +406,28 @@ a:hover {
     .content-main {
       padding: 15px;
       display: flex;
-      flex-direction: column;
-      .el-breadcrumb__item:last-child .el-breadcrumb__inner a {
-        color: $black;
+      flex-direction: column; // margin-left: 290px;
+    }
+  }
+  .el-breadcrumb__item:last-child .el-breadcrumb__inner a {
+    color: $black;
+  }
+  .btn-danger {
+    background-color: $view-color;
+    border-color: $view-color;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+  }
+  .cell {
+    .el-button {
+      &--danger {
+        background-color: $view-color;
+        border-color: $view-color;
+      }
+      &--primary {
+        background-color: $primary;
+        border-color: $primary;
       }
     }
   }
@@ -189,7 +435,6 @@ a:hover {
 
 .tab-search {
   margin: 0 0 10px 12px;
-  min-height: 50px;
   border: 1px solid $black;
   .search-group {
     padding: 12px 5px;
@@ -245,8 +490,12 @@ a:hover {
     border: 1px solid $black;
     padding: 15px 10px;
     margin-left: 12px;
-    flex: 1; // display: flex;
-    // flex-direction: column;
+    flex: 1; // flex-direction: column;
+    &.el-scrollbar {
+      .el-scrollbar__wrap {
+        overflow-x: auto;
+      }
+    }
     .table-tit {
       .el-button {
         padding: 8px 20px;
@@ -257,10 +506,12 @@ a:hover {
         }
       }
     }
-    .table-footer {
-      padding-top: 10px;
-    }
     .el-table {
+      &.detail-table {
+        td {
+          padding: 5px 0;
+        }
+      }
       &--border {
         border: 1px solid $black;
         td,
@@ -288,6 +539,37 @@ a:hover {
       }
       color: $black * 1.2;
     }
+    .form-label {
+      display: inline-block;
+      padding: 8px 0;
+    }
+    .form-content{
+      margin-left: 15px;
+    }
+    .form-table-tit {
+      padding: 3px 0;
+      text-align: center;
+    }
+    .el-form-item {
+      &--mini {
+        .el-form-item {
+          &--mini {
+            margin-top: 0;
+            margin-bottom: 0;
+          }
+        }
+      }
+      &__label {
+        padding: 0 5px 0 0;
+      }
+    }
+  }
+  &-center {
+    height: calc(100% - 42px);
+  }
+  &-footer {
+    padding-top: 10px;
+    overflow: hidden;
     .el-pagination {
       float: right;
       width: 60%;
@@ -304,29 +586,6 @@ a:hover {
             color: #fff;
           }
         }
-      }
-    }
-    .form-label {
-      display: inline-block;
-      padding: 8px 0;
-      flex-basis: 60%;
-    }
-    .form-table-tit {
-      padding: 3px 0;
-      text-align: center;
-    }
-    .el-form-item {
-      &--mini {
-        margin-top: 6px;
-        .el-form-item {
-          &--mini {
-            margin-top: 0;
-            margin-bottom: 0;
-          }
-        }
-      }
-      &__label {
-        padding: 0 5px 0 0;
       }
     }
   }

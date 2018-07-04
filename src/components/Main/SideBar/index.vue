@@ -3,14 +3,19 @@
     <div class="aside-tit">
       <span>组织架构</span>
     </div>
-    <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick">
-    </el-tree>
+    <div class="content-tree">
+      <div class="content-tree-scroll">
+<el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" :draggable="false" accordion>
+      </el-tree>
+      </div>
+      
+    </div>
+
   </div>
 </template>
 
 <script>
-import { queryOrganize } from '@/api/article'
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'SideBar',
@@ -25,7 +30,6 @@ export default {
   },
   created() {
     this.getRoute()
-    this.getOrganize()
   },
   watch: {
     $route() {
@@ -38,28 +42,27 @@ export default {
     })
   },
   methods: {
-    ...mapActions({
-      getOrganize: 'GetOrganize'
-    }),
     getRoute() {
       let matched = this.$route.matched.filter(item => item.path)
-      console.log(matched)
       let first = matched[0].path
       this.path = first
     },
     handleNodeClick(data, node) {
-      console.log(data)
-      console.log(node)
-      let id = data.id
-      // this.$router.push({
-      //   path: this.path,
-      //   query:　{ id : id}
-      // })
-      // let path = `${this.path}/${data.name}`
-      // this.$router.push({
-      //   name: this.path,
-      //   params: { id: 123 }
-      //   })
+      let query
+      if(data.unit_id){
+        query = {
+          unitId: data.unit_id,
+          deptId: data.id
+        }
+      } else {
+        query = {
+          unitId: data.id
+        }
+      }
+      this.$router.push({
+        path: this.path,
+        query: query
+      })
     }
   }
 }

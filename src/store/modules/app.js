@@ -22,8 +22,22 @@ const APP = {
     organizes: (state, getters, rootState) => {
       return rootState.app.organize
     },
+    info: (state, getters, rootState) => {
+      return rootState.app.info
+    },
+    organizesAll: (state, getters, rootState) => {
+      const system = [{
+        name: '廉政档案',
+        id: '001',
+        children: rootState.app.organize
+      }]
+      return system
+    },
     getOrganizeById: (state, getters, rootState) => (id) => {
       return rootState.organize.filter(item => item.id === id)
+    },
+    getInfoByName: (state) => (query) => {
+      return state.info.filter(item => item.name.indexOf(query) > -1)
     },
     getInfoById: (state) => (id) => {
       return state.info.filter(item => item.id === id)
@@ -36,7 +50,6 @@ const APP = {
       return new Promise((resolve, reject) => {
         queryOrganize().then(res => {
           const data = res.data
-          console.log(data)
           if (data.success) {
             commit('SET_ORGANIZE', data.data)
             resolve(res)

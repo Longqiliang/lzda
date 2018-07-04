@@ -15,7 +15,6 @@
 
 <script>
 export default {
-  name: 'Breadcrumb',
   created () {
     this.getRoute()
   },

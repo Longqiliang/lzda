@@ -5,13 +5,13 @@
       <div class="table-tit">
         <el-button type="danger" @click="handleCreate">新增</el-button>
       </div>
-      <el-table :data="tableVal" border width="100%" @cell-click="handleDetail">
+      <el-table :data="tableVal" border width="100%" @cell-click="handleDetail" height="calc(100% - 77px)" v-loading="loading" element-loading-text="加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(255, 255, 255, .8)">
         <el-table-column label="序号" fixed prop="rowno" min-width="50" align="center"></el-table-column>
         <el-table-column label="姓名" prop="name" align="center"></el-table-column>
         <el-table-column label="单位" prop="unit_name" align="center"></el-table-column>
         <el-table-column label="档案类型" prop="archive_type_name" align="center"></el-table-column>
         <el-table-column label="档案名称" prop="archive_name" align="center" min-width="180"></el-table-column>
-        <el-table-column label="说明" prop="dept_name" align="center"></el-table-column>
+        <el-table-column label="部门" prop="dept_name" align="center"></el-table-column>
         <el-table-column label="建档日期" align="center">
           <template slot-scope="scope" v-if="scope.row.create_time">
             {{scope.row.create_time | parseTime('{y}-{m}-{d}')}}
@@ -34,14 +34,13 @@
         <el-pagination background :total="total" :current-page="listQuery.pageIndex" :page-size="listQuery.pageSize" layout="total, pager, ->, jumper" @current-change="handleCurrentChange">
         </el-pagination>
       </div>
-      <ReportDetail  :recordQuery="recordQuery" :recordList="recordList" :personInfo="personInfo"/>
+      <ReportDetail  :recordList="recordList" :personInfo="personInfo" />
       <ReportDialog/>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 import TableSearch from './TableSearch'
 import ReportDialog from '@/components/Dialog/ReportDialog'
 import {
@@ -50,14 +49,13 @@ import {
   updateRecord,
   queryRecordList,
   queryRecordDetails,
+  queryPersonInfoDetailed,
   queryPerson
 } from '@/api/article'
 import ReportDetail from './ReportDetail'
-import { createNamespacedHelpers, mapGetters } from 'vuex'
+import { createNamespacedHelpers } from 'vuex'
 
-const { mapState, mapActions, mapMutations } = createNamespacedHelpers(
-  'report'
-)
+const { mapState, mapMutations } = createNamespacedHelpers('report')
 
 export default {
   name: 'ReportTable',
@@ -75,25 +73,42 @@ export default {
       },
       total: null,
       tableVal: null,
-      recordQuery: null,
       recordList: null,
-      personInfo: []
+      personInfo: [],
+      loading: false
     }
   },
   created() {
     this.getList()
   },
-  provide() {
-    return {
-      getList: this.getList
+  props: {
+    unitId: {
+      type: String
+    },
+    deptId: {
+      type: String
+    },
+    name: {
+      type: String
+    }
+  },
+  watch: {
+    isRefresh(v) {
+      if (v) {
+        this.getList()
+      }
+    },
+    $route(val) {
+      let matched = this.$route.matched.filter(item => item.path)
+      let first = matched[0].path
+      if (first === '/report') {
+        this.getList()
+      }
     }
   },
   computed: {
     ...mapState({
-      status: state => state.report.status
-    }),
-    ...mapGetters({
-      getInfoById: state => state.app.getInfoById
+      isRefresh: 'success'
     })
   },
   methods: {
@@ -102,30 +117,50 @@ export default {
       'setStatus',
       'setReportForm',
       'setFormVal',
-      'toggleDetail'
+      'toggleDetail',
+      'errorList'
     ]),
-    getList(param = { archive_type_id: this.archive_type_id }) {
+    getList(
+      param = {
+        unit_id: this.unitId,
+        dept_id: this.deptId,
+        user_name: this.name,
+        archive_type_id: this.archive_type_id
+      }
+    ) {
+      this.loading = true
       let query = Object.assign(param, this.listQuery)
-      queryRecord(query).then(res => {
-        let data = res.data
-        if (data.success) {
-          console.log(data)
-          
-          if(data.data.length > 0) {
-            this.tableVal = data.data
-            this.total = data.pageInfo.totalRecord
-          } else {
-            if(this.listQuery.pageIndex > 1) {
-              this.listQuery.pageIndex -= 1
-              this.getList()
+      queryRecord(query)
+        .then(res => {
+          let data = res.data
+          this.loading = false
+          if (data.success) {
+            //  console.log(data)
+            if (data.data.length > 0) {
+              this.tableVal = data.data
+              this.total = data.pageInfo.totalRecord
+              this.errorList()
+            } else {
+              if (this.listQuery.pageIndex > 1) {
+                this.listQuery.pageIndex -= 1
+                this.getList()
+              } else {
+                this.tableVal = data.data
+                this.total = data.pageInfo.totalRecord
+                this.errorList()
+              }
             }
           }
-        }
-      })
+        })
+        .catch(err => {
+          this.loading = false
+        })
     },
     handleCreate() {
       this.setStatus('create')
-      this.setFormVal({})
+      this.setFormVal({
+        person_id: ''
+      })
       this.toggleDialog()
     },
     handleDetail(row, column, cell, event) {
@@ -135,12 +170,22 @@ export default {
           person_id: row.person_id,
           buss_id: row.id
         }
-        this.personInfo= this.$store.getters.getInfoById(row.person_id)
-        this.recordQuery = query
+        const userInfo = {
+          name: row.name,
+          idcard: row.idcard,
+          borntime: row.borntime,
+          age: row.age,
+          origin: row.origin,
+          education: row.education,
+          politicalstatus: row.politicalstatus,
+          rank: row.rank,
+          position: row.position
+        }
+        this.personInfo = [userInfo]
         queryRecordList(query)
           .then(res => {
             const data = res.data
-             console.log(data)
+            console.log(data)
             if (data.success) {
               this.recordList = data.data
               this.toggleDetail()
@@ -186,18 +231,31 @@ export default {
         archive_id: row.archiveid,
         buss_id: row.id
       }
-      // this.toggleDetail()
       console.log(query)
-      queryRecordDetails(query).then(res => {
-        console.log(res.data)
-        let data = res.data
-        if (data.success) {
-          this.setStatus('detail')
-          this.setReportForm(parseInt(row.archiveid))
-          this.setFormVal(data.data)
-          this.toggleDialog()
-        }
-      })
+      if (query.archive_id === '9') {
+        queryPersonInfoDetailed(query).then(res => {
+          console.log(res.data)
+          let data = res.data
+          data.data.person_id = row.person_id
+          if (data.success) {
+            this.setStatus('detail')
+            this.setReportForm(parseInt(row.archiveid))
+            this.setFormVal(data.data)
+            this.toggleDialog()
+          }
+        })
+      } else {
+        queryRecordDetails(query).then(res => {
+          console.log(res.data)
+          let data = res.data
+          if (data.success) {
+            this.setStatus('detail')
+            this.setReportForm(parseInt(row.archiveid))
+            this.setFormVal(data.data)
+            this.toggleDialog()
+          }
+        })
+      }
     },
     handleRemove(row) {
       let query = {

@@ -4,8 +4,8 @@
       <el-col :span="11">
         <el-form-item label="姓名">
           <template v-if="status === 'create'">
-            <el-select v-model="questionForm.person_id" filterable >
-              <el-option v-for="item in user" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-select v-model="questionForm.person_id" filterable remote :remote-method="remoteMethod" :loading="loading">
+              <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </template>
           <template v-else>
@@ -17,10 +17,10 @@
       <el-col :span="11" :offset="1">
         <el-form-item label="身份证号码">
           <template v-if="status === 'create'">
-            <span class="txt-number">{{questionForm.person_id | showInfo(user, 'idcard')}}</span>
+            <span class="txt-number">{{questionForm.person_id | showInfo(userList, 'idcard')}}</span>
           </template>
           <template v-else>
-            <span>{{questionForm.idcard}}</span>
+            <span>{{questionForm.id_card}}</span>
           </template>
 
         </el-form-item>
@@ -30,10 +30,10 @@
       <el-col :span="11">
         <el-form-item label="工作单位">
           <template v-if="status === 'create'">
-            <span>{{questionForm.person_id | showInfo(user, 'unitname')}}</span>
+            <span>{{questionForm.person_id | showInfo(userList, 'unitname')}}</span>
           </template>
           <template v-else>
-            <span>{{questionForm.unitname}}</span>
+            <span>{{questionForm.unit_name}}</span>
           </template>
 
         </el-form-item>
@@ -41,7 +41,7 @@
       <el-col :span="11" :offset="1">
         <el-form-item label="职务">
           <template v-if="status === 'create'">
-            <span>{{questionForm.person_id | showInfo(user, 'position')}}</span>
+            <span>{{questionForm.person_id | showInfo(userList, 'position')}}</span>
           </template>
           <template v-else>
             <span>{{questionForm.position}}</span>
@@ -53,7 +53,7 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="来文单位">
-          <el-input v-model="questionForm.communication_dept"></el-input>
+          <el-input :readonly="readonlyStatus" v-model="questionForm.communication_dept"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
@@ -65,10 +65,10 @@
     <el-row>
       <el-col :span="23">
         <el-form-item label="来文内容">
-          <el-input type="textarea" autosize v-model="questionForm.communication_content"></el-input>
+          <el-input :readonly="readonlyStatus" type="textarea" autosize v-model="questionForm.communication_content"></el-input>
           <!-- <el-upload action="https://jsonplaceholder.typicode.com/posts/" ref="upload" :on-error="errorUpload" :on-success="successUpload" :on-remove="removeFile">
             <el-col :span="15">
-              <el-input v-model="fileUpload" readonly></el-input>
+              <el-input :readonly="readonlyStatus" v-model="fileUpload" readonly></el-input>
             </el-col>
             <el-col :span="9">
               <el-button>上传附件</el-button>
@@ -80,14 +80,14 @@
     <el-row>
       <el-col :span="23">
         <el-form-item label="审核类型">
-          <el-input type="textarea" autosize v-model="questionForm.audit_type"></el-input>
+          <el-input :readonly="readonlyStatus" type="textarea" autosize v-model="questionForm.audit_type"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
         <el-form-item label="回复意见">
-          <el-input type="textarea" autosize v-model="questionForm.opinion"></el-input>
+          <el-input :readonly="readonlyStatus" type="textarea" autosize v-model="questionForm.opinion"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -96,7 +96,7 @@
         <el-form-item label="上传附件">
           <el-upload action="https://jsonplaceholder.typicode.com/posts/" ref="upload" :on-error="errorUpload" :on-success="successUpload" :on-remove="removeFile">
             <el-col :span="15">
-              <el-input v-model="fileUpload" readonly></el-input>
+              <el-input  v-model="fileUpload" readonly></el-input>
             </el-col>
             <el-col :span="9">
               <el-button>上传附件</el-button>
@@ -110,8 +110,8 @@
 </template>
 
 <script>
-import { addRecord, updateRecord } from '@/api/article'
-import { mapState, mapActions, mapMutations } from 'vuex'
+import { uploadFile, addRecord, updateRecord, queryTermPerson } from '@/api/article'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'QuestionForm4',
@@ -147,18 +147,65 @@ export default {
       return item[arg]
     }
   },
-  inject: ['getList'],
+  computed: {
+    ...mapState({
+      type: state => state.question.questionForm,
+      dialogShow: state => state.question.dialogShow
+    }),
+    readonlyStatus() {
+      if (this.status === 'detail') {
+        return true
+      } else {
+        return false
+      }
+    },
+    uploadUrl() {
+      if(this.questionForm.id) {
+        this.uploadFile = `${uploadFile}?bussId=${this.questionForm.id}`
+      }
+      return this.uploadFile
+    }
+  },
+  watch: {
+    dialogShow(val) {
+      if (!val) {
+        if (this.$refs['questionForm']) {
+          this.$refs['upload'].clearFiles()
+          this.$refs['questionForm'].resetFields()
+        }
+      }
+    }
+  },
   data() {
     return {
       fileUpload: '',
-      archive_id: 2
+      archive_id: 2,
+      userList: [],
+      loading: false
     }
   },
   methods: {
     ...mapMutations({
       closeDialog: 'question/toggleDialog',
-      closeDetail: 'question/closeDetail'
+      closeDetail: 'question/closeDetail',getList: 'question/refreshList'
     }),
+    remoteMethod(query) {
+      if (query !== ''  ) {
+        this.loading = true
+        queryTermPerson({
+          pageIndex: 1,
+          name: query
+        }).then(res => {
+          this.loading = false
+          const data = res.data
+          if(data.success) {
+            this.userList = data.data
+          }
+        })
+      } else {
+        this.userList = []
+      }
+    },
     successUpload(response, file, fileList) {
       console.log(file)
       console.log(fileList)

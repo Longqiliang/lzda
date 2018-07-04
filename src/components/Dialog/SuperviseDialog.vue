@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible.sync="dialogTableVisible" width="40%" center :before-close="closeDialog">
+  <el-dialog :visible.sync="dialogTableVisible" width="600px" center :before-close="closeDialog" v-el-drag-dialog>
     <div slot="title">
       <template v-if="status === 'create'">
         <el-select v-model="recordSelect" placeholder="请选择档案名称">
@@ -30,9 +30,13 @@ import {
   SuperviseForm3
 } from '@/components/Form/Supervise/index'
 import { mapState, mapActions, mapMutations } from 'vuex'
+import elDragDialog from '@/directive/el-dragDialog'
 
 export default {
   name: 'SuperviseDialog',
+  directives: {
+    elDragDialog
+  },
   components: {
     SuperviseForm1,
     SuperviseForm2,
@@ -44,7 +48,7 @@ export default {
       status: state => state.supervise.status,
       type: state => state.supervise.superviseForm,
       formVal: state => state.supervise.formVal,
-      user:state => state.app.info
+      user: state => state.app.info
     }),
     recordSelect: {
       get() {

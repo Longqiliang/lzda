@@ -2,11 +2,12 @@
   <div class="tab-search">
     <div class="search-group">
       <span class="input-label">单位：</span>
-      <el-select v-model="selectVal" @change="handleChange" size="small">
+      <el-cascader placeholder="请输入" :options="options" :props="organizesProps" :clearable="true" filterable change-on-select @change="handleChange"></el-cascader>
+      <!-- <el-select v-model="selectVal" @change="handleChange" size="small">
         <el-option v-for="item in options" :key="item.value" :label="item.value" :value="item.value"></el-option>
-      </el-select>
+      </el-select> -->
       <span class="input-label">姓名：</span>
-      <el-input v-model="input"></el-input>
+      <el-input v-model="name"></el-input>
       <div class="search-button inline">
         <el-button icon="el-icon-search" @click="handleSearch">查询</el-button>
       </div>
@@ -15,24 +16,69 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'TableSearch',
   props: {
-    options: {
-      type: Array
-    },
-    selectVal: ''
+    selectVal: '',
+    deptId: {
+      type: String
+    }
+  },
+  computed: {
+    ...mapGetters({
+      options: 'organizes'
+    })
   },
   data() {
-    return {
-      input: ''
+    return { 
+      organizesProps: {
+        label: 'name',
+        children: 'children',
+        value: 'id'
+      },
+      name: null,
+      dept_id: null,
+      unitId: null,
+      path: null
+    }
+  },
+  watch: {
+    $route() {
+      this.getRoute()
     }
   },
   methods: {
-    handleChange() {
-      console.log(this.selectVal)
+    getRoute() {
+      let matched = this.$route.matched.filter(item => item.path)
+      let first = matched[0].path
+      this.path = first
     },
-    handleSearch() {}
+    handleChange(val) {
+      if(val.length) {
+        this.unitId = val[0]
+        if(val.length > 1) {
+          this.dept_id = val[1]
+        }else {
+          this.dept_id = null
+        }
+      }else {
+        this.unitId = null
+        this.dept_id = null
+      }
+    },
+    handleSearch() {
+      const query = {
+        unitId: this.unitId,
+        deptId: this.dept_id,
+        name: this.name
+      }
+      this.$router.push({
+          path: this.path,
+          query: query
+        })
+    }
   }
 }
 </script>

@@ -4,10 +4,10 @@
       {{personInfo[0].name}}的廉政档案
     </span>
     <h4 class="detail-tit">1.基本情况</h4>
-    <el-table :data="personInfo" border>
+    <el-table :data="personInfo" border class="detail-table">
       <el-table-column label="身份证" align="center" prop="idcard" min-width="170"></el-table-column>
-      <el-table-column label="出生日期" align="center" prop="borntime"></el-table-column>
-      <el-table-column label="年龄" align="center"></el-table-column>
+      <el-table-column label="出生日期" align="center" prop="borntime" min-width="100"></el-table-column>
+      <el-table-column label="年龄" align="center" prop="age"></el-table-column>
       <el-table-column label="籍贯" align="center" prop="origin"></el-table-column>
       <el-table-column label="学历" align="center" prop="education"></el-table-column>
       <el-table-column label="政治面貌" align="center" prop="politicalstatus"></el-table-column>
@@ -18,7 +18,7 @@
     <h4 class="detail-tit">2.廉政电子档案</h4>
     <el-table :data="recordList" border>
       <el-table-column label="档案名称" prop="archive_name" min-width="180"></el-table-column>
-      <el-table-column label="备注" align="center"></el-table-column>
+      <el-table-column label="备注" align="center" prop="remark"></el-table-column>
       <el-table-column label="建档日期" align="center" sortable min-width="140" prop="create_time" :formatter="createTimeFormatter">
         <!-- <template slot-scope="scope" v-if="scope.row.create_time">
           {{scope.row.create_time | parseTime('{y}-{m}-{d}')}}
@@ -29,7 +29,7 @@
           {{scope.row.update_time | parseTime('{y}-{m}-{d}')}}
         </template> -->
       </el-table-column>
-      <el-table-column label="上报日期" prop="cadrs" align="center"></el-table-column>
+      <el-table-column label="上报日期" align="center" sortable min-width="140" prop="create_time" :formatter="createTimeFormatter"></el-table-column>
       <el-table-column label="操作" align="center" min-width="140">
         <template slot-scope="scope">
           <el-button type="text" @click="handleChange(scope.row,'update')">修改</el-button>
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { queryRecordDetails } from '@/api/article'
+import { queryRecordDetails, deleteRecord } from '@/api/article'
 import { parseTime } from '@/filter'
 import { createNamespacedHelpers } from 'vuex'
 
@@ -74,7 +74,8 @@ export default {
       setQuestionForm: 'setQuestionForm',
       setFormVal: 'setFormVal',
       closeDetail: 'closeDetail',
-      toggleDetail: 'toggleDetail'
+      toggleDetail: 'toggleDetail',
+      getList: 'refreshList'
     }),
     createTimeFormatter(row, column) {
       if (row.create_time) {
@@ -85,11 +86,6 @@ export default {
       if (row.update_time) {
         return parseTime(row.update_time, '{y}-{m}-{d}')
       }
-    },
-    getRecordList() {},
-    handleCreate() {
-      this.setStatus('create')
-      this.toggleDialog()
     },
     handleChange(row,status) {
       let query = {
@@ -110,9 +106,6 @@ export default {
         }
       })
     },
-    handleLook(row) {
-
-    },
     handleRemove(row) {
       let query = {
         id: row.id,
@@ -127,12 +120,14 @@ export default {
           deleteRecord(query)
             .then(res => {
               let data = res.data
+              console.log(data)
               if (data.success) {
                 this.$message({
                   type: 'success',
                   message: '删除成功!'
                 })
-                this.getPersonList()
+                this.getList()
+                this.closeDetail()
               } else {
                 this.$message({
                   type: 'error',
@@ -140,16 +135,16 @@ export default {
                 })
               }
             })
-            .catch(res => {
-              this.$message({
-                type: 'error',
-                message: '删除失败，请重试!'
-              })
+            .catch(err => {
+              console.log(err)
+              // this.$message({
+              //   type: 'error',
+              //   message: '删除失败，请重试!'
+              // })
             })
         })
         .catch(() => {})
-    },
-    handleLook() {}
+    }
   }
 }
 </script>

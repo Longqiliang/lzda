@@ -3,24 +3,50 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="姓名">
-          <el-input v-model="reportForm.name"></el-input>
+          <template v-if="status === 'create'">
+            <el-select v-model="reportForm.person_id" filterable remote :remote-method="remoteMethod" :loading="loading">
+              <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
+          </template>
+          <template v-else>
+            <span>{{reportForm.name}}</span>
+          </template>
         </el-form-item>
+
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="身份证号码">
-          <el-input v-model="reportForm.id_card"></el-input>
+          <template v-if="status === 'create'">
+            <span class="txt-number">{{reportForm.person_id | showInfo(userList, 'idcard')}}</span>
+          </template>
+          <template v-else>
+            <span>{{reportForm.id_card}}</span>
+          </template>
+
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
         <el-form-item label="工作单位">
-          <el-input v-model="reportForm.unit_name"></el-input>
+          <template v-if="status === 'create'">
+            <span>{{reportForm.person_id | showInfo(userList, 'unitname')}}</span>
+          </template>
+          <template v-else>
+            <span>{{reportForm.unit_name}}</span>
+          </template>
+
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="职务">
-          <el-input v-model="reportForm.position"></el-input>
+          <template v-if="status === 'create'">
+            <span>{{reportForm.person_id | showInfo(userList, 'position')}}</span>
+          </template>
+          <template v-else>
+            <span>{{reportForm.position}}</span>
+          </template>
+
         </el-form-item>
       </el-col>
     </el-row>
@@ -33,7 +59,7 @@
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="时任职务">
-          <el-input v-model="reportForm.position"></el-input>
+          <el-input v-model="reportForm.duty"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -70,6 +96,8 @@
 </template>
 
 <script>
+import { uploadFile, addRecord, updateRecord, queryTermPerson } from '@/api/article'
+import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
   name: 'ReportForm2',
   props: {
@@ -117,15 +145,57 @@ export default {
           archive_id: ''
         }
       }
+    },
+    user: {
+      type: Array
+    },
+    status: {
+      type: String,
+      default: 'create'
     }
   },
   data() {
     return {
       fileUpload: '',
-      archive_id: 10
+      archive_id: 10,
+      userList:[],
+      loading: false
     }
   },
+  filters: {
+    showInfo(id, user, arg) {
+      if (!id) {
+        return
+      }
+      const item = user.find(item => {
+        return item.id === id
+      })
+      return item[arg]
+    }
+  },
+  
   methods: {
+    ...mapMutations({
+      closeDialog: 'report/toggleDialog',
+      closeDetail: 'report/closeDetail',getList: 'report/refreshList'
+    }),
+    remoteMethod(query) {
+      if (query !== ''  ) {
+        this.loading = true
+        queryTermPerson({
+          pageIndex: 1,
+          name: query
+        }).then(res => {
+          this.loading = false
+          const data = res.data
+          if(data.success) {
+            this.userList = data.data
+          }
+        })
+      } else {
+        this.userList = []
+      }
+    },
     successUpload(response, file, fileList) {
       console.log(file)
       console.log(fileList)
@@ -145,9 +215,9 @@ export default {
       let param = {
         archive_id: this.archive_id
       }
-      let query = Object.assign(this.questionForm, param)
-      console.log(query)
-      return
+      let query = Object.assign(this.reportForm, param)
+      // console.log(query)
+      // return
       addRecord(query)
         .then(res => {
           const data = res.data
@@ -158,6 +228,9 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.getList()
+            this.closeDialog()
+            this.closeDetail()
           } else {
             this.$notify({
               title: '失败',
@@ -180,7 +253,7 @@ export default {
       let param = {
         archive_id: this.archive_id
       }
-      let query = Object.assign(this.questionForm, param)
+      let query = Object.assign(this.reportForm, param)
       updateRecord(query).then(res => {
         const data = res.data
         if (data.success) {
@@ -190,6 +263,9 @@ export default {
             type: 'success',
             duration: 2000
           })
+          this.getList()
+          this.closeDialog()
+          this.closeDetail()
         } else {
           this.$notify({
             title: '失败',

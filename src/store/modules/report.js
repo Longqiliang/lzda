@@ -5,8 +5,9 @@ const state = {
   detailShow: false,
   status: 'create',
   reportForm: 8,
-  formVal: {},
-  tableVal: null
+  formVal: null,
+  tableVal: null,
+  success: false
 }
 
 const mutations = {
@@ -30,6 +31,12 @@ const mutations = {
   },
   setTableVal(state, val) {
     state.tableVal = val
+  },
+  refreshList() {
+    state.success = true
+  },
+  errorList() {
+    state.success = false
   }
 }
 

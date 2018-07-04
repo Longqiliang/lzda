@@ -4,8 +4,8 @@
       <el-col :span="11">
         <el-form-item label="姓名">
           <template v-if="status === 'create'">
-            <el-select v-model="questionForm.person_id" filterable >
-              <el-option v-for="item in user" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-select v-model="questionForm.person_id" filterable remote :remote-method="remoteMethod" :loading="loading">
+              <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </template>
           <template v-else>
@@ -17,10 +17,10 @@
       <el-col :span="11" :offset="1">
         <el-form-item label="身份证号码">
           <template v-if="status === 'create'">
-            <span class="txt-number">{{questionForm.person_id | showInfo(user, 'idcard')}}</span>
+            <span class="txt-number">{{questionForm.person_id | showInfo(userList, 'idcard')}}</span>
           </template>
           <template v-else>
-            <span>{{questionForm.idcard}}</span>
+            <span>{{questionForm.id_card}}</span>
           </template>
 
         </el-form-item>
@@ -30,10 +30,10 @@
       <el-col :span="11">
         <el-form-item label="工作单位">
           <template v-if="status === 'create'">
-            <span>{{questionForm.person_id | showInfo(user, 'unitname')}}</span>
+            <span>{{questionForm.person_id | showInfo(userList, 'unitname')}}</span>
           </template>
           <template v-else>
-            <span>{{questionForm.unitname}}</span>
+            <span>{{questionForm.unit_name}}</span>
           </template>
 
         </el-form-item>
@@ -41,7 +41,7 @@
       <el-col :span="11" :offset="1">
         <el-form-item label="职务">
           <template v-if="status === 'create'">
-            <span>{{questionForm.person_id | showInfo(user, 'position')}}</span>
+            <span>{{questionForm.person_id | showInfo(userList, 'position')}}</span>
           </template>
           <template v-else>
             <span>{{questionForm.position}}</span>
@@ -52,41 +52,34 @@
     </el-row>
     <el-row>
       <el-col :span="11">
-        <el-form-item label="问题线索来源">
-          <el-input v-model="questionForm.rules_source"></el-input>
+        <el-form-item label="线索来源">
+          <el-input :readonly="readonlyStatus" v-model="questionForm.rules_source"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
-        <el-form-item label="线索受理时间">
+        <el-form-item label="收件时间">
           <el-date-picker type="date" placeholder="选择日期" v-model="questionForm.accept_time" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
-        <el-form-item label="问题摘要">
-          <el-input v-model="questionForm.problem_summary"></el-input>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="23">
-        <el-form-item label="问题线索来源单位或反映人">
-          <el-input v-model="questionForm.source_unit"></el-input>
+        <el-form-item label="内容摘要">
+          <el-input :readonly="readonlyStatus" v-model="questionForm.problem_summary"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
         <el-form-item label="调查情况（基本事实摘要）">
-          <el-input type="textarea" :autosize="{ minRows: 2 }" v-model="questionForm.investigation"></el-input>
+          <el-input :readonly="readonlyStatus" type="textarea" :autosize="{ minRows: 2 }" v-model="questionForm.investigation"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
-        <el-form-item label="承办单位">
-          <el-input v-model="questionForm.organizer"></el-input>
+        <el-form-item label="承办部门">
+          <el-input :readonly="readonlyStatus" v-model="questionForm.organizer"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
@@ -97,16 +90,16 @@
     </el-row>
     <el-row>
       <el-col :span="11">
-        <el-form-item label="属实程度">
-          <el-select v-model="questionForm.true_degree">
+        <el-form-item label="查处情况">
+          <el-select :disable="readonlyStatus" v-model="questionForm.true_degree">
             <el-option v-for="degree in true_degree" :key="degree.label" :label="degree.label" :value="degree.label"></el-option>
           </el-select>
-          <!-- <el-input v-model="questionForm.true_degree"></el-input> -->
+          <!-- <el-input :readonly="readonlyStatus" v-model="questionForm.true_degree"></el-input> -->
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
-        <el-form-item label="存在问题类型">
-          <el-input v-model="questionForm.problem_type"></el-input>
+        <el-form-item label="线索类型/违纪类型" label-width="140px">
+          <el-input :readonly="readonlyStatus" v-model="questionForm.problem_type"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -128,31 +121,22 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="四种形态类型">
-          <el-input v-model="questionForm.shape_type"></el-input>
+          <el-input :readonly="readonlyStatus" v-model="questionForm.shape_type"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
-        <el-form-item label="通报曝光情况">
-          <el-input v-model="questionForm.exposure_situation"></el-input>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="11">
-        <el-form-item label="通报曝光类型">
-          <el-input v-model="questionForm.exposure_type"></el-input>
-        </el-form-item>
-      </el-col>
-      <el-col :span="11" :offset="1">
-        <el-form-item label="通报曝光范围">
-          <el-input v-model="questionForm.exposure_scope"></el-input>
+        <el-form-item label="处置方式">
+          <el-select v-model="questionForm.disposing_type" placeholder="" :disabled="readonlyStatus">
+            <el-option v-for="dt in disposing_type" :key="dt.label" :label="dt.label" :value="dt.label"></el-option>
+          </el-select>
+          <!-- <el-input :readonly="readonlyStatus" v-model="questionForm.shape_type"></el-input> -->
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
-        <el-form-item label="处理情况">
-          <el-input v-model="questionForm.handle_situation"></el-input>
+        <el-form-item label="办理情况">
+          <el-input :readonly="readonlyStatus" v-model="questionForm.handle_situation"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -160,12 +144,12 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="处理机关">
-          <el-input v-model="questionForm.handle_agency"></el-input>
+          <el-input :readonly="readonlyStatus" v-model="questionForm.handle_agency"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="处分文号">
-          <el-input v-model="questionForm.publish_number"></el-input>
+          <el-input :readonly="readonlyStatus" v-model="questionForm.publish_number"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -200,8 +184,13 @@
 </template>
 
 <script>
-import { addRecord, updateRecord } from '@/api/article'
-import { mapState, mapActions, mapMutations } from 'vuex'
+import {
+  uploadFile,
+  addRecord,
+  updateRecord,
+  queryTermPerson
+} from '@/api/article'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'QuestionForm3',
@@ -217,62 +206,62 @@ export default {
       type: Object,
       default() {
         return {
-            born_time: "", 
-            education: "", 
-            completion_time: "", 
-            problem_summary: "", 
-            record_number: "", 
-            filing_time: "", 
-            file_type: "", 
-            rank: "", 
-            id: "", 
-            exposure_situation: "", 
-            publish_starttime: "", 
-            person_id: "", 
-            fileid: "", 
-            create_user_id: "", 
-            ethnic: "", 
-            create_time: "", 
-            rules_source: "", 
-            exposure_type: "", 
-            publish_endtime: "", 
-            cell_phone: "", 
-            unit_name: "", 
-            rules_source_people: "", 
-            file_id: "", 
-            name: "", 
-            shape_type: "", 
-            problem_type: "", 
-            position: "", 
-            work_time: "", 
-            flag: "", 
-            origin: "", 
-            id_card: "", 
-            handle_situation: "", 
-            remark: "", 
-            exposure_scope: "", 
-            update_time: "", 
-            political_status: "", 
-            personid: "", 
-            true_degree: "", 
-            unit_id: "", 
-            accept_time: "", 
-            archive_type_name: "", 
-            join_work_time: "", 
-            address: "", 
-            file_name: "", 
-            sex: "", 
-            dept_name: "", 
-            contact_number: "", 
-            file_size: "", 
-            archive_name: "", 
-            organizer: "", 
-            investigation: "", 
-            handle_agency: "", 
-            dept_id: "", 
-            archive_id: "", 
-            rules_source_unit: "", 
-            publish_number: ""
+          born_time: '',
+          education: '',
+          completion_time: '',
+          problem_summary: '',
+          record_number: '',
+          filing_time: '',
+          file_type: '',
+          rank: '',
+          id: '',
+          exposure_situation: '',
+          publish_starttime: '',
+          person_id: '',
+          fileid: '',
+          create_user_id: '',
+          ethnic: '',
+          create_time: '',
+          rules_source: '',
+          exposure_type: '',
+          publish_endtime: '',
+          cell_phone: '',
+          unit_name: '',
+          rules_source_people: '',
+          file_id: '',
+          name: '',
+          shape_type: '',
+          problem_type: '',
+          position: '',
+          work_time: '',
+          flag: '',
+          origin: '',
+          id_card: '',
+          handle_situation: '',
+          remark: '',
+          exposure_scope: '',
+          update_time: '',
+          political_status: '',
+          personid: '',
+          true_degree: '',
+          unit_id: '',
+          accept_time: '',
+          archive_type_name: '',
+          join_work_time: '',
+          address: '',
+          file_name: '',
+          sex: '',
+          dept_name: '',
+          contact_number: '',
+          file_size: '',
+          archive_name: '',
+          organizer: '',
+          investigation: '',
+          handle_agency: '',
+          dept_id: '',
+          archive_id: '',
+          rules_source_unit: '',
+          publish_number: ''
         }
       }
     }
@@ -288,7 +277,34 @@ export default {
       return item[arg]
     }
   },
-  inject: ['getList'],
+  computed: {
+    ...mapState({
+      dialogShow: state => state.question.dialogShow
+    }),
+    readonlyStatus() {
+      if (this.status === 'detail') {
+        return true
+      } else {
+        return false
+      }
+    },
+    uploadUrl() {
+      if (this.questionForm.id) {
+        this.uploadFile = `${uploadFile}?bussId=${this.questionForm.id}`
+      }
+      return this.uploadFile
+    }
+  },
+  watch: {
+    dialogShow(val) {
+      if (!val) {
+        if (this.$refs['questionForm']) {
+          this.$refs['upload'].clearFiles()
+          this.$refs['questionForm'].resetFields()
+        }
+      }
+    }
+  },
   data() {
     return {
       fileUpload: '',
@@ -306,14 +322,48 @@ export default {
         {
           label: '不属实'
         }
-      ]
+      ],
+      disposing_type: [
+        {
+          label: '谈话函询'
+        },
+        {
+          label: '初步核实'
+        },
+        {
+          label: '疑存待查'
+        },
+        {
+          label: '予以了结'
+        }
+      ],
+      userList: [],
+      loading: false
     }
   },
   methods: {
     ...mapMutations({
       closeDialog: 'question/toggleDialog',
-      closeDetail: 'question/closeDetail'
+      closeDetail: 'question/closeDetail',
+      getList: 'question/refreshList'
     }),
+    remoteMethod(query) {
+      if (query !== '') {
+        this.loading = true
+        queryTermPerson({
+          pageIndex: 1,
+          name: query
+        }).then(res => {
+          this.loading = false
+          const data = res.data
+          if (data.success) {
+            this.userList = data.data
+          }
+        })
+      } else {
+        this.userList = []
+      }
+    },
     successUpload(response, file, fileList) {
       console.log(file)
       console.log(fileList)

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible.sync="dialogTableVisible" width="40%" center :before-close="closeDialog">
+  <el-dialog :visible.sync="dialogTableVisible" width="700px" center :before-close="closeDialog" v-el-drag-dialog>
     <div slot="title">
       <template v-if="status === 'create'">
         <el-select v-model="recordSelect" placeholder="请选择档案名称">
@@ -8,7 +8,12 @@
       </template>
       <div class="form-tit">{{titleChange}}</div>
     </div>
-    <component :is="formComponent" :user="user" :status="status" ref="children" :reportForm="formVal"></component>
+    <template v-if="status === 'create'">
+      <component :is="formComponent" :user="user" :status="status" ref="children"></component>
+    </template>
+    <template v-else>
+      <component :is="formComponent" :user="user" :status="status" ref="children" :reportForm="formVal"></component>
+    </template>
     <div slot="footer" class="dialog-footer">
       <template v-if="status === 'create'">
         <el-button type="primary" @click="handleCreate">保 存</el-button>
@@ -42,13 +47,16 @@ import {
   ReportForm4,
   ReportForm5,
   ReportForm6,
-  ReportForm7,
-  ReportForm8
+  ReportForm7
 } from '@/components/Form/Report/index'
 import { mapState, mapActions, mapMutations } from 'vuex'
+import elDragDialog from '@/directive/el-dragDialog'
 
 export default {
   name: 'ReportDialog',
+  directives: {
+    elDragDialog
+  },
   components: {
     ReportForm1,
     ReportForm2,
@@ -56,8 +64,7 @@ export default {
     ReportForm4,
     ReportForm5,
     ReportForm6,
-    ReportForm7,
-    ReportForm8
+    ReportForm7
   },
   computed: {
     ...mapState({
@@ -65,7 +72,7 @@ export default {
       status: state => state.report.status,
       type: state => state.report.reportForm,
       formVal: state => state.report.formVal,
-      user:state => state.app.info
+      user: state => state.app.info
     }),
     recordSelect: {
       get() {
@@ -121,11 +128,6 @@ export default {
           name: '丧事办理报告表',
           archive_id: 13,
           type: 7
-        },
-        {
-          name: '社区党委领导干部个人有关事项报告表',
-          archive_id: 18,
-          type: 8
         }
       ]
     }

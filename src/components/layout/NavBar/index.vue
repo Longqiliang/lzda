@@ -40,7 +40,7 @@ export default {
     float: left;
     margin: 0;
     font-size: 18px;
-    padding: 0 15px;
+    padding: 0 1%;
     height: 40px;
     line-height: 40px;
     &.is-active {

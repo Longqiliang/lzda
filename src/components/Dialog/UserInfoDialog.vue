@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="个人信息" :visible.sync="DialogVisible" width="40%" center :before-close="closeDialog">
+  <el-dialog title="个人信息" :visible.sync="DialogVisible" width="600px" center :before-close="closeDialog" v-el-drag-dialog>
     <el-form :model="formVal" size="mini" label-width="100px" label-position="left" class="demo-form-inline" :rules="rules" :disabled="formStatus" ref="dataForm">
       <el-row>
         <el-col :span="11">
@@ -71,7 +71,7 @@
         </el-col>
         <el-col :span="11" :offset="1">
           <el-form-item label="任现职时间" prop="worktime">
-            <el-input-number v-model="formVal.worktime"></el-input-number> 年
+            <el-input-number v-model="formVal.worktime" :min="1"></el-input-number> 年
             <!-- <el-date-picker type="date" placeholder="选择日期" v-model="formVal.worktime" style="width: 100%;"></el-date-picker> -->
           </el-form-item>
         </el-col>
@@ -116,15 +116,16 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
+      <!-- <el-row>
         <el-col :span="23">
-          <el-form-item label="附件">
-            <el-upload action="/" ref="upload" :on-error="errorUpload">
-              <el-button>上传附件</el-button>
+          <el-form-item label="头像上传">
+            <el-upload :action="action" ref="upload" :show-file-list="false" :on-error="errorUpload" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
         </el-col>
-      </el-row>
+      </el-row> -->
     </el-form>
     <div slot="footer" class="dialog-footer">
       <template v-if="status === 'create'">
@@ -136,20 +137,24 @@
         <el-button @click="closeDialog">取 消</el-button>
       </template>
       <template v-else-if="status === 'detail'">
-        <el-button type="primary" @click="closeDialog">预 览</el-button>
+        <!-- <el-button type="primary" @click="closeDialog">预 览</el-button>
         <el-button @click="closeDialog">导 出</el-button>
-        <el-button @click="closeDialog">关 闭</el-button>
+        <el-button @click="closeDialog">关 闭</el-button> -->
       </template>
     </div>
   </el-dialog>
 </template>
 
 <script>
-import { addPerson, updatePerson } from '@/api/article'
+import { imageUpload, addPerson, updatePerson } from '@/api/article'
 import { mapGetters } from 'vuex'
+import elDragDialog from '@/directive/el-dragDialog'
 
 export default {
   name: 'UserInfoDialog',
+  directives: {
+    elDragDialog
+  },
   props: {
     formVal: {
       type: Object,
@@ -297,13 +302,15 @@ export default {
             trigger: 'blur'
           }
         ]
-      }
+      },
+      imageUrl: '',
+      action: imageUpload
     }
   },
   watch: {
     status() {
       if (this.$refs['dataForm']) {
-        this.clearValidate()
+        this.$refs['dataForm'].clearValidate()
       }
     }
   },
@@ -388,8 +395,17 @@ export default {
         }
       })
     },
-    successUpload(response, file, fileList) {
-      console.log(response, file, fileList)
+    handleAvatarSuccess(res, file) {},
+    beforeAvatarUpload(file) {
+      const isImage = file.type.startsWith('image/')
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (!isImage) {
+        this.$message.error('请上传图片!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isImage && isLt2M
     },
     errorUpload(err, file, fileList) {
       console.log(err, file, fileList)
@@ -398,6 +414,29 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+}
+.avatar {
+  width: 100px;
+  height: 100px;
+  display: block;
+}
 </style>
+

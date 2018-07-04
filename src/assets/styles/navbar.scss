@@ -1,5 +1,41 @@
 .content-view{
   min-height: 120px;
+  .content-btn{
+    display: inline-flex;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    background: $view-color;
+    border: 1px solid $view-color;
+    color: #fff;
+    -webkit-appearance: none;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    outline: 0;
+    margin: 0;
+    -webkit-transition: .1s;
+    transition: .1s;
+    padding: 6px 12px;
+    font-size: 15px;
+    border-radius: 4px;
+    font-weight: bold;
+    align-items: center;
+    i{
+      margin-right: 5px;
+      color: inherit;
+      font-size: 20px;
+      font-weight: normal;
+    }
+  }
+  .content-nav{
+    float: right;
+    display: flex;
+    flex-direction: column;
+  }
+  .content-row{
+    padding: 0 10px;
+  }
 }
 .content-menu {
   list-style: none;
@@ -7,8 +43,7 @@
   margin: 0;
   padding-left: 0;
   color: #333;
-  float: right;
-  padding-right: 12%;
+  padding-right: 15vw;
   &::before,&::after{
     content: '';
     display: table;

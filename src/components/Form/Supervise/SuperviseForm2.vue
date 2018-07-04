@@ -4,8 +4,8 @@
       <el-col :span="11">
         <el-form-item label="姓名">
           <template v-if="status === 'create'">
-            <el-select v-model="superviseForm.person_id" filterable>
-              <el-option v-for="item in user" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-select v-model="superviseForm.person_id" filterable remote :remote-method="remoteMethod" :loading="loading">
+              <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </template>
           <template v-else>
@@ -16,10 +16,10 @@
       <el-col :span="11" :offset="1">
         <el-form-item label="身份证号码">
           <template v-if="status === 'create'">
-            <span>{{superviseForm.person_id | showInfo(user, 'idcard')}}</span>
+            <span>{{superviseForm.person_id | showInfo(userList, 'idcard')}}</span>
           </template>
           <template v-else>
-            <span>{{superviseForm.idcard}}</span>
+            <span>{{superviseForm.id_card}}</span>
           </template>
         </el-form-item>
       </el-col>
@@ -28,17 +28,17 @@
       <el-col :span="11">
         <el-form-item label="工作单位">
           <template v-if="status === 'create'">
-            <span>{{superviseForm.person_id | showInfo(user, 'unitname')}}</span>
+            <span>{{superviseForm.person_id | showInfo(userList, 'unitname')}}</span>
           </template>
           <template v-else>
-            <span>{{superviseForm.unitname}}</span>
+            <span>{{superviseForm.unit_name}}</span>
           </template>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="职务">
           <template v-if="status === 'create'">
-            <span>{{superviseForm.person_id | showInfo(user, 'position')}}</span>
+            <span>{{superviseForm.person_id | showInfo(userList, 'position')}}</span>
           </template>
           <template v-else>
             <span>{{superviseForm.position}}</span>
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { addRecord, updateRecord } from '@/api/article'
+import { uploadFile, addRecord, updateRecord, queryTermPerson } from '@/api/article'
 import { createNamespacedHelpers } from 'vuex'
 
 const { mapState, mapActions, mapMutations } = createNamespacedHelpers(
@@ -145,7 +145,9 @@ export default {
   data() {
     return {
       fileUpload: '',
-      archive_id: 16
+      archive_id: 16,
+      userList:[],
+      loading: false
     }
   },
   methods: {
@@ -153,6 +155,23 @@ export default {
       closeDialog: 'toggleDialog',
       closeDetail: 'closeDetail'
     }),
+    remoteMethod(query) {
+      if (query !== ''  ) {
+        this.loading = true
+        queryTermPerson({
+          pageIndex: 1,
+          name: query
+        }).then(res => {
+          this.loading = false
+          const data = res.data
+          if(data.success) {
+            this.userList = data.data
+          }
+        })
+      } else {
+        this.userList = []
+      }
+    },
     successUpload(response, file, fileList) {
       console.log(file)
       console.log(fileList)

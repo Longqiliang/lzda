@@ -4,10 +4,10 @@
       {{personInfo[0].name}}的廉政档案
     </span>
     <h4 class="detail-tit">1.基本情况</h4>
-    <el-table :data="personInfo" border>
+    <el-table :data="personInfo" border class="detail-table">
       <el-table-column label="身份证" align="center" prop="idcard" min-width="170"></el-table-column>
       <el-table-column label="出生日期" align="center" prop="borntime"></el-table-column>
-      <el-table-column label="年龄" align="center"></el-table-column>
+      <el-table-column label="年龄" align="center" prop="age"></el-table-column>
       <el-table-column label="籍贯" align="center" prop="origin"></el-table-column>
       <el-table-column label="学历" align="center" prop="education"></el-table-column>
       <el-table-column label="政治面貌" align="center" prop="politicalstatus"></el-table-column>
@@ -43,13 +43,11 @@
 </template>
 
 <script>
-import { queryRecordDetails } from '@/api/article'
+import { queryRecordDetails, deleteRecord } from '@/api/article'
 import { parseTime } from '@/filter'
 import { createNamespacedHelpers } from 'vuex'
 
-const { mapState, mapActions, mapMutations } = createNamespacedHelpers(
-  'report'
-)
+const { mapState, mapActions, mapMutations } = createNamespacedHelpers('report')
 
 export default {
   name: 'ReportDetail',
@@ -62,7 +60,7 @@ export default {
     }
   },
   created() {},
-  computed:{
+  computed: {
     ...mapState({
       detailShow: 'detailShow'
     })
@@ -91,7 +89,7 @@ export default {
       this.setStatus('create')
       this.toggleDialog()
     },
-    handleChange(row,status) {
+    handleChange(row, status) {
       let query = {
         archive_type_id: row.archive_type_id,
         person_id: row.person_id,
@@ -100,19 +98,16 @@ export default {
       }
       queryRecordDetails(query).then(res => {
         const data = res.data
-        if(data.success) {
+        if (data.success) {
           this.setReportForm(row.archiveid)
           this.setFormVal(data.data)
           this.setStatus(status)
           this.toggleDialog()
         } else {
-         
         }
       })
     },
-    handleLook(row) {
-
-    },
+    handleLook(row) {},
     handleRemove(row) {
       let query = {
         id: row.id,
@@ -140,11 +135,8 @@ export default {
                 })
               }
             })
-            .catch(res => {
-              this.$message({
-                type: 'error',
-                message: '删除失败，请重试!'
-              })
+            .catch(err => {
+              console.log(err)
             })
         })
         .catch(() => {})

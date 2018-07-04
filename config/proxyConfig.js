@@ -1,9 +1,9 @@
 module.exports = {
   proxyList: {
-    '/api': {
-      target: 'http://192.168.0.107:80',
+    '/lzda': {
+      target: 'http://192.168.0.107:8080',
       changeOrigin: true,
-      pathRewrite: {'^/api': '/lzda' }
+      pathRewrite: {'^/lzda': '/lzda' }
     }
   }
 }

@@ -1,0 +1,72 @@
+.dashboard-editor-container {
+  padding: 20px 20px 0;
+  width: 100%;
+  height: 100%;
+  >.el-row {
+    height: 50%;
+    min-height: 380px;
+    .el-col {
+      height: 100%;
+    }
+  }
+  .chart-wrapper {
+    background-color: rgba(125, 0, 0, 0.2);
+    padding: 15px 15px 0;
+    margin-bottom: 30px;
+    height: calc(100% - 30px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    .chart-box {
+      flex: 1;
+    }
+    .wrapper-tit {
+      font-size: 20px;
+      margin: 0;
+      color: $black;
+      padding-left: 18px;
+      position: relative;
+      &::before {
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        content: '';
+        width: 4px;
+        height: 100%;
+        background-color: $view-color;
+      }
+    }
+    .wrapper-center{
+      height: 100%;
+      .el-table{
+        color: $black;
+        &--border {
+          border: 1px solid $black;
+          td,
+          th {
+            border-right: 1px solid $black;
+          }
+        }
+        thead {
+          color: $black;
+          font-weight: 300;
+        }
+        td {
+          border-bottom: 1px solid $black;
+          padding: 0;
+        }
+        th {
+          >.cell {
+            line-height: 23px;
+          }
+          &.is-leaf {
+            border-bottom: 1px solid $black;
+          }
+          background-color: #f0e8e1;
+          padding: 6px 0;
+        }
+      }
+    }
+  }
+}

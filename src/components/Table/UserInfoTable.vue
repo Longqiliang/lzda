@@ -1,64 +1,58 @@
 <template>
-  <div class="table">
-    <TableSearch/>
-    <div class="table-container">
-      {{type}}
-      <div class="table-tit">
-        <el-button type="danger" @click="handleCreate">新增</el-button>
-      </div>
-      <el-table :data="tableVal" border width="100%">
-        <el-table-column label="序号" prop="rowno" align="center" width="60"></el-table-column>
-        <el-table-column label="姓名" prop="name" align="center"></el-table-column>
-        <el-table-column label="单位" prop="unitname" align="center"></el-table-column>
-        <el-table-column label="部门" prop="deptname" align="center"></el-table-column>
-        <el-table-column label="身份证" prop="idcard" align="center" min-width="180"></el-table-column>
-        <el-table-column label="年龄" prop="age" align="center"></el-table-column>
-        <el-table-column label="政治面貌" prop="politicalstatus" align="center"></el-table-column>
-        <el-table-column label="职级" prop="rank" align="center"></el-table-column>
-        <el-table-column label="职务" prop="position" align="center"></el-table-column>
-        <el-table-column label="任现职时间" align="center">
-          <template slot-scope="scope">
-            <template v-if="scope.row.worktime">{{scope.row.worktime}}年</template>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" align="center" min-width="140">
-          <template slot-scope="scope">
-            <el-button type="text" @click="handleUpdate(scope.row)">修改</el-button>
-            <el-button type="text" @click="handleLook(scope.row)">详情</el-button>
-            <el-button type="text" @click="handleRemove(scope.row.id)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div class="table-footer">
-        <el-pagination background :total="total" :current-page="listQuery.pageIndex" :page-size="listQuery.pageSize" layout="total, pager, ->, jumper" @current-change="handleCurrentChange">
-        </el-pagination>
-      </div>
-      <UserInfoDialog @update-table="getPersonList" :DialogVisible.sync="dialogTableVisible" :status="dialogStatus" :formVal="formVal" />
+  <div class="table-container">
+    <el-table :data="tableVal" border width="100%">
+      <el-table-column label="序号" prop="rowno" align="center" width="60"></el-table-column>
+      <el-table-column label="姓名" prop="name" align="center"></el-table-column>
+      <el-table-column label="单位" prop="unitname" align="center" min-width="100"></el-table-column>
+      <el-table-column label="部门" prop="deptname" align="center" min-width="100"></el-table-column>
+      <el-table-column label="身份证" prop="idcard" align="center" min-width="180"></el-table-column>
+      <el-table-column label="年龄" prop="age" align="center"></el-table-column>
+      <el-table-column label="政治面貌" prop="politicalstatus" align="center"></el-table-column>
+      <el-table-column label="职级" prop="rank" align="center"></el-table-column>
+      <el-table-column label="职务" prop="position" align="center"></el-table-column>
+      <el-table-column label="任现职时间" align="center">
+        <template slot-scope="scope">
+          <template v-if="scope.row.worktime">{{scope.row.worktime}}年</template>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" min-width="140">
+        <template slot-scope="scope">
+          <el-button type="text" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button type="text" @click="handleLook(scope.row)">详情</el-button>
+          <el-button type="text" @click="handleRemove(scope.row.id)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="table-footer">
+      <el-pagination background :total="total" :current-page="listQuery.pageIndex" :page-size="listQuery.pageSize" layout="total, pager, ->, jumper" @current-change="handleCurrentChange">
+      </el-pagination>
     </div>
   </div>
 
 </template>
 
 <script>
-import TableSearch from './TableSearch'
-import UserInfoDialog from '@/components/Dialog/UserInfoDialog'
-import { queryTermPerson, queryPerson, deletePerson } from '@/api/article'
+import { queryTermPerson, deletePerson } from '@/api/article'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'UserInfoTable',
-  components: {
-    TableSearch,
-    UserInfoDialog
-  },
-  props:{
+  props: {
     type: {
+      type: String
+    },
+    unitId: {
+      type: String
+    },
+    deptId: {
+      type: String
+    },
+    name: {
       type: String
     }
   },
+  
   created() {
-    const param = {
-    
-    }
     this.getPersonList()
   },
   data() {
@@ -98,6 +92,9 @@ export default {
   },
   computed: {},
   methods: {
+    ...mapActions({
+      getInfo: 'GetInfo'
+    }),
     getPersonList(param = {}) {
       let query = Object.assign(param, this.listQuery)
       this.loading = true
@@ -113,7 +110,10 @@ export default {
     },
     getPersonInfo(row, status) {
       this.formVal = row
-      this.formVal.organizesOptions = [this.formVal.unit_id, this.formVal.dept_id]
+      this.formVal.organizesOptions = [
+        this.formVal.unit_id,
+        this.formVal.dept_id
+      ]
       if (status) {
         this.dialogStatus = status
       }
@@ -140,7 +140,7 @@ export default {
         recordnumber: '',
         remark: '',
         unit_id: '',
-        organizesOptions:[]
+        organizesOptions: []
       }
     },
     handleCreate() {
@@ -174,6 +174,7 @@ export default {
                   message: '删除成功!'
                 })
                 this.getPersonList()
+                this.getInfo()
               } else {
                 this.$message({
                   type: 'error',

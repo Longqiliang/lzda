@@ -6,10 +6,15 @@ const state = {
   status: 'create',
   questionForm: 3,
   formVal: {},
-  tableVal: null
+  tableVal: null,
+  success: false
 }
 
 const mutations = {
+  initDialog(state) {
+    state.formVal = {},
+    state.questionForm = 3
+  },
   toggleDialog(state) {
     state.dialogShow = !state.dialogShow
   },
@@ -22,14 +27,20 @@ const mutations = {
   setStatus(state, status) {
     state.status = status
   },
-  setQuestionForm(state, type) {
-    state.questionForm = type
+  setQuestionForm(state, val) {
+    state.questionForm = val
   },
   setFormVal(state, val) {
     state.formVal = val
   },
   setTableVal(state, val) {
     state.tableVal = val
+  },
+  refreshList() {
+    state.success = true
+  },
+  errorList() {
+    state.success = false
   }
 }
 

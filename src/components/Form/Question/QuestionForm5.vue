@@ -1,31 +1,53 @@
 <template>
-  <el-form :model="questionForm" size="mini" label-width="90px" label-position="left" class="demo-form-inline">
+  <el-form :model="questionForm" size="mini" label-width="110px" label-position="left" class="demo-form-inline">
     <el-row>
       <el-col :span="11">
-        <el-form-item label="信访编号">
-          <el-input v-model="questionForm.letter_number"></el-input>
+        <el-form-item label="来源">
+          <el-select :disable="readonlyStatus" v-model="questionForm.letter_source">
+            <el-option v-for="letter in letterSelect" :key="letter.label" :label="letter.label" :value="letter.label"></el-option>
+          </el-select>
+          <!-- <el-input :readonly="readonlyStatus" v-model="questionForm.letter_source"></el-input> -->
         </el-form-item>
       </el-col>
+      
       <el-col :span="11" :offset="1">
-        <el-form-item label="信访时间">
-          <el-date-picker v-model="questionForm.letter_time" placeholder="请选择信访时间" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
+        <el-form-item label="收件日期">
+          <el-date-picker v-model="questionForm.letter_time" placeholder="请选择收件日期" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="23">
+        <el-form-item label="反映内容摘要">
+          <el-input :readonly="readonlyStatus" type="textarea" :autosize="{ minRows: 2 }" v-model="questionForm.investigation"></el-input>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="23">
+        <el-form-item label="信访件编号">
+          <el-input :readonly="readonlyStatus" v-model="questionForm.letter_number"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
-        <el-form-item label="信访来源">
-          <el-select v-model="questionForm.letter_source">
-            <el-option v-for="item in user" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
-          <!-- <el-input v-model="questionForm.letter_source"></el-input> -->
+        <el-form-item label="举报人">
+          <el-input :readonly="readonlyStatus" v-model="questionForm.name"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
-        <el-form-item label="被反映人姓名">
+        <el-form-item label="举报人电话">
+          <el-input :readonly="readonlyStatus" v-model="questionForm.cell_phone"></el-input>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="11">
+        <el-form-item label="被举报人姓名">
           <template v-if="status === 'create'">
-            <el-select v-model="questionForm.person_id" filterable >
-              <el-option v-for="item in user" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-select v-model="questionForm.person_id" filterable remote :remote-method="remoteMethod" :loading="loading">
+              <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </template>
           <template v-else>
@@ -33,12 +55,23 @@
           </template>
         </el-form-item>
       </el-col>
+      <el-col :span="11" :offset="1">
+        <el-form-item label="被举报人单位">
+
+          <template v-if="status === 'create'">
+            <span>{{questionForm.person_id | showInfo(userList, 'unitname')}}</span>
+          </template>
+          <template v-else>
+            <span>{{questionForm.unit_name}}</span>
+          </template>
+        </el-form-item>
+      </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
-        <el-form-item label="被反映人职务">
+        <el-form-item label="被举报人职务">
           <template v-if="status === 'create'">
-            <span>{{questionForm.person_id | showInfo(user, 'position')}}</span>
+            <span>{{questionForm.person_id | showInfo(userList, 'position')}}</span>
           </template>
           <template v-else>
             <span>{{questionForm.position}}</span>
@@ -46,47 +79,25 @@
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
-        <el-form-item label="被反映人单位">
-
-          <template v-if="status === 'create'">
-            <span>{{questionForm.person_id | showInfo(user, 'unitname')}}</span>
-          </template>
-          <template v-else>
-            <span>{{questionForm.unitname}}</span>
-          </template>
+        <el-form-item label="违纪或涉法类型">
+          <el-input :readonly="readonlyStatus" v-model="questionForm.discipline_type"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
-        <el-form-item label="反映人姓名">
-          <el-input v-model="questionForm.name"></el-input>
-        </el-form-item>
-      </el-col>
-      <el-col :span="11" :offset="1">
-        <el-form-item label="反映人电话">
-          <el-input v-model="questionForm.cell_phone"></el-input>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="23">
-        <el-form-item label="调查情况及结论">
-          <el-input type="textarea" :autosize="{ minRows: 2 }" v-model="questionForm.investigation"></el-input>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="23">
-        <el-form-item label="处理结果">
-          <el-input type="textarea" autosize v-model="questionForm.result"></el-input>
+        <el-form-item label="信件处置结果">
+          <el-select v-model="questionForm.result" placeholder="" :disabled="readonlyStatus">
+            <el-option v-for="re in result" :key="re.label" :label="re.label" :value="re.label"></el-option>
+          </el-select>
+          <!-- <el-input :readonly="readonlyStatus" type="textarea" autosize v-model="questionForm.result"></el-input> -->
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
         <el-form-item label="备注">
-          <el-input type="textarea" autosize v-model="questionForm.remark"></el-input>
+          <el-input :readonly="readonlyStatus" type="textarea" autosize v-model="questionForm.remark"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -95,7 +106,7 @@
         <el-form-item label="附件">
           <el-upload action="https://jsonplaceholder.typicode.com/posts/" ref="upload" :on-error="errorUpload" :on-success="successUpload" :on-remove="removeFile">
             <el-col :span="15">
-              <el-input v-model="fileUpload" readonly></el-input>
+              <el-input v-model="fileUpload" readonly ></el-input>
             </el-col>
             <el-col :span="9">
               <el-button>上传附件</el-button>
@@ -109,8 +120,8 @@
 </template>
 
 <script>
-import { addRecord, updateRecord } from '@/api/article'
-import { mapState, mapActions, mapMutations } from 'vuex'
+import { uploadFile, addRecord, updateRecord, queryTermPerson } from '@/api/article'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'QuestionForm5',
@@ -147,12 +158,39 @@ export default {
       return item[arg]
     }
   },
-  inject: ['getList'],
+  computed: {
+    ...mapState({
+      dialogShow: state => state.question.dialogShow
+    }),
+    readonlyStatus() {
+      if (this.status === 'detail') {
+        return true
+      } else {
+        return false
+      }
+    },
+    uploadUrl() {
+      if(this.questionForm.id) {
+        this.uploadFile = `${uploadFile}?bussId=${this.questionForm.id}`
+      }
+      return this.uploadFile
+    }
+  },
+  watch: {
+    dialogShow(val) {
+      if (!val) {
+        if (this.$refs['questionForm']) {
+          this.$refs['upload'].clearFiles()
+          this.$refs['questionForm'].resetFields()
+        }
+      }
+    }
+  },
   data() {
     return {
       fileUpload: '',
       archive_id: 5,
-      letter_source: [
+      letterSelect: [
         {
           label: '本机关受理'
         },
@@ -180,14 +218,40 @@ export default {
         {
           label: '乡镇纪委纪工委收信'
         }
-      ]
+      ],
+      result:[{
+        label: '属实'
+      },{
+        label: '部分属实'
+      },{
+        label: '不属实'
+      }],
+      userList: [],
+      loading: false
     }
   },
   methods: {
     ...mapMutations({
       closeDialog: 'question/toggleDialog',
-      closeDetail: 'question/closeDetail'
+      closeDetail: 'question/closeDetail',getList: 'question/refreshList'
     }),
+    remoteMethod(query) {
+      if (query !== ''  ) {
+       this.loading = true
+        queryTermPerson({
+          pageIndex: 1,
+          name: query
+        }).then(res => {
+          this.loading = false
+          const data = res.data
+          if(data.success) {
+            this.userList = data.data
+          }
+        })
+      } else {
+        this.userList = []
+      }
+    },
     successUpload(response, file, fileList) {
       console.log(file)
       console.log(fileList)

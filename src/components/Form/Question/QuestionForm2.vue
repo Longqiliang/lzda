@@ -2,10 +2,10 @@
   <el-form :model="questionForm" size="mini" label-width="90px" label-position="left" class="demo-form-inline">
     <el-row>
       <el-col :span="11">
-        <el-form-item label="姓名">
+        <el-form-item label="问责对象">
           <template v-if="status === 'create'">
-            <el-select v-model="questionForm.person_id" filterable >
-              <el-option v-for="item in user" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-select v-model="questionForm.person_id" filterable remote :remote-method="remoteMethod" :loading="loading">
+              <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </template>
           <template v-else>
@@ -17,75 +17,70 @@
       <el-col :span="11" :offset="1">
         <el-form-item label="身份证号码">
           <template v-if="status === 'create'">
-            <span class="txt-number">{{questionForm.person_id | showInfo(user, 'idcard')}}</span>
+            <span class="txt-number">{{questionForm.person_id | showInfo(userList, 'idcard')}}</span>
           </template>
           <template v-else>
-            <span>{{questionForm.idcard}}</span>
+            <span>{{questionForm.id_card}}</span>
           </template>
 
         </el-form-item>
       </el-col>
     </el-row>
-    <el-row>
-      <el-col :span="11">
-        <el-form-item label="工作单位">
-          <template v-if="status === 'create'">
-            <span>{{questionForm.person_id | showInfo(user, 'unitname')}}</span>
+    <el-row type="flex" justify="space-around">
+      <el-col :span="24">
+        <span class="form-label">问责对象工作岗位</span>
+        <template v-if="status === 'create'">
+            <span class="form-content">{{questionForm.person_id | showInfo(userList, 'unitname')}}{{questionForm.person_id | showInfo(userList, 'position')}}</span>
           </template>
           <template v-else>
-            <span>{{questionForm.unitname}}</span>
+            <span class="form-content">{{questionForm.unit_name}}{{questionForm.position}}</span>
           </template>
-
-        </el-form-item>
-      </el-col>
-      <el-col :span="11" :offset="1">
-        <el-form-item label="职务">
-          <template v-if="status === 'create'">
-            <span>{{questionForm.person_id | showInfo(user, 'position')}}</span>
-          </template>
-          <template v-else>
-            <span>{{questionForm.position}}</span>
-          </template>
-
-        </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
-        <el-form-item label="问责类型">
-          <el-cascader :options="accountType" :show-all-levels="false" v-model="questionForm.account_type"></el-cascader>
-          <!-- <el-input v-model="questionForm.account_type"></el-input> -->
+        <el-form-item label="问责情形">
+          <el-cascader :options="accountType" :show-all-levels="false" v-model="accountSelect" @change="handleChange"></el-cascader>
+          <!-- <el-input :readonly="readonlyStatus" v-model="questionForm.account_type"></el-input> -->
+
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
-        <el-form-item label="问责事由">
-          <el-input v-model="questionForm.account_cause"></el-input>
+        <el-form-item label="事由">
+          <el-input :readonly="readonlyStatus" v-model="questionForm.account_cause"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
         <el-form-item label="处理机关">
-          <el-input v-model="questionForm.account_agency"></el-input>
+          <el-input :readonly="readonlyStatus" v-model="questionForm.account_agency"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
-        <el-form-item label="问责时间">
+        <el-form-item label="印发时间">
           <el-date-picker type="date" placeholder="选择日期" v-model="questionForm.handle_time" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
-        <el-form-item label="标题">
-          <el-input v-model="questionForm.title"></el-input>
+        <el-form-item label="文号">
+          <el-input :readonly="readonlyStatus" v-model="questionForm.title"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
         <el-form-item label="问题内容">
-          <el-input type="textarea" autosize v-model="questionForm.problem_context"></el-input>
+          <el-input :readonly="readonlyStatus" type="textarea" autosize v-model="questionForm.problem_context"></el-input>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="23">
+        <el-form-item label="备注">
+          <el-input :readonly="readonlyStatus" type="textarea" :autosize="{ minRows: 3 }" v-model="questionForm.remark"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -108,8 +103,8 @@
 </template>
 
 <script>
-import { addRecord, updateRecord } from '@/api/article'
-import { mapState, mapActions, mapMutations } from 'vuex'
+import { uploadFile, addRecord, updateRecord, queryTermPerson } from '@/api/article'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'QuestionForm2',
@@ -149,7 +144,39 @@ export default {
       return item[arg]
     }
   },
-  inject: ['getList'],
+    computed: {
+    ...mapState({
+      dialogShow: state => state.question.dialogShow
+    }),
+    readonlyStatus() {
+      if (this.status === 'detail') {
+        return true
+      } else {
+        return false
+      }
+    },
+    uploadUrl() {
+      if(this.questionForm.id) {
+        this.uploadFile = `${uploadFile}?bussId=${this.questionForm.id}`
+      }
+      return this.uploadFile
+    }
+  },
+  watch: {
+    dialogShow(val) {
+      if (!val) {
+        if (this.$refs['questionForm']) {
+          this.$refs['upload'].clearFiles()
+          this.$refs['questionForm'].resetFields()
+        }
+      }
+    }
+  },
+  created() {
+    if (this.status != 'create') {
+      this.filterAccount()
+    }
+  },
   data() {
     return {
       fileUpload: '',
@@ -181,14 +208,54 @@ export default {
             { label: '纪律处分', value: '纪律处分' }
           ]
         }
-      ]
+      ],
+      accountSelect: [],
+      userList: [],
+      loading: false
     }
   },
   methods: {
     ...mapMutations({
       closeDialog: 'question/toggleDialog',
-      closeDetail: 'question/closeDetail'
+      closeDetail: 'question/closeDetail',getList: 'question/refreshList'
     }),
+    filterAccount() {
+      if (!this.questionForm.account_type) {
+        return
+      }
+      const accountObj = this.accountType.find(item =>
+        item.children.find(
+          children => children.value === this.questionForm.account_type
+        )
+      )
+      const accountChildren = accountObj.children.find(
+        children => children.value === this.questionForm.account_type
+      )
+      const arr = []
+      arr.push(accountObj.value)
+      arr.push(accountChildren.value)
+      this.accountSelect = arr
+    },
+    handleChange(array) {
+      this.questionForm.account_type = array[1]
+    },
+    remoteMethod(query) {
+      if (query !== ''  ) {
+        this.loading = true
+        queryTermPerson({
+          pageIndex: 1,
+          name: query
+        }).then(res => {
+          this.loading = false
+          const data = res.data
+          if(data.success) {
+            this.userList = data.data
+          }
+        })
+      } else {
+        this.userList = []
+      }
+    },
     successUpload(response, file, fileList) {
       console.log(file)
       console.log(fileList)
@@ -209,6 +276,7 @@ export default {
         archive_id: this.archive_id
       }
       let query = Object.assign(this.questionForm, param)
+      console.log(query)
       addRecord(query)
         .then(res => {
           const data = res.data

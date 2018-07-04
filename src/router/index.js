@@ -3,27 +3,50 @@ import Router from 'vue-router'
 import LayOut from '@/components/layout/LayOut'
 import Main from '@/components/Main/Main'
 import QuestionTable from '@/components/Table/QuestionTable'
-import UserInfoTable from '@/components/Table/UserInfoTable'
+import UserInfoMain from '@/components/Table/UserInfoMain'
 import SuperviseTable from '@/components/Table/SuperviseTable'
 import ReportTable from '@/components/Table/ReportTable'
 import IncorruptTable from '@/components/Table/IncorruptTable'
+import chart from '@/components/charts'
+import person from '@/components/person'
+import personDetail from '@/components/person/detail'
+import setting from '@/components/Setting/Setting'
 Vue.use(Router)
 
 function propsFn(route) {
   return {
-    type: route.query.id
+    unitId: route.query.unitId,
+    deptId: route.query.deptId,
+    name: route.query.name
   }
 }
 
+function portrayalPropsFn(route) {
+  return {
+    id: route.params.id,
+    name: route.query.name,
+    sex: route.query.sex,
+    rank: route.query.rank,
+    politicalstatus: route.query.politicalstatus,
+    unitname: route.query.unitname,
+    age: route.query.age,
+    education: route.query.education,
+    origin: route.query.origin,
+    idcard: route.query.idcard
+  }
+}
 const router = new Router({
   routes: [{
       path: '/',
-      name: 'Index',
       meta: {
         title: '首页',
         icon: 'index'
       },
-      component: LayOut
+      component: LayOut,
+      children: [{
+        path: '',
+        component: chart
+      }]
     },
     {
       path: '/information',
@@ -40,7 +63,7 @@ const router = new Router({
         props: propsFn,
         children: [{
           path: '',
-          component: UserInfoTable,
+          component: UserInfoMain,
           props: propsFn
         }]
       }]
@@ -54,7 +77,16 @@ const router = new Router({
       component: LayOut,
       children: [{
         path: '/',
-        component: Main
+        component: Main,
+        children: [{
+          path: '',
+          component: person,
+          props: propsFn
+        }, {
+          path: 'detail/:id',
+          component: personDetail,
+          props: portrayalPropsFn
+        }]
       }]
     },
     {
@@ -68,11 +100,12 @@ const router = new Router({
       component: LayOut,
       children: [{
         path: '/question/:type',
-        name: '/question',
         component: Main,
+        props: propsFn,
         children: [{
           path: '',
-          component: QuestionTable
+          component: QuestionTable,
+          props: propsFn
         }]
       }]
     },
@@ -88,9 +121,11 @@ const router = new Router({
       children: [{
         path: '/report/:type',
         component: Main,
+        props: propsFn,
         children: [{
           path: '',
-          component: ReportTable
+          component: ReportTable,
+          props: propsFn
         }]
       }]
     },
@@ -106,9 +141,11 @@ const router = new Router({
       children: [{
         path: '/supervision/:type',
         component: Main,
+        props: propsFn,
         children: [{
           path: '',
-          component: SuperviseTable
+          component: SuperviseTable,
+          props: propsFn
         }]
       }]
     },
@@ -123,22 +160,12 @@ const router = new Router({
       children: [{
         path: 'all',
         component: Main,
+        props: propsFn,
         children: [{
           path: '',
-          component: IncorruptTable
+          component: IncorruptTable,
+          props: propsFn
         }]
-      }]
-    },
-    {
-      path: '/statistics',
-      meta: {
-        title: '统计分析',
-        icon: 'statistics'
-      },
-      component: LayOut,
-      children: [{
-        path: '/',
-        component: Main
       }]
     },
     {
@@ -150,7 +177,7 @@ const router = new Router({
       component: LayOut,
       children: [{
         path: '/',
-        component: Main
+        component: setting
       }]
     }
   ]

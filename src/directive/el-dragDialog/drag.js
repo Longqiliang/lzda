@@ -22,14 +22,11 @@ export default{
       const dragDomWidth = dragDom.offsetWidth
       const dragDomheight = dragDom.offsetHeight
 
-      const screenWidth = document.body.clientWidth
+      const screenWidth = document.body.clientWidth 
       const screenHeight = document.body.clientHeight
-
+     
       const minDragDomLeft = dragDom.offsetLeft
       const maxDragDomLeft = screenWidth - dragDom.offsetLeft - dragDomWidth
-
-      const minDragDomTop = dragDom.offsetTop
-      const maxDragDomTop = screenHeight - dragDom.offsetTop - dragDomheight
 
       // 获取到的值带px 正则匹配替换
       let styL = getStyle(dragDom, 'left')
@@ -42,6 +39,9 @@ export default{
         styL = +styL.replace(/\px/g, '')
         styT = +styT.replace(/\px/g, '')
       }
+
+      const minDragDomTop = dragDom.offsetTop
+      const maxDragDomTop = screenHeight - dragDom.offsetTop - dragDomheight > 0 ? screenHeight - dragDom.offsetTop - dragDomheight : -styT
 
       document.onmousemove = function(e) {
         // 通过事件委托，计算移动的距离
@@ -60,7 +60,7 @@ export default{
         } else if (top > maxDragDomTop) {
           top = maxDragDomTop
         }
-
+        
         // 移动当前元素
         dragDom.style.cssText += `;left:${left + styL}px;top:${top + styT}px;`
       }

@@ -1,0 +1,43 @@
+
+.dialog {
+  .el-dialog__body {
+    display: flex;
+    justify-content: space-around;
+    $font-size: 18px;
+    .card {
+      height: 675px;
+      border: 1px solid #333;
+      background-color: #fff;
+      width: 455px;
+      padding: 20px;
+      .card-tit {
+        font-size: $font-size * 1.4;
+        text-align: center;
+        margin: 10px 0 20px;
+      }
+      .card-content{
+        line-height: 1.61;
+        font-size: $font-size;
+        margin: 0;
+        &-tit{
+          font-weight: normal;
+          line-height: 1.61;
+          font-size: $font-size;
+          margin: 0;
+        }
+        .text-red{
+          color: #FF0000;
+        }
+        .text-indent{
+          text-indent: 2em;
+        }
+        .padded-40{
+          padding-top: 40px;
+        }
+        .text-right{
+          text-align: right;
+        }
+      }
+    }
+  }
+}
