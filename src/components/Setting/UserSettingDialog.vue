@@ -148,7 +148,7 @@
 </template>
 
 <script>
-import { API, addPerson, updatePerson } from '@/api/article'
+import { addPerson, updatePerson } from '@/api/article'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 
 export default {
@@ -293,7 +293,7 @@ export default {
         ]
       },
       imageUrl: '',
-      action: API + '/person/imageUpload'
+      // action: API + '/person/imageUpload'
     }
   },
   watch: {

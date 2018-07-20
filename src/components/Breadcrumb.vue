@@ -50,6 +50,7 @@ export default {
   .el-breadcrumb{
     &-tit{
       line-height: 1;
+      min-height: 16px;
     }
     font-size: 16px;
   }

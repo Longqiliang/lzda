@@ -8,18 +8,15 @@
       <el-table :data="tableVal" border width="100%" @cell-click="handleDetail" height="calc(100% - 77px)" v-loading="loading" element-loading-text="加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(255, 255, 255, .8)">
         <el-table-column label="序号" fixed prop="row_num" min-width="50" align="center"></el-table-column>
         <el-table-column label="姓名" prop="name" align="center"></el-table-column>
-        <el-table-column label="单位" prop="unit_name" align="center"></el-table-column>
-        <el-table-column label="档案类型" prop="archive_type_name" align="center"></el-table-column>
-        <el-table-column label="档案名称" prop="archive_name" align="center" min-width="180"></el-table-column>
-        <el-table-column label="部门" prop="dept_name" align="center"></el-table-column>
-        <el-table-column label="建档日期" align="center">
-          <template slot-scope="scope" v-if="scope.row.create_time">
-            {{scope.row.create_time | parseTime('{y}-{m}-{d}')}}
+        <el-table-column label="单位职务" align="center" min-width="200">
+          <template slot-scope="scope">
+            {{scope.row.unit_name}}{{scope.row.position}}
           </template>
         </el-table-column>
-        <el-table-column label="最后修改日期" align="center">
-          <template slot-scope="scope" v-if="scope.row.update_time">
-            {{scope.row.update_time | parseTime('{y}-{m}-{d}')}}
+        <el-table-column label="监督部门" prop="dept_name" align="center" min-width="140"></el-table-column>
+        <el-table-column label="建档日期" align="center" min-width="140">
+          <template slot-scope="scope" v-if="scope.row.create_time">
+            {{scope.row.create_time | parseTime('{y}-{m}-{d}')}}
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" min-width="140">

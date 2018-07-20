@@ -28,9 +28,13 @@ body {
     width: 100%;
     >.el-container {
       height: 100%;
+      position: relative;
       .el-aside {
         height: 100%;
       }
+      &.is-collapse .breadcrumb{
+        padding-left: 25px;
+      } 
     }
   }
 }
@@ -363,6 +367,18 @@ a:hover {
     .aside {
       display: flex;
     }
+    .aside-collapse{
+      height: 40px;
+      line-height: 40px;
+      background-color: $view-color;
+      color: #fff;
+      cursor: pointer;
+      padding: 0 10px;
+      position: absolute;
+      top: 15px;
+      left: 0;
+      z-index: 1000;
+    }
     .content-aside {
       margin-top: 15px;
       height: calc(100% - 15px);
@@ -375,6 +391,7 @@ a:hover {
         color: #fff;
         position: relative;
         background-color: $view-color;
+        cursor: pointer;
         span {
           margin-left: 25%;
         }

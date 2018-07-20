@@ -1,10 +1,13 @@
 <template>
-  <el-container>
-    <el-aside>
-       <SideBar />
-    </el-aside>  
-     
-    
+  <el-container :class="{'is-collapse': isCollapse}">
+    <transition name="slide">
+      <el-aside v-if="!isCollapse">
+        <SideBar @togglecollapse="hideSideBar"/>
+      </el-aside> 
+      <div class="aside-collapse" v-else @click="showSideBar">
+        <i class="el-icon-arrow-right"></i>
+      </div>
+    </transition>
     <el-main class="content-main">
       <Breadcrumb/>
       <!-- <Table/> -->
@@ -23,6 +26,19 @@ export default {
   components: {
     SideBar,
     Breadcrumb
+  },
+  data () {
+    return {
+      isCollapse: false
+    }
+  },
+  methods: {
+    hideSideBar(val) {
+      this.isCollapse = val
+    },
+    showSideBar() {
+       this.isCollapse = false
+    }
   }
 }
 </script>

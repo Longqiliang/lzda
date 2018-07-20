@@ -47,7 +47,8 @@ import {
   ReportForm4,
   ReportForm5,
   ReportForm6,
-  ReportForm7
+  ReportForm7,
+  ReportForm8
 } from '@/components/Form/Report/index'
 import { mapState, mapActions, mapMutations } from 'vuex'
 import elDragDialog from '@/directive/el-dragDialog'
@@ -64,7 +65,8 @@ export default {
     ReportForm4,
     ReportForm5,
     ReportForm6,
-    ReportForm7
+    ReportForm7,
+    ReportForm8
   },
   computed: {
     ...mapState({
@@ -128,6 +130,11 @@ export default {
           name: '丧事办理报告表',
           archive_id: 13,
           type: 7
+        },
+        {
+          name: '其他喜庆事宜报告表',
+          archive_id: 23,
+          type: 8
         }
       ]
     }

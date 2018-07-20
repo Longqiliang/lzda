@@ -1,16 +1,14 @@
 <template>
   <div class="content-aside">
-    <div class="aside-tit">
+    <div class="aside-tit" @click="togglecollapse">
       <span>组织架构</span>
     </div>
     <div class="content-tree">
       <div class="content-tree-scroll">
-<el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" :draggable="false" accordion>
-      </el-tree>
+        <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" :draggable="false" accordion>
+        </el-tree>
       </div>
-      
     </div>
-
   </div>
 </template>
 
@@ -42,6 +40,9 @@ export default {
     })
   },
   methods: {
+    togglecollapse() {
+      this.$emit('togglecollapse', true)
+    },
     getRoute() {
       let matched = this.$route.matched.filter(item => item.path)
       let first = matched[0].path

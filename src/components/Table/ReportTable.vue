@@ -6,7 +6,7 @@
         <el-button type="danger" @click="handleCreate">新增</el-button>
       </div>
       <el-table :data="tableVal" border width="100%" @cell-click="handleDetail" height="calc(100% - 77px)" v-loading="loading" element-loading-text="加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(255, 255, 255, .8)">
-        <el-table-column label="序号" fixed prop="rowno" min-width="50" align="center"></el-table-column>
+        <el-table-column label="序号" fixed prop="row_num" min-width="50" align="center"></el-table-column>
         <el-table-column label="姓名" prop="name" align="center"></el-table-column>
         <el-table-column label="单位" prop="unit_name" align="center"></el-table-column>
         <el-table-column label="档案类型" prop="archive_type_name" align="center"></el-table-column>

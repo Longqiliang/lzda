@@ -100,7 +100,7 @@ export default {
           type: 1
         },
         {
-          name: '受到其它组织措施情况',
+          name: '其他组织处理情况',
           archive_id: 21,
           type: 1
         },
@@ -130,12 +130,12 @@ export default {
           type: 6
         },
         {
-          name: '受到党纪处分情况',
+          name: '党纪处分情况',
           archive_id: 7,
           type: 7
         },
         {
-          name: '受到政务处分情况',
+          name: '政务处分情况',
           archive_id: 22,
           type: 7
         }

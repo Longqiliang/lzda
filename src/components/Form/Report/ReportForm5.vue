@@ -3,20 +3,23 @@
     <el-row type="flex" justify="space-around">
       <el-col :span="11">
         <el-form-item label="姓名">
-          <template v-if="status === 'create'">
+          <template v-if="!readonlyStatus">
             <el-select v-model="reportForm.person_id" filterable remote :remote-method="remoteMethod" :loading="loading">
               <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </template>
           <template v-else>
-            <span>{{reportForm.person_id | showInfo(userList, 'name')}}</span>
+            <span>{{reportForm.personReport.name}}</span>
           </template>
         </el-form-item>
       </el-col>
       <el-col :span="11">
         <el-form-item label="工作单位">
-          <template>
+          <template v-if="!readonlyStatus">
             <span>{{reportForm.person_id | showInfo(userList, 'unitname')}}</span>
+          </template>
+          <template v-else>
+            <span>{{reportForm.personReport.unit_name}}</span>
           </template>
         </el-form-item>
       </el-col>
@@ -24,15 +27,21 @@
     <el-row type="flex" justify="space-around">
       <el-col :span="11">
         <el-form-item label="现任职务">
-          <template>
+          <template v-if="!readonlyStatus">
             <span>{{reportForm.person_id | showInfo(userList, 'position')}}</span>
+          </template>
+          <template v-else>
+            <span>{{reportForm.personReport.position}}</span>
           </template>
         </el-form-item>
       </el-col>
       <el-col :span="11">
         <el-form-item label="身份证号码">
-          <template>
+          <template v-if="!readonlyStatus">
             <span class="txt-number">{{reportForm.person_id | showInfo(userList, 'idcard')}}</span>
+          </template>
+           <template v-else>
+            <span>{{reportForm.personReport.id_card}}</span>
           </template>
         </el-form-item>
       </el-col>
@@ -40,15 +49,21 @@
     <el-row type="flex" justify="space-around">
       <el-col :span="11">
         <el-form-item label="户籍">
-          <template>
+          <template v-if="!readonlyStatus">
             <span class="txt-number">{{reportForm.person_id | showInfo(userList, 'origin')}}</span>
+          </template>
+          <template v-else>
+            <span>{{reportForm.personReport.origin}}</span>
           </template>
         </el-form-item>
       </el-col>
       <el-col :span="11">
         <el-form-item label="地址">
-          <template>
+          <template v-if="!readonlyStatus">
             <span class="txt-number">{{reportForm.person_id | showInfo(userList, 'address')}}</span>
+          </template>
+          <template v-else>
+            <span>{{reportForm.personReport.address}}</span>
           </template>
         </el-form-item>
       </el-col>
@@ -92,10 +107,10 @@
           </el-select>
         </el-col>
         <el-col :span="3">
-          <el-input v-model="fa.name" size="mini"></el-input>
+          <el-input :readonly="readonlyStatus" v-model="fa.name" size="mini"></el-input>
         </el-col>
         <el-col :span="3">
-          <el-date-picker type="date" placeholder="选择日期" v-model="fa.born_time" style="width: 100%;" value-format="yyyy-MM-dd" size="mini"></el-date-picker>
+          <el-date-picker :readonly="readonlyStatus"  type="date" placeholder="选择日期" v-model="fa.born_time" style="width: 100%;" value-format="yyyy-MM-dd" size="mini"></el-date-picker>
         </el-col>
         <el-col :span="3">
           <el-select v-model="fa.education_level" size="mini">
@@ -103,18 +118,18 @@
           </el-select>
         </el-col>
         <el-col :span="3">
-          <el-input v-model="fa.employer" size="mini"></el-input>
+          <el-input :readonly="readonlyStatus" v-model="fa.employer" size="mini"></el-input>
         </el-col>
         <el-col :span="3">
-          <el-input v-model="fa.address" size="mini"></el-input>
+          <el-input :readonly="readonlyStatus" v-model="fa.address" size="mini"></el-input>
         </el-col>
         <el-col :span="3">
-          <el-input v-model="fa.phone" size="mini"></el-input>
+          <el-input :readonly="readonlyStatus" v-model="fa.phone" size="mini"></el-input>
         </el-col>
         <el-col :span="3">
           <el-row type="flex" justify="space-around" align="center">
-            <el-button type="primary" size="mini" icon="el-icon-plus" class="mini" @click="addFamily(f)"></el-button>
-            <el-button size="mini" icon="el-icon-minus" class="mini" @click="removeFamily(f)"></el-button>
+            <el-button :disabled="readonlyStatus" type="primary" size="mini" icon="el-icon-plus" class="mini" @click="addFamily(f)"></el-button>
+            <el-button :disabled="readonlyStatus" size="mini" icon="el-icon-minus" class="mini" @click="removeFamily(f)"></el-button>
           </el-row>
         </el-col>
       </el-row>
@@ -124,10 +139,12 @@
         <div class="flex flex-jf-between flex-center">
           <span class="form-label">婚姻变化情况</span>
           <div>
-            <el-radio-group v-model="showMarriage" @change="changeMarriage">
-              <el-radio :label="1">有变化</el-radio>
-              <el-radio :label="0">无变化</el-radio>
-            </el-radio-group>
+            <template v-if="!readonlyStatus">
+              <el-radio-group v-model="showMarriage" @change="changeMarriage">
+                <el-radio :label="1">有变化</el-radio>
+                <el-radio :label="0">无变化</el-radio>
+              </el-radio-group>
+            </template>
           </div>
         </div>
       </el-col>
@@ -152,10 +169,10 @@
             </el-select>
           </el-col>
           <el-col :span="7">
-            <el-input v-model="mar.change_time" size="mini"></el-input>
+            <el-input :readonly="readonlyStatus" v-model="mar.change_time" size="mini"></el-input>
           </el-col>
           <el-col :span="12">
-            <el-input v-model="mar.marital_cause" size="mini"></el-input>
+            <el-input :readonly="readonlyStatus" v-model="mar.marital_cause" size="mini"></el-input>
           </el-col>
         </el-row>
       </el-row>
@@ -165,11 +182,12 @@
         <div class="flex flex-jf-between flex-center">
           <span class="form-label"> 本人持有普通护照、港澳台通行证的情况 </span>
           <div>
+            <template v-if="!readonlyStatus">
             <el-radio-group v-model="showPassport" @change="changePassport">
               <el-radio :label="1">有变化</el-radio>
               <el-radio :label="0">无变化</el-radio>
             </el-radio-group>
-
+            </template>
           </div>
         </div>
       </el-col>
@@ -198,24 +216,24 @@
         </el-row>
         <el-row class="padded-10" v-for="(par,pa) in reportForm.passport" :key="pa">
           <el-col :span="7">
-            <el-input v-model="par.credentials_number" size="mini"></el-input>
+            <el-input :readonly="readonlyStatus" v-model="par.credentials_number" size="mini"></el-input>
           </el-col>
           <el-col :span="3">
-            <el-date-picker type="date" placeholder="选择日期" v-model="par.sign_time" style="width: 100%;" value-format="yyyy-MM-dd" size="mini"></el-date-picker>
+            <el-date-picker :readonly="readonlyStatus"  type="date" placeholder="选择日期" v-model="par.sign_time" style="width: 100%;" value-format="yyyy-MM-dd" size="mini"></el-date-picker>
           </el-col>
           <el-col :span="3">
-            <el-date-picker type="date" placeholder="选择日期" v-model="par.term_validity" style="width: 100%;" value-format="yyyy-MM-dd" size="mini"></el-date-picker>
+            <el-date-picker :readonly="readonlyStatus"  type="date" placeholder="选择日期" v-model="par.term_validity" style="width: 100%;" value-format="yyyy-MM-dd" size="mini"></el-date-picker>
           </el-col>
           <el-col :span="4">
-            <el-input v-model="par.custodian" size="mini"></el-input>
+            <el-input :readonly="readonlyStatus" v-model="par.custodian" size="mini"></el-input>
           </el-col>
           <el-col :span="4">
-            <el-input v-model="par.remark" size="mini"></el-input>
+            <el-input :readonly="readonlyStatus" v-model="par.remark" size="mini"></el-input>
           </el-col>
           <el-col :span="3">
             <el-row type="flex" justify="space-around" align="center">
-              <el-button type="primary" size="mini" icon="el-icon-plus" class="mini" @click="addPassport(pa)"></el-button>
-              <el-button size="mini" icon="el-icon-minus" class="mini" @click="removePassport(pa)"></el-button>
+              <el-button :disabled="readonlyStatus" type="primary" size="mini" icon="el-icon-plus" class="mini" @click="addPassport(pa)"></el-button>
+              <el-button :disabled="readonlyStatus" size="mini" icon="el-icon-minus" class="mini" @click="removePassport(pa)"></el-button>
             </el-row>
           </el-col>
         </el-row>
@@ -226,11 +244,12 @@
         <div class="flex flex-jf-between flex-center">
           <span class="form-label"> 本人因私出境的情况</span>
           <div>
+            <template v-if="!readonlyStatus">
             <el-radio-group v-model="showExit" @change="changeExit">
               <el-radio :label="1">有此类情况</el-radio>
               <el-radio :label="0">无此类情况</el-radio>
             </el-radio-group>
-
+            </template>
           </div>
         </div>
       </el-col>
@@ -265,16 +284,16 @@
         </el-row>
         <el-row class="padded-10" v-for="(ex,e) in reportForm.private_exit" :key="e">
           <el-col :span="3">
-            <el-date-picker type="date" placeholder="选择日期" v-model="ex.depart_time" style="width: 100%;" value-format="yyyy-MM-dd" size="mini"></el-date-picker>
+            <el-date-picker :readonly="readonlyStatus"  type="date" placeholder="选择日期" v-model="ex.depart_time" style="width: 100%;" value-format="yyyy-MM-dd" size="mini"></el-date-picker>
           </el-col>
           <el-col :span="3">
-            <el-date-picker type="date" placeholder="选择日期" v-model="ex.repatriate" style="width: 100%;" value-format="yyyy-MM-dd" size="mini"></el-date-picker>
+            <el-date-picker :readonly="readonlyStatus"  type="date" placeholder="选择日期" v-model="ex.repatriate" style="width: 100%;" value-format="yyyy-MM-dd" size="mini"></el-date-picker>
           </el-col>
           <el-col :span="3">
-            <el-input v-model="ex.countries" size="mini"></el-input>
+            <el-input :readonly="readonlyStatus" v-model="ex.countries" size="mini"></el-input>
           </el-col>
           <el-col :span="3">
-            <el-input v-model="ex.custodian" size="mini"></el-input>
+            <el-input :readonly="readonlyStatus" v-model="ex.custodian" size="mini"></el-input>
           </el-col>
           <el-col :span="3">
             <el-select v-model="ex.main_content" size="mini">
@@ -282,15 +301,15 @@
             </el-select>
           </el-col>
           <el-col :span="3">
-            <el-input v-model="ex.passport_no" size="mini"></el-input>
+            <el-input :readonly="readonlyStatus" v-model="ex.passport_no" size="mini"></el-input>
           </el-col>
           <el-col :span="3">
-            <el-input v-model="ex.approve_outfit" size="mini"></el-input>
+            <el-input :readonly="readonlyStatus" v-model="ex.approve_outfit" size="mini"></el-input>
           </el-col>
           <el-col :span="3">
             <el-row type="flex" justify="space-around" align="center">
-              <el-button type="primary" size="mini" icon="el-icon-plus" class="mini" @click="addExit(e)"></el-button>
-              <el-button size="mini" icon="el-icon-minus" class="mini" @click="removeExit(e)"></el-button>
+              <el-button :disabled="readonlyStatus" type="primary" size="mini" icon="el-icon-plus" class="mini" @click="addExit(e)"></el-button>
+              <el-button :disabled="readonlyStatus" size="mini" icon="el-icon-minus" class="mini" @click="removeExit(e)"></el-button>
             </el-row>
           </el-col>
         </el-row>
@@ -301,11 +320,12 @@
         <div class="flex flex-jf-between flex-center">
           <span class="form-label">配偶、子女及其配偶被司法机关追究刑事责任的情况</span>
           <div>
+            <template v-if="!readonlyStatus">
             <el-radio-group v-model="showCriminal" @change="changeCriminal">
               <el-radio :label="1">有变化</el-radio>
               <el-radio :label="0">无变化</el-radio>
             </el-radio-group>
-
+            </template>
           </div>
         </div>
       </el-col>
@@ -334,13 +354,13 @@
         </el-row>
         <el-row class="padded-10" v-for="(cr,c) in reportForm.criminal" :key="c">
           <el-col :span="3">
-            <el-input v-model="cr.name" size="mini"></el-input>
+            <el-input :readonly="readonlyStatus" v-model="cr.name" size="mini"></el-input>
           </el-col>
           <el-col :span="4">
-            <el-date-picker type="date" placeholder="选择日期" v-model="cr.run_time" style="width: 100%;" value-format="yyyy-MM-dd" size="mini"></el-date-picker>
+            <el-date-picker :readonly="readonlyStatus"  type="date" placeholder="选择日期" v-model="cr.run_time" style="width: 100%;" value-format="yyyy-MM-dd" size="mini"></el-date-picker>
           </el-col>
           <el-col :span="4">
-            <el-input v-model="cr.run_cause" size="mini"></el-input>
+            <el-input :readonly="readonlyStatus" v-model="cr.run_cause" size="mini"></el-input>
           </el-col>
           <el-col :span="5">
             <el-select v-model="cr.dispose_stage" size="mini">
@@ -348,12 +368,12 @@
             </el-select>
           </el-col>
           <el-col :span="5">
-            <el-input v-model="cr.dispose_result" size="mini"></el-input>
+            <el-input :readonly="readonlyStatus" v-model="cr.dispose_result" size="mini"></el-input>
           </el-col>
           <el-col :span="3">
             <el-row type="flex" justify="space-around" align="center">
-              <el-button type="primary" size="mini" icon="el-icon-plus" class="mini" @click="addCriminal(c)"></el-button>
-              <el-button size="mini" icon="el-icon-minus" class="mini" @click="removeCriminal(c)"></el-button>
+              <el-button :disabled="readonlyStatus" type="primary" size="mini" icon="el-icon-plus" class="mini" @click="addCriminal(c)"></el-button>
+              <el-button :disabled="readonlyStatus" size="mini" icon="el-icon-minus" class="mini" @click="removeCriminal(c)"></el-button>
             </el-row>
           </el-col>
         </el-row>
@@ -364,11 +384,12 @@
         <div class="flex flex-jf-between flex-center">
           <span class="form-label">本人、配偶、共同生活的子女为所有权人或者共有人的房产情况</span>
           <div>
+            <template v-if="!readonlyStatus">
             <el-radio-group v-model="showProperty" @change="changeProperty">
               <el-radio :label="1">有变化</el-radio>
               <el-radio :label="0">无变化</el-radio>
             </el-radio-group>
-
+            </template>
           </div>
         </div>
       </el-col>
@@ -403,7 +424,7 @@
         </el-row>
         <el-row class="padded-10" v-for="(pr,p) in reportForm.property" :key="p">
           <el-col :span="3">
-            <el-input v-model="pr.name" size="mini"></el-input>
+            <el-input :readonly="readonlyStatus" v-model="pr.name" size="mini"></el-input>
           </el-col>
           <el-col :span="3">
             <el-select v-model="pr.real_estate_source" size="mini">
@@ -411,10 +432,10 @@
             </el-select>
           </el-col>
           <el-col :span="3">
-            <el-input v-model="pr.address" size="mini"></el-input>
+            <el-input :readonly="readonlyStatus" v-model="pr.address" size="mini"></el-input>
           </el-col>
           <el-col :span="3">
-            <el-input v-model="pr.measure_area" size="mini"></el-input>
+            <el-input :readonly="readonlyStatus" v-model="pr.measure_area" size="mini"></el-input>
           </el-col>
           <el-col :span="3">
             <el-select v-model="pr.property_nature" size="mini">
@@ -422,15 +443,15 @@
             </el-select>
           </el-col>
           <el-col :span="3">
-            <el-input v-model="pr.trading_time" size="mini"></el-input>
+            <el-input :readonly="readonlyStatus" v-model="pr.trading_time" size="mini"></el-input>
           </el-col>
           <el-col :span="3">
-            <el-input v-model="pr.trading_price" size="mini"></el-input>
+            <el-input :readonly="readonlyStatus" v-model="pr.trading_price" size="mini"></el-input>
           </el-col>
           <el-col :span="3">
             <el-row type="flex" justify="space-around" align="center">
-              <el-button type="primary" size="mini" icon="el-icon-plus" class="mini" @click="addProperty(p)"></el-button>
-              <el-button size="mini" icon="el-icon-minus" class="mini" @click="removeProperty(p)"></el-button>
+              <el-button :disabled="readonlyStatus" type="primary" size="mini" icon="el-icon-plus" class="mini" @click="addProperty(p)"></el-button>
+              <el-button :disabled="readonlyStatus" size="mini" icon="el-icon-minus" class="mini" @click="removeProperty(p)"></el-button>
             </el-row>
           </el-col>
         </el-row>
@@ -533,7 +554,15 @@ export default {
       return item[arg]
     }
   },
-  
+  computed: {
+    readonlyStatus() {
+      if (this.status === 'detail') {
+        return true
+      } else {
+        return false
+      }
+    },
+  },
   mounted() {
     console.log(this.reportForm)
     console.log(this.user)

@@ -40,7 +40,7 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="问责情形">
-          <el-cascader :options="accountType" :show-all-levels="false" v-model="accountSelect" @change="handleChange"></el-cascader>
+          <el-cascader :disabled="readonlyStatus" :options="accountType" :show-all-levels="false" v-model="accountSelect" @change="handleChange"></el-cascader>
           <!-- <el-input :readonly="readonlyStatus" v-model="questionForm.account_type"></el-input> -->
 
         </el-form-item>
@@ -59,7 +59,7 @@
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="印发时间">
-          <el-date-picker type="date" placeholder="选择日期" v-model="questionForm.handle_time" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
+          <el-date-picker type="date" placeholder="选择日期" :readonly="readonlyStatus" v-model="questionForm.handle_time" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
       </el-col>
     </el-row>
@@ -221,6 +221,7 @@ export default {
     }),
     filterAccount() {
       if (!this.questionForm.account_type) {
+        this.accountSelect = []
         return
       }
       const accountObj = this.accountType.find(item =>
@@ -228,6 +229,10 @@ export default {
           children => children.value === this.questionForm.account_type
         )
       )
+      if(!accountObj){
+        this.accountSelect = []
+        return
+      }
       const accountChildren = accountObj.children.find(
         children => children.value === this.questionForm.account_type
       )

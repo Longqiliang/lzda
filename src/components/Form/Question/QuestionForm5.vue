@@ -3,10 +3,14 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="来源">
-          <el-select :disable="readonlyStatus" v-model="questionForm.letter_source">
+          <template v-if="status === 'create'">
+          <el-select  v-model="questionForm.letter_source">
             <el-option v-for="letter in letterSelect" :key="letter.label" :label="letter.label" :value="letter.label"></el-option>
           </el-select>
-          <!-- <el-input :readonly="readonlyStatus" v-model="questionForm.letter_source"></el-input> -->
+          </template>
+          <template v-else-if="status === 'detail'">
+            <el-input :readonly="readonlyStatus" v-model="questionForm.letter_source"></el-input>
+          </template>
         </el-form-item>
       </el-col>
       
@@ -33,7 +37,7 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="举报人">
-          <el-input :readonly="readonlyStatus" v-model="questionForm.name"></el-input>
+          <el-input :readonly="readonlyStatus" v-model="questionForm.informant"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
