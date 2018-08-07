@@ -14,34 +14,12 @@
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
-        <el-form-item label="身份证号码">
-          <template v-if="status === 'create'">
-            <span>{{superviseForm.person_id | showInfo(userList, 'idcard')}}</span>
-          </template>
-          <template v-else>
-            <span>{{superviseForm.id_card}}</span>
-          </template>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="11">
         <el-form-item label="工作单位">
           <template v-if="status === 'create'">
             <span>{{superviseForm.person_id | showInfo(userList, 'unitname')}}</span>
           </template>
           <template v-else>
             <span>{{superviseForm.unit_name}}</span>
-          </template>
-        </el-form-item>
-      </el-col>
-      <el-col :span="11" :offset="1">
-        <el-form-item label="职务">
-          <template v-if="status === 'create'">
-            <span>{{superviseForm.person_id | showInfo(userList, 'position')}}</span>
-          </template>
-          <template v-else>
-            <span>{{superviseForm.position}}</span>
           </template>
         </el-form-item>
       </el-col>
@@ -61,7 +39,9 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="主要问题类型">
-          <el-input v-model="superviseForm.problem_type"></el-input>
+          <el-select  v-model="superviseForm.problem_type">
+            <el-option v-for="dis in problemList" :key="dis.label" :label="dis.label" :value="dis.label"></el-option>
+          </el-select>
         </el-form-item>
       </el-col>
     </el-row>
@@ -147,7 +127,36 @@ export default {
       fileUpload: '',
       archive_id: 16,
       userList:[],
-      loading: false
+      loading: false,
+      problemList:[
+          {
+          label: '政治纪律'
+        },
+           {
+          label: '组织纪律'
+        },
+           {
+          label: '廉洁纪律'
+        },
+           {
+          label: '群众纪律'
+        },
+           {
+          label: '工作纪律'
+        },
+           {
+          label: '生活纪律'
+        },
+           {
+          label: '贪污贿赂'
+        },
+           {
+          label: '渎职侵权'
+        },
+           {
+          label: '其他'
+        }
+      ]
     }
   },
   methods: {

@@ -3,7 +3,7 @@
     <el-form :model="questionForm" ref="questionForm" size="mini" label-width="90px" label-position="left" class="demo-form-inline">
       <el-row>
         <el-col :span="11">
-          <el-form-item label="姓名">
+          <el-form-item label="谈话对象">
             <template v-if="status === 'create'">
               <el-select v-model="questionForm.person_id" filterable remote :remote-method="remoteMethod" :loading="loading">
                 <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -12,7 +12,6 @@
             <template v-else>
               <span>{{questionForm.name}}</span>
             </template>
-
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">

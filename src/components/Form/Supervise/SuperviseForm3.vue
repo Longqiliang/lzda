@@ -2,7 +2,7 @@
   <el-form :model="superviseForm" size="mini" label-width="90px" label-position="left" class="demo-form-inline">
     <el-row>
       <el-col :span="11">
-        <el-form-item label="姓名">
+        <el-form-item label="被监督单位">
           <template v-if="status === 'create'">
             <el-select v-model="superviseForm.person_id" filterable remote :remote-method="remoteMethod" :loading="loading">
               <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -13,50 +13,9 @@
           </template>
         </el-form-item>
       </el-col>
-      <el-col :span="11" :offset="1">
-        <el-form-item label="身份证号码">
-          <template v-if="status === 'create'">
-            <span>{{superviseForm.person_id | showInfo(userList, 'idcard')}}</span>
-          </template>
-          <template v-else>
-            <span>{{superviseForm.id_card}}</span>
-          </template>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="11">
-        <el-form-item label="工作单位">
-          <template v-if="status === 'create'">
-            <span>{{superviseForm.person_id | showInfo(userList, 'unitname')}}</span>
-          </template>
-          <template v-else>
-            <span>{{superviseForm.unit_name}}</span>
-          </template>
-        </el-form-item>
-      </el-col>
-      <el-col :span="11" :offset="1">
-        <el-form-item label="职务">
-          <template v-if="status === 'create'">
-            <span>{{superviseForm.person_id | showInfo(userList, 'position')}}</span>
-          </template>
-          <template v-else>
-            <span>{{superviseForm.position}}</span>
-          </template>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="11">
+       <el-col :span="11" :offset="1">
         <el-form-item label="会议时间">
           <el-date-picker type="date" placeholder="选择日期" v-model="superviseForm.meeting_time" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="23">
-        <el-form-item label="会议内容">
-          <el-input type="textarea" :autosize="{ minRows: 5 }" v-model="superviseForm.meeting_content"></el-input>
         </el-form-item>
       </el-col>
     </el-row>

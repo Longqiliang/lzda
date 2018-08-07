@@ -91,7 +91,7 @@
     </el-row>
     <el-row>
       <el-col :span="23">
-        <el-form-item label="违纪事实">
+        <el-form-item label="违纪或违法事实">
           <el-input :readonly="readonlyStatus" v-model="questionForm.disciplinary_facts"></el-input>
         </el-form-item>
       </el-col>

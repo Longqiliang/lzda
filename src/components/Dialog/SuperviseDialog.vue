@@ -83,12 +83,12 @@ export default {
           type: 2
         },
         {
-          name: '会议监督情况（参加或列席会议时发现的情况）',
+          name: '会议监督情况（民主生活、专题生活会）',
           archive_id: 17,
           type: 3
         },
         {
-          name: '监督检查情况',
+          name: '监督检查情况（重点工作等）',
           archive_id: 25,
           type: 4
         }

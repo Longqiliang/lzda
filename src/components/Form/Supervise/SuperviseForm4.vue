@@ -2,7 +2,7 @@
   <el-form :model="superviseForm" size="mini" label-width="90px" label-position="left" class="demo-form-inline">
     <el-row>
       <el-col :span="11">
-        <el-form-item label="姓名">
+        <el-form-item label="被监督单位">
           <template v-if="status === 'create'">
             <el-select v-model="superviseForm.person_id" filterable remote :remote-method="remoteMethod" :loading="loading">
               <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -13,42 +13,10 @@
           </template>
         </el-form-item>
       </el-col>
-      <el-col :span="11" :offset="1">
-        <el-form-item label="单位">
-          <template v-if="status === 'create'">
-            <span>{{superviseForm.person_id | showInfo(userList, 'unitname')}}</span>
-          </template>
-          <template v-else>
-            <span>{{superviseForm.unit_name}}</span>
-          </template>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="11">
-        <el-form-item label="职务">
-          <template v-if="status === 'create'">
-            <span>{{superviseForm.person_id | showInfo(userList, 'position')}}</span>
-          </template>
-          <template v-else>
-            <span>{{superviseForm.position}}</span>
-          </template>
-        </el-form-item>
-      </el-col>
-      <el-col :span="11" :offset="1">
-        <el-form-item label="联系方式">
-          <template v-if="status === 'create'">
-            <span>{{superviseForm.person_id | showInfo(userList, 'cellphone')}}</span>
-          </template>
-          <template v-else>
-            <span>{{superviseForm.cell_phone}}</span>
-          </template>
-        </el-form-item>
-      </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
-        <el-form-item label="监督原因">
+        <el-form-item label="现存原因">
           <el-input type="textarea" :autosize="{ minRows: 5 }" v-model="superviseForm.supervision_reasons"></el-input>
         </el-form-item>
       </el-col>
@@ -62,7 +30,7 @@
     </el-row>
     <el-row>
       <el-col :span="23">
-        <el-form-item label="整改情况">
+        <el-form-item label="整改建议">
           <el-input type="textarea" :autosize="{ minRows: 5 }" v-model="superviseForm.rectify"></el-input>
         </el-form-item>
       </el-col>
