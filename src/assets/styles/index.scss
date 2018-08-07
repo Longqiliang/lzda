@@ -4,6 +4,7 @@
 @import './person.scss';
 @import './view.scss';
 @import './charts.scss';
+@import './login.scss';
 html,
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -123,7 +124,7 @@ a:hover {
     margin: 15px;
     padding: 5px;
     height: calc(100% - 30px);
-    background-color: rgba(125, 0, 0, .2);
+    background-color: rgba(2, 70, 126, .2);
     &-main {
       height: calc(100% - 40px);
       display: flex;
@@ -285,11 +286,17 @@ a:hover {
       }
     }
   }
+  
   .el-dialog {
     margin: 0 auto;
-    background-image: url(./assets/images/dialog-bg.jpg);
+    background-image: url(./assets/images/dialog-bg.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
+    &__headerbtn{
+      .el-dialog__close{
+        color: $black;
+      }
+    } 
     &__header{
       &btn{
         top: 10px;
@@ -438,10 +445,10 @@ a:hover {
   }
   .cell {
     .el-button {
-      &--danger {
-        background-color: $view-color;
-        border-color: $view-color;
-      }
+      // &--danger {
+      //   background-color: $view-color;
+      //   border-color: $view-color;
+      // }
       &--primary {
         background-color: $primary;
         border-color: $primary;
@@ -498,7 +505,24 @@ a:hover {
   margin: 0;
   padding: 5px 0;
 }
-
+.upload-tit{
+  display: inline-block;
+  min-width: 100px;
+  text-align: right;
+}
+.el-upload-list{
+  &__item{
+    &.is-success{
+      .el-upload-list{
+        &__item-name{
+          [class^=el-icon]{
+            color: #67c23a;
+          }
+        }
+      } 
+    }
+  } 
+}
 .table {
   flex: 1;
   display: flex;
@@ -551,7 +575,7 @@ a:hover {
         &.is-leaf {
           border-bottom: 1px solid $black;
         }
-        background-color: #f0e8e1;
+        background-color: #c3d8ec;
         padding: 6px 0;
       }
       color: $black * 1.2;

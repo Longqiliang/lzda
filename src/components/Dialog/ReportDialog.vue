@@ -12,11 +12,11 @@
       <component :is="formComponent" :user="user" :status="status" ref="children"></component>
     </template>
     <template v-else>
-      <component :is="formComponent" :user="user" :status="status" ref="children" :reportForm="formVal"></component>
+      <component :is="formComponent" :user="user" :status="status" ref="children" :reportForm="formVal"  @closeLoad="closeLoading"></component>
     </template>
     <div slot="footer" class="dialog-footer">
       <template v-if="status === 'create'">
-        <el-button type="primary" @click="handleCreate">保 存</el-button>
+        <el-button type="primary" @click="handleCreate" :loading="submitLoading">保 存</el-button>
         <el-button @click="closeDialog">取 消</el-button>
       </template>
       <template v-else-if="status === 'update'">
@@ -136,7 +136,8 @@ export default {
           archive_id: 23,
           type: 8
         }
-      ]
+      ],
+      submitLoading: false
     }
   },
   methods: {
@@ -152,10 +153,14 @@ export default {
       return titleObj
     },
     handleCreate() {
+      this.submitLoading = true
       this.$refs.children.createData()
     },
     handleUpdate() {
       this.$refs.children.updateData()
+    },
+     closeLoading() {
+      this.submitLoading = false
     }
   }
 }

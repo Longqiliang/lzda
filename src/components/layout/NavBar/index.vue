@@ -1,12 +1,14 @@
 <template>
-  <el-menu :router="true" :default-active="routePath" mode="horizontal" text-color="#fff" active-text-color="#fff" background-color="#c53333">
+  <el-menu :router="true" :default-active="routePath" mode="horizontal" text-color="#fff" active-text-color="#fff" background-color="#02467e">
     <template v-for="item in routes">
-      <router-link :to="item.path" :key="item.name">
-        <el-menu-item :index="item.path" :key="item.name">
-          <span slot="title">
-            <i :class="iconName(item.meta.icon)"></i>{{item.meta.title}}</span>
-        </el-menu-item>
-      </router-link>
+      <template v-if="!item.hidden">
+        <router-link :to="item.path" :key="item.name">
+          <el-menu-item :index="item.path" :key="item.name">
+            <span slot="title">
+              <i :class="iconName(item.meta.icon)"></i>{{item.meta.title}}</span>
+          </el-menu-item>
+        </router-link>
+      </template>
     </template>
   </el-menu>
 </template>
@@ -45,7 +47,7 @@ export default {
     line-height: 40px;
     &.is-active {
       border-bottom: 2px solid transparent !important;
-      background-color: #fa6700 !important;
+      background-color: #3496ee !important;
     }
     i {
       color: #fff;

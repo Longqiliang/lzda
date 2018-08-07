@@ -7,6 +7,23 @@ export {
   uploadFile,
   imageUpload
 }
+
+// 登录
+export function login(query) {
+  return request({
+    url: API + '/login/addlogin',
+    method: 'post',
+    params: query
+  })
+}
+export function layout(query) {
+  return request({
+    url: API + '/login/cancellation',
+    method: 'get',
+    params: query
+  })
+}
+
 // 首页
 export function queryIndexFourInfo(query) {
   return request({

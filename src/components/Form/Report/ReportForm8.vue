@@ -5,7 +5,7 @@
         <el-form-item label="姓名">
           <template v-if="status === 'create'">
             <el-select v-model="reportForm.person_id" filterable remote :remote-method="remoteMethod" :loading="loading">
-              <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-option v-for="(item, i) in userList" :key="i" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </template>
           <template v-else>
@@ -36,7 +36,7 @@
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
-        <el-form-item label="联系方式">
+        <el-form-item label="联系电话">
           <template v-if="status === 'create'">
             <span>{{reportForm.person_id | showInfo(userList, 'cellphone')}}</span>
           </template>
@@ -48,53 +48,79 @@
     </el-row>
     <el-row>
       <el-col :span="11">
-        <el-form-item label="举办时间">
-          <el-date-picker type="date" placeholder="选择日期" v-model="reportForm.holding_time" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
+        <el-form-item label="是否单位负责人" label-width="120px">
+          <el-select v-model="reportForm.person_charge" placeholder="">
+            <el-option v-for="(pe, p) in person_charge" :key="p" :label="pe.label" :value="pe.value"></el-option>
+          </el-select>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
+        <el-form-item label="职务补充说明">
+          <el-input v-model="reportForm.job_supplementation" ></el-input>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="11" >
         <el-form-item label="举办事宜">
           <el-input v-model="reportForm.holding_matters"></el-input>
         </el-form-item>
       </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="23">
-        <el-form-item label="举办地点">
-          <el-input v-model="reportForm.holding_address"></el-input>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="23">
-        <el-form-item label="基本情况">
-          <el-input type="textarea" autosize v-model="reportForm.base_situation"></el-input>
+      <el-col :span="11" :offset="1">
+        <el-form-item label="举办时间">
+          <el-date-picker type="date" placeholder="选择日期" v-model="reportForm.holding_time" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
-        <el-form-item label="首次报告方式">
-          <el-input v-model="reportForm.report_method"></el-input>
+        <el-form-item label="举办地点">
+          <el-input v-model="reportForm.holding_address"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
-        <el-form-item label="报告负责人">
-          <el-input v-model="reportForm.report_principal"></el-input>
+        <el-form-item label="酒店星级">
+          <el-select v-model="reportForm.star_number">
+            <el-option v-for="(nu,n) in star_number" :key="n" :value="nu.value" :label="nu.label"></el-option>
+          </el-select>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
-      <el-col :span="23">
-        <el-form-item label="审核意见">
-          <el-input type="textarea" autosize v-model="reportForm.audit_opinion"></el-input>
+      <el-col :span="11">
+        <el-form-item label="单方预计开支">
+          <el-input v-model="reportForm.single_expenditure"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="11" :offset="1">
+        <el-form-item label="参加人数">
+          <el-input v-model="reportForm.person_number"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
-      <el-col :span="23">
-        <el-form-item label="纪检监察机关备案意见">
-          <el-input type="textarea" :autosize="{ minRows : 3 }" v-model="reportForm.record_suggest"></el-input>
+      <el-col :span="11">
+        <el-form-item label="双方预计开支">
+          <el-input v-model="reportForm.double_expenditure"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="11" :offset="1">
+        <el-form-item label="邀请范围">
+          <el-input v-model="reportForm.scope_invitation"></el-input>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="11">
+        <el-form-item label="报告状态">
+          <el-select v-model="reportForm.reporting_state">
+            <el-option v-for="(st,s) in reporting_state" :key="s" :label="st.label" :value="st.value"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="11" :offset="1">
+        <el-form-item label="其他说明">
+          <el-input v-model="reportForm.information_other" ></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -127,16 +153,6 @@ export default {
       default() {
         return {
           rank: '',
-          holding_time: '',
-          holding_matters: '',
-          holding_address: '',
-          base_situation: '',
-          report_method: '',
-          report_principal: '',
-          audit_opinion: '',
-          record_suggest: '',
-          person_id: '',
-          unit_id: '',
           fileId: '',
           file_name: '',
           id: ''
@@ -156,7 +172,37 @@ export default {
       fileUpload: '',
       archive_id: 23,
       userList:[],
-      loading: false
+      loading: false,
+      person_charge:[{
+        label:'是',
+        value: '1'
+      },{
+        label:'否',
+        value: '1'
+      }],
+      reporting_state:[{
+        label:'未报告',
+        value: '1'
+      },{
+        label: '已报告',
+        value: '2'
+      }],
+      star_number:[{
+        label: '一星级',
+        value: '1'
+      },{
+        label: '二星级',
+        value: '2'
+      },{
+        label: '三星级',
+        value: '3'
+      },{
+        label: '四星级',
+        value: '4'
+      },{
+        label: '五星级',
+        value: '5'
+      }]
     }
   },
   filters: {
@@ -225,6 +271,7 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.$emit('closeLoad')
             this.getList()
             this.closeDialog()
             this.closeDetail()

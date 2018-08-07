@@ -129,7 +129,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <template v-if="status === 'create'">
-        <el-button type="primary" @click="createData">保 存</el-button>
+        <el-button type="primary" @click="createData" :loading="submitLoading">保 存</el-button>
         <el-button @click="closeDialog">取 消</el-button>
       </template>
       <template v-if="status === 'update'">
@@ -304,7 +304,8 @@ export default {
         ]
       },
       imageUrl: '',
-      action: imageUpload
+      action: imageUpload,
+      submitLoading: false
     }
   },
   watch: {
@@ -346,7 +347,9 @@ export default {
     createData() {
       this.$refs['dataForm'].validate(v => {
         if (v) {
+          this.submitLoading = true
           addPerson(this.formVal).then(res => {
+            this.submitLoading = false
             const data = res.data
             if (data.success) {
               this.$notify({
@@ -365,6 +368,8 @@ export default {
                 duration: 2000
               })
             }
+          }).catch(() => {
+            this.submitLoading = false
           })
         }
       })

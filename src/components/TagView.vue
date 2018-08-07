@@ -1,10 +1,15 @@
 <template>
   <div class="content-view">
+    <h1>
+      <router-link to="index">
+        <img src="../assets/logo.png" alt="lzda-logo" class="nav-logo">
+      </router-link>
+    </h1>
     <div class="content-nav">
       <ul class="content-menu">
         <li class="menu-item">
           <i class="iconfont icon-user"></i>
-          管理员
+          {{getUser}}
         </li>
         <li class="menu-item active" @click="closeAllTags">
           <i class="iconfont icon-checkout"></i>
@@ -22,12 +27,26 @@
 </template>
 
 <script>
+import { layout } from '@/api/article'
+import { getToken, removeToken } from '@/utils/auth'
 export default {
   name: 'Header',
+  data () {
+    return {
+       username: null
+    }
+  },
+  computed: {
+    getUser() {
+      this.username = getToken()
+      return this.username
+    }
+  },
   methods: {
     closeAllTags() {
+      removeToken()
       //this.$store.dispatch('delAllViews')
-      this.$router.push('/')
+      location.reload()
     }
   }
 }
@@ -36,7 +55,7 @@ export default {
 <style lang="scss" scoped>
 [class*=' icon-'],
 [class^='icon-'] {
-  color: #c53333;
+  color: #02467e;
 }
 .icon-user {
   font-size: 22px;

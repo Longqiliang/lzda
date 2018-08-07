@@ -1,5 +1,22 @@
 .content-view{
   min-height: 120px;
+  h1{
+    margin: 0;
+    float: left;
+    font-size: 30px;
+    height: 120px;
+    display: flex;
+    padding-left: 70px;
+    align-items: center;
+    a{
+      color: $black;
+      text-decoration: none;
+      display: block;
+    }
+  }
+  .nav-logo{
+    vertical-align: sub;
+  }
   .content-btn{
     display: inline-flex;
     line-height: 1;

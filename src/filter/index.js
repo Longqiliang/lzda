@@ -29,3 +29,12 @@ export function parseTime(time, cFormat) {
   })
   return timeStr
 }
+export function showInfo(id, user, arg) {
+  if (!id || user.length < 1) {
+    return
+  }
+  const item = user.find(item => {
+    return item.id === id
+  })
+  return item[arg]
+}

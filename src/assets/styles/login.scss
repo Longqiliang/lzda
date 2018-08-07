@@ -1,0 +1,84 @@
+$login-color: #054e9b;
+.app-wrapper{
+  .login{
+    flex: 1;
+  }
+}
+.title {
+  margin-top: 15vh;
+  margin-bottom: 55px;
+  text-align: center;
+}
+.form-group {
+  margin: 0 auto;
+  width: 445px;
+  padding: 20px;
+  background-color: rgba(56, 157, 239, 0.25);
+  border-radius: 6px;
+  .el-form-item{
+    &__content{
+      height: 45px;
+      border-bottom: 1px solid $login-color;
+      margin: 0 45px;
+    }
+  }
+  .form-input {
+    width: 85%;
+    height: 45px;
+    .el-input{
+      &__inner{
+      height: 100%;
+      line-height: 45px;
+      font-size: 16px;
+      border: none !important;
+      display: inline-block;
+      outline: none;
+      background: transparent;
+      box-sizing: border-box;
+      color: $black;
+      &::-webkit-input-placeholder {
+        color: #666;
+      }
+      &:-webkit-autofill{
+        background-color: transparent!important;
+      }
+      }
+    }
+  
+    &-group {
+      height: 45px;
+      border-bottom: 1px solid $login-color;
+      margin: 0 45px;
+      display: flex;
+      flex-direction: column;
+    }
+    &_label {
+      max-width: 13%;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    &-footer{
+      margin: 45px 45px 25px;
+      button{
+        width: 100%;
+        font-size: 18px;
+      }
+    }
+  }
+}
+.form-title {
+  color: $login-color;
+  font-size: 24px;
+  font-weight: normal;
+  margin-top: 0;
+  margin-bottom: 25px;
+}
+
+
+
+.form-icon {
+  display: inline-block;
+  font-weight: normal;
+  font-size: 30px;
+  color: $login-color;
+}

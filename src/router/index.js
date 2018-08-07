@@ -37,7 +37,17 @@ function portrayalPropsFn(route) {
 }
 const router = new Router({
   routes: [{
-      path: '/',
+    path: '',
+    redirect: '/index',
+    hidden: true
+  },{
+    path: '/login',
+    name: 'login',
+    hidden: true,
+    component: () => import('@/components/login') 
+  },
+    {
+      path: '/index',
       meta: {
         title: '首页',
         icon: 'index'

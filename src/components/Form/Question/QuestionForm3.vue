@@ -397,6 +397,7 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.$emit('closeLoad')
             this.closeDialog()
             this.closeDetail()
           } else {

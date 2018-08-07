@@ -8,10 +8,10 @@
       </template>
       <div class="form-tit">{{titleChange}}</div>
     </div>
-    <component :is="formComponent" :user="user" :status="status" ref="children" :questionForm="formVal"></component>
+    <component :is="formComponent" :user="user" :status="status" ref="children" :questionForm="formVal" @closeLoad="closeLoading"></component>
     <div slot="footer" class="dialog-footer">
       <template v-if="status === 'create'">
-        <el-button type="primary" @click="handleCreate">保 存</el-button>
+        <el-button type="primary" @click="handleCreate" :loading="submitLoading">保 存</el-button>
         <el-button @click="closeDialog">取 消</el-button>
       </template>
       <template v-else-if="status === 'update'">
@@ -125,8 +125,13 @@ export default {
           type: 5
         },
         {
-          name: '谈话函询结果',
+          name: '谈话结果',
           archive_id: 6,
+          type: 6
+        },
+        {
+          name: '函询结果',
+          archive_id: 24,
           type: 6
         },
         {
@@ -138,8 +143,9 @@ export default {
           name: '政务处分情况',
           archive_id: 22,
           type: 7
-        }
-      ]
+        }  
+      ],
+      submitLoading: false
     }
   },
   methods: {
@@ -159,10 +165,14 @@ export default {
       this.setFormVal({})
     },
     handleCreate() {
+      this.submitLoading = true
       this.$refs.children.createData()
     },
     handleUpdate() {
       this.$refs.children.updateData()
+    },
+    closeLoading() {
+      this.submitLoading = false
     }
   }
 }

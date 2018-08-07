@@ -132,7 +132,7 @@ export default {
   },
   filters: {
     showInfo(id, user, arg) {
-      if (!id) {
+      if (!id || user.length < 1) {
         return
       }
       const item = user.find(item => {
@@ -204,6 +204,7 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.$emit('closeLoad')
             this.getList()
             this.closeDialog()
             this.closeDetail()

@@ -4,7 +4,7 @@
       <el-col :span="11">
         <el-form-item label="姓名">
           <template v-if="status === 'create'">
-            <el-select v-model="superviseForm.person_id" filterable remote :remote-method="remoteMethod" :loading="loading">
+            <el-select v-model="superviseForm.person_id" filterable remote :remote-method="remoteMethod" :loading="loading" >
               <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </template>
@@ -117,7 +117,7 @@ export default {
   },
   filters: {
     showInfo(id, user, arg) {
-      if (!id) {
+      if (!id || user.length < 1) {
         return
       }
       const item = user.find(item => {
@@ -189,6 +189,7 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.$emit('closeLoad')
             this.getList()
             this.closeDialog()
             this.closeDetail()

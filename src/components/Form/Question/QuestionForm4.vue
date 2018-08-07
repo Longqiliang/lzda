@@ -12,42 +12,6 @@
             <span>{{questionForm.name}}</span>
           </template>
         </el-form-item>
-
-      </el-col>
-      <el-col :span="11" :offset="1">
-        <el-form-item label="身份证号码">
-          <template v-if="status === 'create'">
-            <span class="txt-number">{{questionForm.person_id | showInfo(userList, 'idcard')}}</span>
-          </template>
-          <template v-else>
-            <span>{{questionForm.id_card}}</span>
-          </template>
-
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="11">
-        <el-form-item label="工作单位">
-          <template v-if="status === 'create'">
-            <span>{{questionForm.person_id | showInfo(userList, 'unitname')}}</span>
-          </template>
-          <template v-else>
-            <span>{{questionForm.unit_name}}</span>
-          </template>
-
-        </el-form-item>
-      </el-col>
-      <el-col :span="11" :offset="1">
-        <el-form-item label="职务">
-          <template v-if="status === 'create'">
-            <span>{{questionForm.person_id | showInfo(userList, 'position')}}</span>
-          </template>
-          <template v-else>
-            <span>{{questionForm.position}}</span>
-          </template>
-
-        </el-form-item>
       </el-col>
     </el-row>
     <el-row>
@@ -64,7 +28,7 @@
     </el-row>
     <el-row>
       <el-col :span="23">
-        <el-form-item label="来文内容">
+        <el-form-item label="来文标题">
           <el-input :readonly="readonlyStatus" type="textarea" autosize v-model="questionForm.communication_content"></el-input>
           <!-- <el-upload action="https://jsonplaceholder.typicode.com/posts/" ref="upload" :on-error="errorUpload" :on-success="successUpload" :on-remove="removeFile">
             <el-col :span="15">
@@ -78,9 +42,29 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-col :span="23">
-        <el-form-item label="审核类型">
-          <el-input :readonly="readonlyStatus" type="textarea" autosize v-model="questionForm.audit_type"></el-input>
+      <el-col :span="11">
+        <el-form-item label="审核事项">
+          <el-select :disabled="readonlyStatus" v-model="questionForm.audit_type" placeholder="请选择">
+            <el-option v-for="(ty,t) in audit_type" :key="t" :label="ty.label" :value="ty.label"></el-option>
+          </el-select>
+          <!-- <el-input :readonly="readonlyStatus" type="textarea" autosize v-model="questionForm.audit_type"></el-input> -->
+        </el-form-item>
+      </el-col>
+      <el-col :span="11" :offset="1">
+        <el-form-item label="影响提拔任用人数" label-width="130px">
+          <el-input :readonly="readonlyStatus" v-model="questionForm.promotions"></el-input>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="11">
+        <el-form-item label="人数">
+          <el-input :readonly="readonlyStatus" v-model="questionForm.peoplenub"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="11" :offset="1">
+        <el-form-item label="回复日期">
+          <el-date-picker type="date" placeholder="选择日期" :readonly="readonlyStatus" v-model="questionForm.replydate" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
       </el-col>
     </el-row>
@@ -94,14 +78,24 @@
     <el-row>
       <el-col :span="23">
         <el-form-item label="上传附件">
-          <el-upload action="https://jsonplaceholder.typicode.com/posts/" ref="upload" :on-error="errorUpload" :on-success="successUpload" :on-remove="removeFile">
-            <el-col :span="15">
-              <el-input  v-model="fileUpload" readonly></el-input>
-            </el-col>
-            <el-col :span="9">
+          <div>
+            <el-upload action="https://jsonplaceholder.typicode.com/posts/" ref="upload" :on-error="errorUpload" :on-success="successUpload" :on-remove="removeFile">
+              <span class="upload-tit">提醒：</span>
               <el-button>上传附件</el-button>
-            </el-col>
-          </el-upload>
+            </el-upload>
+            <el-upload action="https://jsonplaceholder.typicode.com/posts/" ref="upload" :on-error="errorUpload" :on-success="successUpload" :on-remove="removeFile">
+              <span class="upload-tit">谈话笔录：</span>
+              <el-button>上传附件</el-button>
+            </el-upload>
+            <el-upload action="https://jsonplaceholder.typicode.com/posts/" ref="upload" :on-error="errorUpload" :on-success="successUpload" :on-remove="removeFile">
+              <span class="upload-tit">通知书：</span>
+              <el-button>上传附件</el-button>
+            </el-upload>
+            <el-upload action="https://jsonplaceholder.typicode.com/posts/" ref="upload" :on-error="errorUpload" :on-success="successUpload" :on-remove="removeFile">
+              <span class="upload-tit">谈话问题目录：</span>
+              <el-button>上传附件</el-button>
+            </el-upload>
+          </div>
         </el-form-item>
       </el-col>
     </el-row>
@@ -181,7 +175,22 @@ export default {
       fileUpload: '',
       archive_id: 2,
       userList: [],
-      loading: false
+      loading: false,
+      audit_type: [{
+        label: '干部任职'
+      },{
+        label: '表彰奖励'
+      },{
+        label: '考核'
+      },{
+        label: '试用期转正'
+      },{
+        label: '辞职'
+      },{
+        label: '退休'
+      },{
+        label: '其它'
+      }]
     }
   },
   methods: {
@@ -237,6 +246,7 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.$emit('closeLoad')
             this.closeDialog()
             this.closeDetail()
           } else {

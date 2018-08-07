@@ -225,6 +225,7 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.$emit('closeLoad')
             this.getList()
             this.closeDialog()
             this.closeDetail()

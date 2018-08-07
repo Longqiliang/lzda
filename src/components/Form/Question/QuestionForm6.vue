@@ -2,7 +2,19 @@
   <el-form :model="questionForm" size="mini" label-width="90px" label-position="left" class="demo-form-inline">
     <el-row>
       <el-col :span="11">
-        <el-form-item label="姓名">
+        <el-form-item label="举报人姓名">
+         <el-input :readonly="readonlyStatus" placeholder="请输入举报人姓名" v-model="questionForm.informant_name"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="11" :offset="1">
+        <el-form-item label="其它信息">
+          <el-input :readonly="readonlyStatus" v-model="questionForm.information_other"></el-input>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="11">
+         <el-form-item label="被举报人姓名">
           <template v-if="status === 'create'">
             <el-select v-model="questionForm.person_id" filterable remote :remote-method="remoteMethod" :loading="loading">
               <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -14,30 +26,6 @@
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
-        <el-form-item label="身份证号码">
-          <template v-if="status === 'create'">
-            <span class="txt-number">{{questionForm.person_id | showInfo(userList, 'idcard')}}</span>
-          </template>
-          <template v-else>
-            <span>{{questionForm.id_card}}</span>
-          </template>
-
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="11">
-        <el-form-item label="工作单位">
-          <template v-if="status === 'create'">
-            <span>{{questionForm.person_id | showInfo(userList, 'unitname')}}</span>
-          </template>
-          <template v-else>
-            <span>{{questionForm.unit_name}}</span>
-          </template>
-
-        </el-form-item>
-      </el-col>
-      <el-col :span="11" :offset="1">
         <el-form-item label="职务">
           <template v-if="status === 'create'">
             <span>{{questionForm.person_id | showInfo(userList, 'position')}}</span>
@@ -46,15 +34,6 @@
             <span>{{questionForm.position}}</span>
           </template>
 
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="11">
-        <el-form-item label="类型">
-          <el-select :disabled="readonlyStatus" v-model="questionForm.interviews_type" @change="handleChange">
-            <el-option v-for="ta in talkType" :key="ta.label" :label="ta.label" :value="ta.value"></el-option>
-          </el-select>
         </el-form-item>
       </el-col>
     </el-row>
@@ -95,6 +74,28 @@
     </el-row>
     <el-row>
       <el-col :span="23">
+        <el-form-item label="上传附件">
+          <div>
+            <el-upload :action="uploadUrl" :file-list="filelistByType(2)" :data="{file_type_name: 2}" :on-success="successUpload" :disabled="readonlyStatus">
+              <span class="upload-tit">提醒：</span>
+              <el-button>上传附件</el-button>
+            </el-upload>
+            <el-upload :action="uploadUrl" :file-list="filelistByType(3)" :data="{file_type_name: 3}" :on-success="successUpload" :disabled="readonlyStatus">
+              <span class="upload-tit">谈话笔录：</span>
+              <el-button>上传附件</el-button>
+            </el-upload>
+            <el-upload :action="uploadUrl" :file-list="filelistByType(4)" :data="{file_type_name: 4}" :on-success="successUpload" :disabled="readonlyStatus">
+              <span class="upload-tit">通知书：</span>
+              <el-button>上传附件</el-button>
+            </el-upload>
+            <el-upload :action="uploadUrl" :file-list="filelistByType(5)"  :data="{file_type_name: 5}" ref="upload" :on-error="errorUpload" :on-success="successUpload" :disabled="readonlyStatus">
+              <span class="upload-tit">谈话问题目录：</span>
+              <el-button>上传附件</el-button>
+            </el-upload>
+          </div>
+        </el-form-item>
+      </el-col>
+      <!-- <el-col :span="23">
         <el-form-item label="附件">
           <el-upload action="https://jsonplaceholder.typicode.com/posts/" ref="upload" :on-error="errorUpload" :on-success="successUpload" :on-remove="removeFile">
             <el-col :span="10">
@@ -106,7 +107,7 @@
             </el-col>
           </el-upload>
         </el-form-item>
-      </el-col>
+      </el-col> -->
     </el-row>
   </el-form>
 
@@ -209,13 +210,18 @@ export default {
           value: '2'
         }
       ],
-      archive_id: 6,
       userList: [],
-      loading: false
+      loading: false,
+      uploadFile: uploadFile,
+      fileList1: [],
+      fileList2: [],
+      fileList3: [],
+      fileList4: [],
     }
   },
   computed: {
     ...mapState({
+      type: state => state.question.questionForm,
       dialogShow: state => state.question.dialogShow
     }),
     readonlyStatus() {
@@ -251,6 +257,22 @@ export default {
       closeDialog: 'question/toggleDialog',
       closeDetail: 'question/closeDetail',getList: 'question/refreshList'
     }),
+    filelistByType(type) {
+      if(!this.questionForm.fileList){
+        return
+      }
+      let list = this.questionForm.fileList.filter(v => {
+        return parseInt(v.file_type_name) === type
+      })
+      for(let item of list){
+        item.name = item.file_name
+      }
+      this[`fileList${type}`] = list
+      return list
+    },
+    updatefileList(type) {
+
+    },
     remoteMethod(query) {
       if (query !== ''  ) {
         this.loading = true
@@ -269,13 +291,13 @@ export default {
       }
     },
     successUpload(response, file, fileList) {
-      console.log(file)
-      console.log(fileList)
-      let fileArr = []
-      for (file of fileList) {
-        fileArr.push(file.name)
+      //console.log(this.questionForm.id)
+      if (!this.questionForm.id) {
+        if (response.bussId) {
+          this.questionForm.bussId = response.bussId
+          this.uploadFile = `${uploadFile}?bussId=${response.bussId}`
+        }
       }
-      this.fileUpload = fileArr.join(',')
     },
     errorUpload(err, file, fileList) {
       console.log(err, file, fileList)
@@ -288,7 +310,7 @@ export default {
     },
     createData() {
       let param = {
-        archive_id: this.archive_id
+        archive_id: this.type
       }
       let query = Object.assign(this.questionForm, param)
       addRecord(query)
@@ -302,6 +324,7 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.$emit('closeLoad')
             this.closeDialog()
             this.closeDetail()
           } else {
