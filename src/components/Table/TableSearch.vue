@@ -4,7 +4,7 @@
       <span class="input-label">单位：</span>
       <el-cascader placeholder="请输入" :options="options" :props="organizesProps" :clearable="true" filterable change-on-select @change="handleChange"></el-cascader>
       <span class="input-label">姓名：</span>
-      <el-input v-model="name"></el-input>
+      <el-input v-model="name" clearable></el-input>
       <template v-if="archiveOptions">
         <span class="input-label">档案名称：</span>
         <el-select v-model="selectVal" @change="handleArchiveChange" clearable size="small">
