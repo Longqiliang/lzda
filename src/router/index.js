@@ -184,6 +184,7 @@ const router = new Router({
         title: '系统管理',
         icon: 'setting'
       },
+      hidden: true,
       component: LayOut,
       children: [{
         path: '/',

@@ -1,5 +1,5 @@
 <template>
-  <el-menu :router="true" :default-active="routePath" mode="horizontal" text-color="#fff" active-text-color="#fff" background-color="#02467e">
+  <el-menu :router="true" :default-active="routePath" mode="horizontal" text-color="#fff" active-text-color="#054E9B" background-color="#3471e1">
     <template v-for="item in routes">
       <template v-if="!item.hidden">
         <router-link :to="item.path" :key="item.name">
@@ -10,6 +10,13 @@
         </router-link>
       </template>
     </template>
+    <a href="http://172.16.64.43:8087/ps_bigdata/login/index" target="_blank">
+      <el-menu-item index="index">
+        <span slot="title">
+          <i class="iconfont icon-ptsy"></i>平台首页
+        </span>
+      </el-menu-item>
+    </a>
   </el-menu>
 </template>
 
@@ -41,18 +48,23 @@ export default {
   .el-menu-item {
     float: left;
     margin: 0;
-    font-size: 18px;
+    font-size: 17px;
     padding: 0 1%;
     height: 40px;
     line-height: 40px;
+    // font-weight: bold;
     &.is-active {
       border-bottom: 2px solid transparent !important;
-      background-color: #3496ee !important;
+      background-color: #fff !important;
+      i{
+        color: inherit;
+      }
     }
     i {
       color: #fff;
-      font-size: 26px;
+      font-size: 24px;
       margin-right: 3px;
+      font-weight: normal;
     }
   }
 }

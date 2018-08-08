@@ -16,7 +16,7 @@
     </el-row>
     <el-row>
       <el-col :span="23">
-        <el-form-item label="现存原因">
+        <el-form-item label="现存问题">
           <el-input type="textarea" :autosize="{ minRows: 5 }" v-model="superviseForm.supervision_reasons"></el-input>
         </el-form-item>
       </el-col>

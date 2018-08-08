@@ -1,10 +1,15 @@
+$nav-height: 108px;
 .content-view{
-  min-height: 120px;
+  min-height: $nav-height;
+  overflow: hidden;
+  background-image: url(./assets/images/app-title.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   h1{
     margin: 0;
     float: left;
     font-size: 30px;
-    height: 120px;
+    height: $nav-height;
     display: flex;
     padding-left: 70px;
     align-items: center;
@@ -59,7 +64,7 @@
   position: relative;
   margin: 0;
   padding-left: 0;
-  color: #333;
+  color: #fff;
   padding-right: 15vw;
   &::before,&::after{
     content: '';
@@ -73,8 +78,9 @@
     text-align: center;
     float: left;
     position: relative;
+    display: flex;
+    align-items: center;
     &.active:hover{
-      color: $view-color;
       cursor: pointer;
     }
   }

@@ -10,15 +10,15 @@
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <h4 class="wrapper-tit">违纪行为</h4>
-          <!-- <LoopChart /> -->
-          <DisciplineRing  class="wrapper-center"/>
+          <LoopChart />
+          <!-- <DisciplineRing  class="wrapper-center"/> -->
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="10">
         <div class="chart-wrapper">
           <h4 class="wrapper-tit">廉情指标分析</h4>
-          <IntegrityBar :data="targetData" v-if="targetData" class="wrapper-center"/>
-            <!-- <YBarChart :data="targetData" v-if="targetData" /> -->
+          <!-- <IntegrityBar :data="targetData" v-if="targetData" class="wrapper-center"/> -->
+          <YBarChart :data="targetData" v-if="targetData" />
         </div>
       </el-col>
     </el-row>
@@ -33,17 +33,17 @@
         <div class="chart-wrapper">
           <h4 class="wrapper-tit">违法行为</h4>
        
-            <IllegalPie :data="illegalData" v-if="illegalData" class="wrapper-center"/>
+            <!-- <IllegalPie :data="illegalData" v-if="illegalData" class="wrapper-center"/> -->
             <!-- <PieChart name="违法行为" :data="illegalData" v-if="illegalData" /> -->
-      
+            <Highcharts :options="illegalData" v-if="illegalData" class="wrapper-center"/>
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="10">
         <div class="chart-wrapper">
           <h4 class="wrapper-tit">单位廉情分析</h4>
      
-            <IntegrityHistogram :data="unitsData" v-if="unitsData" class="wrapper-center"/>
-              <!-- <BarChart :data="unitsData" v-if="unitsData"/> -->
+            <!-- <IntegrityHistogram :data="unitsData" v-if="unitsData" class="wrapper-center"/> -->
+              <BarChart :data="unitsData" v-if="unitsData"/>
     
         </div>
       </el-col>
@@ -59,16 +59,18 @@ import DisciplineRing from './DisciplineRing'
 import IntegrityHistogram from './IntegrityHistogram'
 import IllegalPie from './IllegalPie'
 import IntegrityBar from './IntegrityBar'
-
+import Highcharts from './Highcharts'
 import LoopPieChart from './LoopPieChart'
 
-// import PieChart from './PieChart'
-// import LoopChart from './LoopChart'
-// import BarChart from './BarChart'
-// import YBarChart from './YBarChart'
+import PieChart from './PieChart'
+import LoopChart from './LoopChart'
+import BarChart from './BarChart'
+import YBarChart from './YBarChart'
 import { queryIndexFourInfo } from '@/api/article'
 import QuestionDialog from '@/components/Dialog/QuestionDialog'
 import ReportDialog from '@/components/Dialog/ReportDialog'
+
+import {getIllegalChart, getUnitChart} from '@/utils/highcharts'
 export default {
   name: 'chart',
   components: {
@@ -79,11 +81,12 @@ export default {
     IntegrityHistogram,
     LoopPieChart,
     QuestionDialog,
-    ReportDialog
-    // PieChart,
-    // LoopChart,
-    // BarChart,
-    // YBarChart
+    ReportDialog,
+    Highcharts,
+    PieChart,
+    LoopChart,
+    BarChart,
+    YBarChart
   },
   data() {
     return {
@@ -106,13 +109,27 @@ export default {
             this.targetData = data.lqzbfx
           }
           if (data.wfxw.length) {
-            this.illegalData = data.wfxw
+            //this.illegalData = data.wfxw
+            const wfData = []
+            for(let wf of data.wfxw) {
+              let arr = Object.values(wf)
+              wfData.push(arr)
+            }
+            // console.log(wfData)
+             
+            // return
+             const option = {name: '违法行为',data:wfData}
+             this.illegalData = getIllegalChart(option)
           }
           if (data.szxt.length) {
             this.statutsData = data.szxt
           }
           if (data.dwlqfx.length) {
-            this.unitsData = data.dwlqfx
+            // this.unitsData = data.dwlqfx
+            const unitData = []
+            for (let un of data.dwlqfx) {
+              let arr = [un]
+            }
           }
         }
       })

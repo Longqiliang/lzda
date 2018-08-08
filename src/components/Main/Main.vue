@@ -1,5 +1,5 @@
 <template>
-  <el-container :class="{'is-collapse': isCollapse}">
+  <el-container :class="{'is-collapse': isCollapse}" class="main-bg">
     <transition name="slide">
       <el-aside v-if="!isCollapse">
         <SideBar @togglecollapse="hideSideBar"/>

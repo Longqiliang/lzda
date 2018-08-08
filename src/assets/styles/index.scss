@@ -10,7 +10,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+  font-family: Microsoft YaHei;
+  // font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
   margin: 0;
   height: 100%;
   box-sizing: border-box;
@@ -113,9 +114,9 @@ a:hover {
 //main-container全局样式
 .app-wrapper {
   height: 100%;
-  background-image: url(./assets/images/bg.png);
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
+  // background-image: url(./assets/images/bg.png);
+  // background-size: 100% 100%;
+  // background-repeat: no-repeat;
   display: flex; // 图表样式
   .v-charts-component-loading {
     background-color: hsla(0, 0%, 100%, .1);
@@ -124,7 +125,7 @@ a:hover {
     margin: 15px;
     padding: 5px;
     height: calc(100% - 30px);
-    background-color: rgba(2, 70, 126, .2);
+    // background-color: rgba(2, 70, 126, .2);
     &-main {
       height: calc(100% - 40px);
       display: flex;
@@ -143,7 +144,7 @@ a:hover {
       overflow: hidden;
       &-box {
         border: 1px solid $view-color;
-        background-color: rgba(0, 0, 0, .15);
+        // background-color: rgba(0, 0, 0, .15);
         width: calc(100% - 12px);
         margin: 0 0 12px 12px;
         flex: 1;
@@ -180,7 +181,7 @@ a:hover {
         tr {
           &:hover {
             >td {
-              background-color: rgba(0, 0, 0, .1);
+              // background-color: rgba(0, 0, 0, .1);
             }
           }
         }
@@ -192,12 +193,14 @@ a:hover {
         color: $black;
       }
       tr {
-        background-color: rgba(0, 0, 0, .1);
+        // background-color: rgba(0, 0, 0, .1);
       }
       th {
         background-color: inherit;
+       
         &.is-leaf {
           border-bottom: 1px solid $view-color;
+          background-color: $table-head-color;
         }
       }
       &--border,
@@ -225,8 +228,9 @@ a:hover {
   }
   .content-tree {
     height: 100%;
-    padding-bottom: 20px;
+    // padding-bottom: 20px;
     overflow: hidden;
+    border-right: 5px solid $view-color;
     &-scroll {
       height: 100%; // width: 100%;
       margin-right: -17px;
@@ -435,6 +439,7 @@ a:hover {
   }
   .el-breadcrumb__item:last-child .el-breadcrumb__inner a {
     color: $black;
+    cursor: pointer;
   }
   .btn-danger {
     background-color: $view-color;
@@ -456,21 +461,32 @@ a:hover {
     }
   }
 }
-
+.main-bg{
+  background-image: url(./assets/images/main-bg.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
 .tab-search {
   margin: 0 0 10px 12px;
-  border: 1px solid $black;
+  border: 1px solid $view-color;
   .search-group {
     padding: 12px 5px;
     .search-button {
       padding-left: 40px;
-      button {
-        padding: 5px 15px;
-        border: 1px solid#999;
+      button{
+        padding: 7px 28px;
       }
-      &.inline {
-        display: inline-block;
+    }
+    button {
+      padding: 7px 18px;
+      background-color: $view-color;
+      border-color: $view-color;
+      &.search-btn{
+        margin-left: 5px;
       }
+    }
+    .inline {
+      display: inline-block;
     }
   }
   .input-label {
@@ -528,7 +544,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   &-container {
-    border: 1px solid $black;
+    border: 1px solid $view-color;
     padding: 15px 10px;
     margin-left: 12px;
     flex: 1; // flex-direction: column;
@@ -554,10 +570,10 @@ a:hover {
         }
       }
       &--border {
-        border: 1px solid $black;
+        border: 1px solid $table-border;
         td,
         th {
-          border-right: 1px solid $black;
+          border-right: 1px solid $table-border;
         }
       }
       thead {
@@ -565,7 +581,7 @@ a:hover {
         font-weight: 300;
       }
       td {
-        border-bottom: 1px solid $black;
+        border-bottom: 1px solid $table-border;
         padding: 0;
       }
       th {
@@ -573,9 +589,9 @@ a:hover {
           line-height: 23px;
         }
         &.is-leaf {
-          border-bottom: 1px solid $black;
+          border-bottom: 1px solid $table-border;
         }
-        background-color: #c3d8ec;
+        background-color: $table-head-color;
         padding: 6px 0;
       }
       color: $black * 1.2;

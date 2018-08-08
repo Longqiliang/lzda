@@ -23,6 +23,14 @@ export function layout(query) {
     params: query
   })
 }
+// 数据字典
+export function queryArchivesAll(query) {
+  return request({
+    url: API + '/record/queryArchivesAll',
+    method: 'get',
+    params: query
+  })
+}
 
 // 首页
 export function queryIndexFourInfo(query) {

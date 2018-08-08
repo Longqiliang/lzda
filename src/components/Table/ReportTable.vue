@@ -1,17 +1,22 @@
 <template>
   <div class="table">
-    <TableSearch/>
+    <TableSearch @handleSearch="handleSearch" @handleCreate="handleCreate" :archiveOptions="archiveOptions"/>
     <div class="table-container">
-      <div class="table-tit">
+      <!-- <div class="table-tit">
         <el-button type="danger" @click="handleCreate">新增</el-button>
-      </div>
-      <el-table :data="tableVal" border width="100%" @cell-click="handleDetail" height="calc(100% - 77px)" v-loading="loading" element-loading-text="加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(255, 255, 255, .8)">
+      </div> -->
+      <el-table :data="tableVal" border width="100%" @cell-click="handleDetail" height="calc(100% - 42px)" v-loading="loading" element-loading-text="加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(255, 255, 255, .8)">
         <el-table-column label="序号" fixed prop="row_num" min-width="50" align="center"></el-table-column>
         <el-table-column label="姓名" prop="name" align="center"></el-table-column>
-        <el-table-column label="单位" prop="unit_name" align="center"></el-table-column>
+        <el-table-column label="单位职务" align="center" min-width="200">
+          <template slot-scope="scope">
+            {{scope.row.unit_name}}{{scope.row.position}}
+          </template>
+        </el-table-column>
+        
         <el-table-column label="档案类型" prop="archive_type_name" align="center"></el-table-column>
+        <el-table-column label="录入部门" prop="" align="center" min-width="140"></el-table-column>
         <el-table-column label="档案名称" prop="archive_name" align="center" min-width="180"></el-table-column>
-        <el-table-column label="部门" prop="dept_name" align="center"></el-table-column>
         <el-table-column label="建档日期" align="center">
           <template slot-scope="scope" v-if="scope.row.create_time">
             {{scope.row.create_time | parseTime('{y}-{m}-{d}')}}
@@ -50,7 +55,8 @@ import {
   queryRecordList,
   queryRecordDetails,
   queryPersonInfoDetailed,
-  queryPerson
+  queryPerson,
+  queryArchivesAll
 } from '@/api/article'
 import ReportDetail from './ReportDetail'
 import { createNamespacedHelpers } from 'vuex'
@@ -75,11 +81,13 @@ export default {
       tableVal: null,
       recordList: null,
       personInfo: [],
-      loading: false
+      loading: false,
+      archiveOptions: []
     }
   },
   created() {
     this.getList()
+    this.getArchive()
   },
   props: {
     unitId: {
@@ -96,7 +104,7 @@ export default {
     isRefresh(v) {
       if (v) {
         this.getList()
-      }
+      }   
     },
     $route(val) {
       let matched = this.$route.matched.filter(item => item.path)
@@ -104,7 +112,7 @@ export default {
       if (first === '/report') {
         this.getList()
       }
-    }
+    } 
   },
   computed: {
     ...mapState({
@@ -125,7 +133,8 @@ export default {
         unit_id: this.unitId,
         dept_id: this.deptId,
         user_name: this.name,
-        archive_type_id: this.archive_type_id
+        archive_type_id: this.archive_type_id,
+        archive_id: this.archive_id
       }
     ) {
       this.loading = true
@@ -155,7 +164,18 @@ export default {
         .catch(err => {
           this.loading = false
         })
-    },
+    }, 
+    getArchive() {
+      const param = {
+        archive_type_id: this.archive_type_id
+      }
+      queryArchivesAll(param).then(res => {
+        const data = res.data
+        if(data.success){
+          this.archiveOptions = data.data
+        }
+      })
+    }, // 获取档案名称
     handleCreate() {
       this.setStatus('create')
       this.setFormVal({
@@ -290,6 +310,11 @@ export default {
     handleCurrentChange(val) {
       this.listQuery.pageIndex = val
       this.getList()
+    },
+    handleSearch(query) {
+      query.archive_type_id = this.archive_type_id
+      this.archive_id = query.archive_id
+      this.getList(query)
     }
   }
 }

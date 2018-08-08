@@ -41,10 +41,21 @@ export default {
       })
     },
     initChart(data) {
+      const label = {
+        show: false
+      }
+      const labelLine ={
+        show: false
+      } 
       const legendArr = []
       for (const leg of data) {
         legendArr.push(leg.name)
+        if(leg.value == 0) {
+          leg.label = label,
+          leg.labelLine = labelLine
+        }
       }
+      console.log(data)
       this.chart = echarts.init(this.$el, null, { renderer: 'svg' })
       this.chart.setOption({
         tooltip: {
@@ -67,10 +78,15 @@ export default {
           '#70ad46'
         ],
         legend: {
-          left: 'center',
+          type: 'scroll',
+          orient: 'vertical',
+          right: 80,
           calculable: true,
-          bottom: '0',
-          padding: [3,3],
+          top: 'center',
+          padding: [40,20],
+          itemWidth: 10,
+          itemHeight: 10,
+          itemGap: 20,
           tooltip: {
             show: true
           },
@@ -86,12 +102,13 @@ export default {
             name: '违纪行为',
             type: 'pie',
             selectedMode: 'single',
-            radius: [55, 95],
-            center: ['50%', '40%'],
+            radius: [55, 130],
+            center: ['30%', '50%'],
             data: data,
             itemStyle: {
               normal: {
-                borderColor: 'white'
+                borderColor: 'white',
+                borderWidth: 2
               }
             },
             label: {

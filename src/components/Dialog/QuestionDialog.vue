@@ -19,14 +19,6 @@
         <el-button @click="closeDialog">取 消</el-button>
       </template>
       <template v-else-if="status === 'detail'"></template>
-      <!-- <template v-if="recordSelect === 3">
-        <div class="explain">
-          <h5 class="explain-txt">填表说明:</h5>
-          <p>1.本表供领导干部谈话提醒时填写，每次谈话均应有记录。</p>
-          <p>2.涉及纪律类型从“六项纪律”（政治纪律、组织纪律、廉洁纪律、群众纪律、工作纪律、生活纪律）中选择填写，单项或多项均可。</p>
-          <p>3.谈话方式为“咬耳扯袖”或者“红脸出汗”。</p>
-        </div>
-      </template> -->
     </div>
   </el-dialog>
 </template>
@@ -39,7 +31,8 @@ import {
   QuestionForm4,
   QuestionForm5,
   QuestionForm6,
-  QuestionForm7
+  QuestionForm7,
+  QuestionForm8
 } from '@/components/Form/Question/index'
 import { mapState, mapActions, mapMutations } from 'vuex'
 import elDragDialog from '@/directive/el-dragDialog'
@@ -54,7 +47,8 @@ export default {
     QuestionForm4,
     QuestionForm5,
     QuestionForm6,
-    QuestionForm7
+    QuestionForm7,
+    QuestionForm8
   },
   computed: {
     ...mapState({
@@ -102,7 +96,7 @@ export default {
         {
           name: '其他组织处理情况',
           archive_id: 21,
-          type: 1
+          type: 8
         },
         {
           name: '问责情况',

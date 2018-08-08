@@ -18,7 +18,6 @@
     <h4 class="detail-tit">2.廉政电子档案</h4>
     <el-table :data="recordList" border>
       <el-table-column label="档案名称" prop="archive_name" min-width="180"></el-table-column>
-      <el-table-column label="备注" align="center" prop="remark"></el-table-column>
       <el-table-column label="建档日期" align="center" sortable min-width="140" prop="create_time" :formatter="createTimeFormatter">
         <!-- <template slot-scope="scope" v-if="scope.row.create_time">
           {{scope.row.create_time | parseTime('{y}-{m}-{d}')}}
@@ -30,6 +29,7 @@
         </template> -->
       </el-table-column>
       <el-table-column label="上报日期" align="center" sortable min-width="140" prop="create_time" :formatter="createTimeFormatter"></el-table-column>
+      <!-- <el-table-column label="备注"  min-width="140" align="center" prop="remark"></el-table-column> -->
       <el-table-column label="操作" align="center" min-width="140">
         <template slot-scope="scope">
           <el-button type="text" @click="handleChange(scope.row,'detail')">详情</el-button>

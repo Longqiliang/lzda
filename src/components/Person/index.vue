@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TableSearch />
+     <TableSearch @handleSearch="handleSearch" :isCreate="false"/>
       <el-row :gutter="10">
         <el-col :xl="4" :lg="6" :md="8" v-for="(li,i) in list" :key="i">
           <div class="person-card" @click="jumpTo(li)">
@@ -54,9 +54,9 @@ export default {
       type: String
     }
   },
-  created() {
+    created() {
     this.getPersonList()
-  },
+  },  
   watch: {
     $route(val) {
       let matched = this.$route.matched.filter(item => item.path)
@@ -65,7 +65,7 @@ export default {
         this.getPersonList()
       }
     }
-  },
+  },  
   methods: {
     jumpTo(e) {
       this.$router.push({path: `/portrayal/detail/${e.id}`, query: {
@@ -99,6 +99,9 @@ export default {
           this.total = data.allsize
         }
       })
+    },
+    handleSearch(query) {
+      this.getPersonList(query)
     }
   }
 }

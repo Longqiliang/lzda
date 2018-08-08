@@ -23,7 +23,7 @@
       &.is-leaf {
         border-bottom: 1px solid $black;
       }
-      background-color: #c3d8ec;
+      background-color: $table-head-color;
       padding: 6px 0;
     }
   }

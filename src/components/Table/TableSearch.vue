@@ -3,13 +3,19 @@
     <div class="search-group">
       <span class="input-label">单位：</span>
       <el-cascader placeholder="请输入" :options="options" :props="organizesProps" :clearable="true" filterable change-on-select @change="handleChange"></el-cascader>
-      <!-- <el-select v-model="selectVal" @change="handleChange" size="small">
-        <el-option v-for="item in options" :key="item.value" :label="item.value" :value="item.value"></el-option>
-      </el-select> -->
       <span class="input-label">姓名：</span>
       <el-input v-model="name"></el-input>
-      <div class="search-button inline">
-        <el-button icon="el-icon-search" @click="handleSearch">查询</el-button>
+      <template v-if="archiveOptions">
+        <span class="input-label">档案名称：</span>
+        <el-select v-model="selectVal" @change="handleArchiveChange" size="small">
+          <el-option v-for="item in archiveOptions" :key="item.archive_id" :label="item.archive_name" :value="item.archive_id"></el-option>
+        </el-select>
+      </template>
+      <div class="inline">
+        <el-button icon="el-icon-search" @click="handleSearch" type="primary" class="search-btn">查询</el-button>
+      </div>
+      <div class="search-button inline" v-if="isCreate">
+        <el-button type="primary" @click="handleCreate">新增</el-button>
       </div>
     </div>
   </div>
@@ -21,9 +27,15 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'TableSearch',
   props: {
-    selectVal: '',
     deptId: {
       type: String
+    },
+    archiveOptions: {
+      type: Array
+    },
+    isCreate: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -41,7 +53,8 @@ export default {
       name: null,
       dept_id: null,
       unitId: null,
-      path: null
+      path: null,
+      selectVal: null
     }
   },
   watch: {
@@ -68,16 +81,20 @@ export default {
         this.dept_id = null
       }
     },
+    handleCreate() {
+      this.$emit('handleCreate')
+    },
+    handleArchiveChange(val) {
+      this.selectVal = val
+    },
     handleSearch() {
       const query = {
-        unitId: this.unitId,
-        deptId: this.dept_id,
-        name: this.name
+        unit_id: this.unitId,
+        dept_id: this.dept_id,
+        user_name: this.name,
+        archive_id :this.selectVal
       }
-      this.$router.push({
-          path: this.path,
-          query: query
-        })
+      this.$emit('handleSearch',query)
     }
   }
 }

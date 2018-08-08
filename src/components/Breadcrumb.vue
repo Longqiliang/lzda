@@ -45,6 +45,7 @@ export default {
   display: flex;
   padding: 12px;
   font-size: 16px;
+  min-height: 40px;
   .el-breadcrumb{
     &-tit{
       line-height: 1;

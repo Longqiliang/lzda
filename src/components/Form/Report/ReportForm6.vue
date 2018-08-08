@@ -15,36 +15,63 @@
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="政治面貌">
-          <el-input v-model="reportForm.political_status"></el-input>
-        </el-form-item>
+            <template v-if="status === 'create'">
+              <span>{{reportForm.person_id | showInfo(userList, 'politicalstatus')}}</span>
+            </template>
+            <template v-else>
+              <span>{{reportForm.politicalstatus}}</span>
+            </template>
+          </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
         <el-form-item label="单位及职务">
-          <el-input v-model="reportForm.talk_time"></el-input>
+          <template v-if="status === 'create'">
+            <span>{{reportForm.person_id | showInfo(userList, 'unitname')}}{{reportForm.person_id | showInfo(userList, 'position')}}</span>
+          </template>
+          <template v-else>
+            <span>{{reportForm.unit_name}}{{reportForm.position}}</span>
+          </template>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
-        <el-form-item label="联系方式">
-          <el-input v-model="reportForm.contact_number"></el-input>
-        </el-form-item>
+         <el-form-item label="职级">
+            <template v-if="status === 'create'">
+              <span>{{reportForm.person_id | showInfo(userList, 'rank')}}</span>
+            </template>
+            <template v-else>
+              <span>{{reportForm.rank}}</span>
+            </template>
+
+          </el-form-item>
       </el-col>
     </el-row>
     <el-row>
-      <el-col :span="11">
+      <el-col :span="11" >
+        <el-form-item label="联系方式">
+            <template v-if="status === 'create'">
+              <span>{{reportForm.person_id | showInfo(userList, 'cellphone')}}</span>
+            </template>
+            <template v-else>
+              <span>{{reportForm.cell_phone}}</span>
+            </template>
+
+          </el-form-item>
+      </el-col>
+      <el-col :span="11" :offset="1">
         <el-form-item label="举办时间">
           <el-date-picker type="date" placeholder="选择日期" v-model="reportForm.holding_time" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
       </el-col>
-      <el-col :span="11" :offset="1">
-        <el-form-item label="举办事宜">
-          <el-input v-model="reportForm.holding_matter"></el-input>
-        </el-form-item>
-      </el-col>
     </el-row>
     <el-row>
-      <el-col :span="23">
+      <el-col :span="11" >
+        <el-form-item label="举办事宜">
+          <el-input v-model="reportForm.holding_matters"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="11" :offset="1">
         <el-form-item label="举办地点">
           <el-input v-model="reportForm.holding_address"></el-input>
         </el-form-item>
@@ -65,6 +92,16 @@
           <el-input v-model="reportForm.unilateral_number"></el-input>
         </el-form-item>
       </el-col>
+      <el-col :span="11">
+        <el-form-item label="预计总开支">
+          <el-input v-model="reportForm.single_expenditure"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="11" :offset="1">
+        <el-form-item label="车队规模">
+          <el-input v-model="reportForm.single_fleet"></el-input>
+        </el-form-item>
+      </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
@@ -78,6 +115,16 @@
       <el-col :span="11" :offset="1">
         <el-form-item label="桌数">
           <el-input v-model="reportForm.bilateral_number"></el-input>
+        </el-form-item>
+      </el-col>
+       <el-col :span="11">
+        <el-form-item label="预计总开支">
+          <el-input v-model="reportForm.double_expenditure"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="11" :offset="1">
+        <el-form-item label="车队规模">
+          <el-input v-model="reportForm.double_fleet"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -139,27 +186,6 @@ export default {
       type: Object,
       default() {
         return {
-          name: '',
-          political_status: '',
-          unit_name: '',
-          rank: '',
-          contact_number: '',
-          holding_time: '',
-          holding_matter: '',
-          holding_address: '',
-          unilateral_people: '',
-          unilateral_number: '',
-          bilateral_people: '',
-          bilateral_number: '',
-          other_info: '',
-          dept_suggest: '',
-          superior_suggest: '',
-          record_suggest: '',
-          person_id: '',
-          unit_id: '',
-          fileId: '',
-          file_name: '',
-          id: ''
         }
       }
     },
@@ -190,7 +216,15 @@ export default {
       return item[arg]
     }
   },
-  
+  computed: {
+    readonlyStatus() {
+      if (this.status === 'detail') {
+        return true
+      } else {
+        return false
+      }
+    }
+  },
   methods: {
     ...mapMutations({
       closeDialog: 'report/toggleDialog',

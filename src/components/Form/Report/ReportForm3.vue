@@ -67,20 +67,7 @@
         </el-form-item>
       </el-col>
     </el-row>
-    <el-row>
-      <el-col :span="23">
-        <el-form-item label="标题">
-          <el-input v-model="reportForm.response_title"></el-input>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="23">
-        <el-form-item label="内容">
-          <el-input type="textarea" autosize v-model="reportForm.response_content"></el-input>
-        </el-form-item>
-      </el-col>
-    </el-row>
+
     <el-row>
       <el-col :span="23">
         <el-form-item label="附件">

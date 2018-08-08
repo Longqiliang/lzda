@@ -46,7 +46,7 @@ export default {
           }
         },
         grid: {
-          left: '45%',
+          right: '30%',
           bottom: '10%',
           top: '10%'
         },
@@ -56,6 +56,7 @@ export default {
             axisTick: {
               show: false
             },
+            position: 'right',
             axisLine: {
               show: true,
               lineStyle: {
@@ -96,7 +97,8 @@ export default {
         ],
         xAxis: {
           type: 'value',
-          show: false
+          show: false,
+          inverse: true
         },
         series: [
           {
@@ -105,7 +107,7 @@ export default {
             label: {
               normal: {
                 show: true,
-                position: 'insideRight',
+                position: 'insideLeft',
                 formatter: '{c}',
                 color: '#fff'
               }
@@ -116,7 +118,7 @@ export default {
           type: 'continuous',
           max: 10,
           min: 1,
-          show: true,
+          show: false,
           dimension: 0,
           inRange: {
             color: ['#66bf04', '#fea000', '#ff5b01']

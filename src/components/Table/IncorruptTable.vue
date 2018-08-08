@@ -1,6 +1,6 @@
 <template>
   <div class="table">
-    <TableSearch/>
+    <TableSearch @handleSearch="handleSearch" :isCreate="false"/>
     <div class="table-container">
       <el-table :data="tableVal" border width="100%" height="calc(100% - 42px)">
         <el-table-column label="序号" prop="row_num" min-width="50" align="center"></el-table-column>
@@ -94,7 +94,7 @@ export default {
         dept_id: this.deptId,
         name: this.name
       }
-    ) {
+      ) {
       let query = Object.assign(param, this.listQuery)
       queryHonest(query).then(res => {
         let data = res.data
@@ -116,6 +116,17 @@ export default {
         }
       })
     },
+    getArchive() {
+      const param = {
+        archive_type_id: this.archive_type_id
+      }
+      queryArchivesAll(param).then(res => {
+        const data = res.data
+        if(data.success){
+          this.archiveOptions = data.data
+        }
+      })
+    },
     handleLook(row) {
       let query = {
         person_id: row.id
@@ -132,6 +143,9 @@ export default {
     handleCurrentChange(val) {
       this.listQuery.pageIndex = val
       this.getList()
+    },
+    handleSearch(query) {
+      this.getList(query)
     }
   }
 }

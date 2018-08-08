@@ -1,11 +1,11 @@
 <template>
   <div class="table">
-    <TableSearch/>
+    <TableSearch @handleSearch="handleSearch" @handleCreate="handleCreate" :archiveOptions="archiveOptions"/>
     <div class="table-container">
-      <div class="table-tit">
+      <!-- <div class="table-tit">
         <el-button type="danger" @click="handleCreate">新增</el-button>
-      </div>
-      <el-table :data="tableVal" border width="100%" @cell-click="handleDetail" height="calc(100% - 77px)">
+      </div> -->
+      <el-table :data="tableVal" border width="100%" @cell-click="handleDetail" height="calc(100% - 42px)">
         <el-table-column label="序号" fixed prop="row_num" min-width="50" align="center"></el-table-column>
         <el-table-column label="姓名" prop="name" align="center"></el-table-column>
         <el-table-column label="单位职务" align="center" min-width="200">
@@ -15,7 +15,9 @@
         </el-table-column>
         <el-table-column label="监督信息" prop="supervisory" align="center" min-width="180" :show-overflow-tooltip="true">
         </el-table-column>
-        <el-table-column label="监督部门" prop="dept_name" align="center"></el-table-column>
+        
+        <el-table-column label="档案名称" prop="archive_name" align="center"></el-table-column>
+        <el-table-column label="录入部门" prop="" align="center"></el-table-column>
         <el-table-column label="建档日期" align="center">
           <template slot-scope="scope" v-if="scope.row.create_time">
             {{scope.row.create_time | parseTime('{y}-{m}-{d}')}}
@@ -49,7 +51,8 @@ import {
   updateRecord,
   queryRecordList,
   queryRecordDetails,
-  queryPerson
+  queryPerson,
+  queryArchivesAll
 } from '@/api/article'
 import SuperviseDetail from './SuperviseDetail'
 import { createNamespacedHelpers } from 'vuex'
@@ -75,7 +78,9 @@ export default {
       total: null,
       tableVal: null,
       recordList: null,
-      personInfo: []
+      personInfo: [],
+      archiveOptions: [],
+      loading: false  
     }
   },
   props: {
@@ -86,9 +91,9 @@ export default {
       type: String
     },
     name: {
-      type: String
+      type: String 
     }
-  },
+  },  
   watch: {
     $route(val) {
       let matched = this.$route.matched.filter(item => item.path)
@@ -97,9 +102,10 @@ export default {
         this.getList()
       }
     }
-  },
+  },  
   created() {
     this.getList()
+    this.getArchive()
   },
   provide() {
     return {
@@ -117,34 +123,53 @@ export default {
       'setStatus',
       'setSuperviseForm',
       'setFormVal',
-      'toggleDetail'
+      'toggleDetail',
+      'errorList'
     ]),
-    getList(
+    getList( 
       param = {
         unit_id: this.unitId,
         dept_id: this.deptId,
         user_name: this.name,
         archive_type_id: this.archive_type_id
       }
-    ) {
+    ) {   
+      this.loading = true   
       let query = Object.assign(param, this.listQuery)
       queryRecord(query).then(res => {
         let data = res.data
+        this.loading = false
         if (data.success) {
-          console.log(data)
-
           if (data.data.length > 0) {
             this.tableVal = data.data
             this.total = data.pageInfo.totalRecord
+            this.errorList()
           } else {
             if (this.listQuery.pageIndex > 1) {
               this.listQuery.pageIndex -= 1
               this.getList()
+            }else {
+              this.tableVal = data.data
+              this.total = data.pageInfo.totalRecord
+              this.errorList()
             }
           }
         }
+      }).catch(err => {
+        this.loading = false
       })
     },
+    getArchive() {
+      const param = {
+        archive_type_id: this.archive_type_id
+      }
+      queryArchivesAll(param).then(res => {
+        const data = res.data
+        if(data.success){
+          this.archiveOptions = data.data
+        }
+      })
+    }, // 获取档案名称
     handleCreate() {
       this.setStatus('create')
       this.setFormVal({
@@ -266,6 +291,11 @@ export default {
     handleCurrentChange(val) {
       this.listQuery.pageIndex = val
       this.getList()
+    },
+    handleSearch(query) {
+      query.archive_type_id = this.archive_type_id
+      this.archive_id = query.archive_id
+      this.getList(query)
     }
   }
 }

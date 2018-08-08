@@ -1,5 +1,5 @@
 <template>
-  <el-container direction="vertical">
+  <el-container direction="vertical" class="main-bg">
     <div class="container">
       <div class="header">
         <Breadcrumb />

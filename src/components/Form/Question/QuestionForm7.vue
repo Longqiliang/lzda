@@ -14,12 +14,12 @@
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
-        <el-form-item label="身份证号码">
+        <el-form-item label="单位">
           <template v-if="status === 'create'">
-            <span class="txt-number">{{questionForm.person_id | showInfo(userList, 'idcard')}}</span>
+            <span class="txt-number">{{questionForm.person_id | showInfo(userList, 'unitname')}}</span>
           </template>
           <template v-else>
-            <span>{{questionForm.id_card}}</span>
+            <span>{{questionForm.unit_name}}</span>
           </template>
 
         </el-form-item>
@@ -27,43 +27,67 @@
     </el-row>
     <el-row>
       <el-col :span="11">
+        <el-form-item label="职务">
+          <template v-if="status === 'create'">
+            <span>{{questionForm.person_id | showInfo(userList, 'position')}}</span>
+          </template>
+          <template v-else>
+            <span>{{questionForm.position}}</span>
+          </template>
+        </el-form-item>
+      </el-col>
+      <el-col :span="11" :offset="1">
+        <el-form-item label="职级">
+          <template v-if="status === 'create'">
+            <span>{{questionForm.person_id | showInfo(userList, 'rank')}}</span>
+          </template>
+          <template v-else>
+            <span>{{questionForm.rank}}</span>
+          </template>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="11">
+        <el-form-item label="政治面貌">
+          <template v-if="status === 'create'">
+            <span>{{questionForm.person_id | showInfo(userList, 'politicalstatus')}}</span>
+          </template>
+          <template v-else>
+            <span>{{questionForm.politicalstatus}}</span>
+          </template>
+        </el-form-item>
+      </el-col>
+      <el-col :span="11" :offset="1">
         <el-form-item label="违纪行为">
           <el-select :disabled="readonlyStatus" v-model="questionForm.disciplinary_action">
             <el-option v-for="dis in discipline" :key="dis.label" :label="dis.label" :value="dis.label"></el-option>
           </el-select>
-
-        </el-form-item>
-      </el-col>
-      <el-col :span="11" :offset="1">
-        <el-form-item label="违法行为">
-          <el-select :disabled="readonlyStatus" v-model="questionForm.illegal_action">
-            <el-option v-for="ill in infringe" :key="ill.label" :label="ill.label" :value="ill.label"></el-option>
-          </el-select>
-
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
-        <el-form-item label="处分类型">
-        <template v-if="type == '7'">
-          <el-select :disabled="readonlyStatus" v-model="questionForm.disciplinary_type">
-            <el-option v-for="dis in disposeType" :key="dis.label" :label="dis.label" :value="dis.label"></el-option>
+        <el-form-item label="违法行为">
+          <el-select :disabled="readonlyStatus" v-model="questionForm.illegal_action">
+            <el-option v-for="ill in infringe" :key="ill.label" :label="ill.label" :value="ill.label"></el-option>
           </el-select>
-        </template>
-        <template v-else-if="type == '22'">
-          <el-select :disabled="readonlyStatus" v-model="questionForm.disciplinary_type">
-            <el-option v-for="go in governmentType" :key="go.label" :label="go.label" :value="go.label"></el-option>
-          </el-select>
-        </template>
-          
         </el-form-item>
       </el-col>
-      <!-- <el-col :span="11" :offset="1">
-        <el-form-item label="案件性质">
-          <el-input :readonly="readonlyStatus" v-model="questionForm.cause_natrue"></el-input>
+      <el-col :span="11" :offset="1">
+        <el-form-item label="处分类型">
+          <template v-if="type == '7'">
+            <el-select :disabled="readonlyStatus" v-model="questionForm.disciplinary_type">
+              <el-option v-for="dis in disposeType" :key="dis.label" :label="dis.label" :value="dis.label"></el-option>
+            </el-select>
+          </template>
+          <template v-else-if="type == '22'">
+            <el-select :disabled="readonlyStatus" v-model="questionForm.disciplinary_type">
+              <el-option v-for="go in governmentType" :key="go.label" :label="go.label" :value="go.label"></el-option>
+            </el-select>
+          </template>
         </el-form-item>
-      </el-col> -->
+      </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
@@ -108,7 +132,7 @@
         <el-form-item label="附件上传">
           <el-upload action="https://jsonplaceholder.typicode.com/posts/" ref="upload" :on-error="errorUpload" :on-success="successUpload" :on-remove="removeFile">
             <el-col :span="15">
-              <el-input  v-model="fileUpload" readonly></el-input>
+              <el-input v-model="fileUpload" readonly></el-input>
             </el-col>
             <el-col :span="9">
               <el-button>上传附件</el-button>
@@ -122,7 +146,12 @@
 </template>
 
 <script>
-import { uploadFile, addRecord, updateRecord, queryTermPerson } from '@/api/article'
+import {
+  uploadFile,
+  addRecord,
+  updateRecord,
+  queryTermPerson
+} from '@/api/article'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 
 export default {
@@ -259,14 +288,14 @@ export default {
       getInfoByName: state => state.app.getInfoByName
     }),
     readonlyStatus() {
-      if(this.status === 'detail'){
+      if (this.status === 'detail') {
         return true
-      }else {
+      } else {
         return false
       }
     },
     uploadUrl() {
-      if(this.questionForm.id) {
+      if (this.questionForm.id) {
         this.uploadFile = `${uploadFile}?bussId=${this.questionForm.id}`
       }
       return this.uploadFile
@@ -296,7 +325,8 @@ export default {
   methods: {
     ...mapMutations({
       closeDialog: 'question/toggleDialog',
-      closeDetail: 'question/closeDetail',getList: 'question/refreshList'
+      closeDetail: 'question/closeDetail',
+      getList: 'question/refreshList'
     }),
     remoteMethod(query) {
       if (query !== '') {
@@ -307,7 +337,7 @@ export default {
         }).then(res => {
           this.loading = false
           const data = res.data
-          if(data.success) {
+          if (data.success) {
             this.userList = data.data
           }
         })
@@ -403,5 +433,4 @@ export default {
 </script>
 
 <style>
-
 </style>

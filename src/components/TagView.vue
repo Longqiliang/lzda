@@ -8,6 +8,10 @@
     <div class="content-nav">
       <ul class="content-menu">
         <li class="menu-item">
+          <i class="iconfont icon-setting"></i>
+          系统设置
+        </li>
+        <li class="menu-item">
           <i class="iconfont icon-user"></i>
           {{getUser}}
         </li>
@@ -16,10 +20,10 @@
           退出
         </li>
       </ul>
-      <div class="content-row">
+      <!-- <div class="content-row">
         <a class="content-btn" href="http://172.16.64.43:8087/ps_bigdata/login/index">
           <i class="iconfont icon-ptsy"></i>平台首页</a>
-      </div>
+      </div> -->
 
     </div>
 
@@ -55,7 +59,11 @@ export default {
 <style lang="scss" scoped>
 [class*=' icon-'],
 [class^='icon-'] {
-  color: #02467e;
+  color: #fff;
+  margin-right: 5px;
+}
+.icon-setting {
+  font-size: 22px;
 }
 .icon-user {
   font-size: 22px;
