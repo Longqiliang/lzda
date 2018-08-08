@@ -7,7 +7,7 @@
       <el-input v-model="name"></el-input>
       <template v-if="archiveOptions">
         <span class="input-label">档案名称：</span>
-        <el-select v-model="selectVal" @change="handleArchiveChange" size="small">
+        <el-select v-model="selectVal" @change="handleArchiveChange" clearable size="small">
           <el-option v-for="item in archiveOptions" :key="item.archive_id" :label="item.archive_name" :value="item.archive_id"></el-option>
         </el-select>
       </template>
