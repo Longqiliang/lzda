@@ -61,14 +61,14 @@
     <el-row>
       <el-col :span="23">
         <el-form-item label="内容">
-          <el-input :readonly="readonlyStatus" type="textarea" autosize v-model="questionForm.interviews_context"></el-input>
+          <el-input :readonly="readonlyStatus" type="textarea" :autosize="{ minRows: 3 }" v-model="questionForm.interviews_context"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
         <el-form-item label="结果">
-          <el-input :readonly="readonlyStatus" type="textarea" autosize v-model="questionForm.interviews_result"></el-input>
+          <el-input :readonly="readonlyStatus" type="textarea" :autosize="{ minRows: 3 }" v-model="questionForm.interviews_result"></el-input>
         </el-form-item>
       </el-col>
     </el-row>

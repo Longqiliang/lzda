@@ -172,7 +172,7 @@
             <el-input :readonly="readonlyStatus" v-model="mar.change_time" size="mini"></el-input>
           </el-col>
           <el-col :span="12">
-            <el-input :readonly="readonlyStatus" v-model="mar.marital_cause" size="mini"></el-input>
+            <el-input type="textarea"  :autosize="{ minRows: 1}" :readonly="readonlyStatus" v-model="mar.marital_cause" size="mini"></el-input>
           </el-col>
         </el-row>
       </el-row>

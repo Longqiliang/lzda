@@ -14,7 +14,7 @@
           </template>
         </el-table-column>
         
-        <el-table-column label="档案名称" prop="archive_name" align="center"></el-table-column>
+        <el-table-column label="档案名称" prop="archive_name" align="center" min-width="120"></el-table-column>
         <el-table-column label="录入部门" prop="" align="center" min-width="140"></el-table-column>
         <el-table-column label="建档日期" align="center" min-width="140">
           <template slot-scope="scope" v-if="scope.row.create_time">
@@ -40,7 +40,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import TableSearch from './TableSearch'
 import QuestionDialog from '@/components/Dialog/QuestionDialog'
 import {
@@ -80,7 +79,7 @@ export default {
       archive_type_id: 1,
       listQuery: {
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 20
       },
       total: null,
       tableVal: null,

@@ -11,6 +11,7 @@ import chart from '@/components/charts'
 import person from '@/components/person'
 import personDetail from '@/components/person/detail'
 import setting from '@/components/Setting/Setting'
+import comprehensive from '@/components/Comprehensive'
 Vue.use(Router)
 
 function propsFn(route) {
@@ -176,6 +177,18 @@ const router = new Router({
           component: IncorruptTable,
           props: propsFn
         }]
+      }]
+    },
+    {
+      path: '/comprehensive',
+      meta: {
+        title: '综合查询',
+        icon: 'cSearch'
+      },
+      component: LayOut,
+      children: [{
+        path: '/',
+        component: comprehensive
       }]
     },
     {

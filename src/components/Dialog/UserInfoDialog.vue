@@ -1,118 +1,123 @@
 <template>
-  <el-dialog title="个人信息" :visible.sync="DialogVisible" width="600px" center :before-close="closeDialog" v-el-drag-dialog>
-    <el-form :model="formVal" size="mini" label-width="100px" label-position="left" class="demo-form-inline" :rules="rules" :disabled="formStatus" ref="dataForm">
+  <el-dialog title="个人信息" :visible.sync="DialogVisible" width="800px" center :before-close="closeDialog" v-el-drag-dialog>
+    <el-form :model="formVal" size="mini" label-width="100px" label-position="left" class="demo-form-inline" :rules="rules" ref="dataForm">
       <el-row>
         <el-col :span="11">
           <el-form-item label="姓名" prop="name">
-            <el-input v-model="formVal.name"></el-input>
+            <el-input :readonly="formStatus" v-model="formVal.name"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
           <el-form-item label="身份证号码" prop="idcard">
-            <el-input v-model="formVal.idcard"></el-input>
+            <el-input :readonly="formStatus" v-model="formVal.idcard" :maxlength="18" @blur="getBronTime"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="23">
+          <el-form-item label="工作单位" prop="organizesOptions">
+            <el-cascader :disabled="formStatus" placeholder="请选择工作单位" :options="organizes" :props="organizesProps" @change="handleChange" filterable v-model="formVal.organizesOptions" style="width: 100%;"></el-cascader>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="11">
-          <el-form-item label="工作单位" prop="organizesOptions">
-            <el-cascader placeholder="请选择工作单位" :options="organizes" :props="organizesProps" @change="handleChange" filterable v-model="formVal.organizesOptions"></el-cascader>
-          </el-form-item>
-        </el-col>
-        <el-col :span="11" :offset="1">
           <el-form-item label="性别" prop="sex">
-            <el-select v-model="formVal.sex" placeholder="请选择性别">
+            <el-select v-model="formVal.sex" placeholder="请选择性别" style="width: 100%;" :disabled="formStatus">
               <el-option v-for="se in sex" :key="se.value" :label="se.label" :value="se.value"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :span="11" :offset="1">
+          <el-form-item label="现任职务" prop="position">
+            <el-input :readonly="formStatus" v-model="formVal.position"></el-input>
+          </el-form-item>
+        </el-col>
       </el-row>
       <el-row>
         <el-col :span="11">
-          <el-form-item label="职务" prop="position">
-            <el-input v-model="formVal.position"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="11" :offset="1">
           <el-form-item label="职级" prop="rank">
-            <el-input v-model="formVal.rank"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="11">
-          <el-form-item label="出生日期" prop="borntime">
-            <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="formVal.borntime" style="width: 100%;"></el-date-picker>
+            <el-input :readonly="formStatus" v-model="formVal.rank"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
-          <el-form-item label="学历" prop="education">
-            <el-input v-model="formVal.education"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="11">
           <el-form-item label="政治面貌" prop="politicalstatus">
-            <el-input v-model="formVal.politicalstatus"></el-input>
+            <el-input :readonly="formStatus" v-model="formVal.politicalstatus"></el-input>
+          </el-form-item>
+        </el-col>
+
+      </el-row>
+      <el-row>
+        <el-col :span="11">
+          <el-form-item label="学历" prop="education">
+            <el-input :readonly="formStatus" v-model="formVal.education"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
+          <el-form-item label="出生日期" prop="borntime">
+            <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="formVal.borntime" style="width: 100%;" readonly></el-date-picker>
+          </el-form-item>
+        </el-col>
+
+      </el-row>
+      <el-row>
+        <el-col :span="11">
           <el-form-item label="民族" prop="ethnic">
-            <el-input v-model="formVal.ethnic"></el-input>
+            <el-input :readonly="formStatus" v-model="formVal.ethnic"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="11" :offset="1">
+          <el-form-item label="籍贯" prop="origin">
+            <el-input :readonly="formStatus" v-model="formVal.origin"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="11">
-          <el-form-item label="参加工作时间" prop="joinworktime">
-            <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="formVal.joinworktime" style="width: 100%;"></el-date-picker>
+          <el-form-item label="身份类别" prop="id_category">
+            <el-select v-model="formVal.id_category" style="width: 100%;" :disabled="formStatus">
+              <el-option v-for="(it,i) in identityType" :key="i" :label="it.label" :value="it.value"></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
           <el-form-item label="任现职时间" prop="worktime">
-            <el-input-number v-model="formVal.worktime" :min="1"></el-input-number> 年
-            <!-- <el-date-picker type="date" placeholder="选择日期" v-model="formVal.worktime" style="width: 100%;"></el-date-picker> -->
+            <!-- <el-input-number v-model="formVal.worktime" :min="1"></el-input-number> 年 -->
+            <el-date-picker type="date" placeholder="选择日期" v-model="formVal.worktime" style="width: 100%;" :readonly="formStatus"></el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="11">
-          <el-form-item label="联系电话" prop="contactnumber">
-            <el-input v-model="formVal.contactnumber"></el-input>
+          <el-form-item label="办公电话" prop="contactnumber">
+            <el-input :readonly="formStatus" v-model="formVal.contactnumber"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
-          <el-form-item label="手机" prop="cellphone">
-            <el-input v-model="formVal.cellphone"></el-input>
+          <el-form-item label="手机号码" prop="cellphone">
+            <el-input :readonly="formStatus" v-model="formVal.cellphone"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
-        <el-col :span="23">
-          <el-form-item label="籍贯" prop="origin">
-            <el-input v-model="formVal.origin"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
+
+      <!-- <el-row>
         <el-col :span="23">
           <el-form-item label="住址" prop="address">
-            <el-input v-model="formVal.address"></el-input>
+            <el-input :readonly="formStatus" v-model="formVal.address"></el-input>
           </el-form-item>
         </el-col>
-      </el-row>
+      </el-row> -->
       <el-row>
         <el-col :span="23">
           <el-form-item label="档案编号" prop="recordnumber">
-            <el-input v-model="formVal.recordnumber"></el-input>
+            <el-input :readonly="formStatus" v-model="formVal.recordnumber"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="23">
           <el-form-item label="备注">
-            <el-input type="textarea" autosize v-model="formVal.remark"></el-input>
+            <el-input :readonly="formStatus" type="textarea" :autosize="{ minRows: 4}" v-model="formVal.remark"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -172,6 +177,13 @@ export default {
     }
   },
   data() {
+    const validateIdCard = (rule, value, callback) => {
+      if (value.length === 15 || value.length === 18) {
+        callback()
+      } else {
+        callback(new Error('请输入有效的密码'))
+      }
+    }
     return {
       organizesProps: {
         label: 'name',
@@ -188,19 +200,48 @@ export default {
           value: '2'
         }
       ],
+      identityType: [
+        {
+          label: '公务员',
+          value: '1'
+        },
+        {
+          label: '职员',
+          value: '2'
+        },
+        {
+          label: '雇员',
+          value: '3'
+        },
+        {
+          label: '聘用人员',
+          value: '4'
+        },
+        {
+          label: '公共辅助员',
+          value: '5'
+        }
+      ],
       rules: {
         name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
-        idCard: [
+        idcard: [
           {
             required: true,
-            message: '请输入身份证号码',
-            trigger: 'blur'
+            trigger: 'blur',
+            validator: validateIdCard
           }
         ],
         sex: [
           {
             required: true,
             message: '请选择性别',
+            trigger: 'change'
+          }
+        ],
+        id_category: [
+          {
+            required: true,
+            message: '请选择身份类别',
             trigger: 'change'
           }
         ],
@@ -232,7 +273,7 @@ export default {
             trigger: 'blur'
           }
         ],
-        politicalStatus: [
+        politicalstatus: [
           {
             required: true,
             message: '请输入政治面貌',
@@ -253,24 +294,24 @@ export default {
             trigger: 'change'
           }
         ],
-        workTime: [
+        worktime: [
           {
             required: true,
             message: '请输入任现职时间',
             trigger: 'blur'
           }
         ],
-        contactNumber: [
+        contactnumber: [
           {
             required: true,
-            message: '请输入联系电话',
+            message: '请输入办公电话',
             trigger: 'blur'
           }
         ],
-        cellPhone: [
+        cellphone: [
           {
             required: true,
-            message: '请输入手机号',
+            message: '请输入手机号码',
             trigger: 'blur'
           }
         ],
@@ -278,13 +319,6 @@ export default {
           {
             required: true,
             message: '请输入籍贯',
-            trigger: 'blur'
-          }
-        ],
-        address: [
-          {
-            required: true,
-            message: '请输入地址',
             trigger: 'blur'
           }
         ],
@@ -328,6 +362,19 @@ export default {
     }
   },
   methods: {
+    getBronTime() {
+      let idCard = this.formVal.idcard,
+       birthday = ''
+      if (idCard != null && idCard != '') {
+        if (idCard.length == 15) {
+          birthday = '19' + idCard.substr(6, 6)
+        } else if (idCard.length == 18) {
+          birthday = idCard.substr(6, 8)
+        }
+        birthday = birthday.replace(/(.{4})(.{2})/, '$1-$2-')
+      }
+      this.formVal.borntime = birthday
+    },
     handleChange(value) {
       this.formVal.unit_id = value[0]
       this.formVal.dept_id = value[1]
@@ -348,29 +395,31 @@ export default {
       this.$refs['dataForm'].validate(v => {
         if (v) {
           this.submitLoading = true
-          addPerson(this.formVal).then(res => {
-            this.submitLoading = false
-            const data = res.data
-            if (data.success) {
-              this.$notify({
-                title: '成功',
-                message: '创建成功',
-                type: 'success',
-                duration: 2000
-              })
-              this.updateTable()
-              this.closeDialog()
-            } else {
-              this.$notify({
-                title: '失败',
-                message: '创建失败，请重试！',
-                type: 'error',
-                duration: 2000
-              })
-            }
-          }).catch(() => {
-            this.submitLoading = false
-          })
+          addPerson(this.formVal)
+            .then(res => {
+              this.submitLoading = false
+              const data = res.data
+              if (data.success) {
+                this.$notify({
+                  title: '成功',
+                  message: '创建成功',
+                  type: 'success',
+                  duration: 2000
+                })
+                this.updateTable()
+                this.closeDialog()
+              } else {
+                this.$notify({
+                  title: '失败',
+                  message: '创建失败，请重试！',
+                  type: 'error',
+                  duration: 2000
+                })
+              }
+            })
+            .catch(() => {
+              this.submitLoading = false
+            })
         }
       })
     },

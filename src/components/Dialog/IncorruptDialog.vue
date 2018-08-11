@@ -10,7 +10,7 @@
         <p class="card-content">
           <span class="text-red">1.谈话提醒情况：</span>
           <template v-if="formVal.data.btalk_time">
-            {{formVal.data.btalk_time}}，被{{formVal.data.unit_name}}给予谈话提醒
+            {{formVal.data.btalk_time}}，被谈话提醒
           </template>
           <template v-else>
             {{errorText}}
@@ -19,7 +19,7 @@
         <p class="card-content">
           <span class="text-red">2.诫勉谈话情况：</span>
           <template v-if="formVal.data.ctalk_time">
-            {{formVal.data.ctalk_time}}，被{{formVal.data.unit_name}}给予诫勉谈话处理
+            {{formVal.data.ctalk_time}}，被诫勉谈话处理
           </template>
           <template v-else>
             {{errorText}}
@@ -28,7 +28,7 @@
         <p class="card-content">
           <span class="text-red">3.其它组织措施情况：</span>
           <template v-if="formVal.data.dtalk_time">
-            {{formVal.data.dtalk_time}}，被{{formVal.data.unit_name}}给予{{formVal.data.dtalk_type}}处理
+            {{formVal.data.dtalk_time}}，被{{formVal.data.dtalk_type}}处理
           </template>
           <template v-else>
             {{errorText}}
@@ -46,7 +46,7 @@
         <p class="card-content">
           <span class="text-red">5.受到党纪处分情况：</span>
           <template v-if="formVal.data.fstart_time">
-            {{formVal.data.fstart_time}}，被{{formVal.data.fagency}}给予{{formVal.data.fdisciplinary_type}}处分
+            {{formVal.data.fstart_time}}，受到{{formVal.data.fdisciplinary_type}}处分
           </template>
           <template v-else>
             {{errorText}}
@@ -55,7 +55,7 @@
         <p class="card-content">
           <span class="text-red">6.受到政务处分情况：</span>
           <template v-if="formVal.data.gstart_time">
-            {{formVal.data.gstart_time}}，被{{formVal.data.gagency}}给予{{formVal.data.gdisciplinary_type}}处分
+            {{formVal.data.gstart_time}}，受到{{formVal.data.gdisciplinary_type}}处分
           </template>
           <template v-else>
             {{errorText}}

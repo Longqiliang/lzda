@@ -5,7 +5,7 @@
     </div>
     <div class="content-tree">
       <div class="content-tree-scroll">
-        <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" :draggable="false" accordion>
+        <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" :draggable="false" accordion :highlight-current="true">
         </el-tree>
       </div>
     </div>

@@ -31,7 +31,14 @@ export function queryArchivesAll(query) {
     params: query
   })
 }
-
+// 综合查询
+export function queryAllArchives(query) {
+  return request({
+    url: API + '/comprehensive/queryAllArchives',
+    method: 'get',
+    params: query
+  })
+}
 // 首页
 export function queryIndexFourInfo(query) {
   return request({
@@ -96,6 +103,7 @@ export function queryUnitAnalysisList(query) {
     params: query
   })
 }
+
 // 系统管理
 export function addUnit(query) {
   return request({

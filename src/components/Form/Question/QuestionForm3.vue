@@ -53,7 +53,10 @@
     <el-row>
       <el-col :span="11">
         <el-form-item label="线索来源">
-          <el-input :readonly="readonlyStatus" v-model="questionForm.rules_source"></el-input>
+          <!-- <el-input :readonly="readonlyStatus" v-model="questionForm.rules_source"></el-input> -->
+          <el-select v-model="questionForm.rules_source" :disabled="readonlyStatus">
+            <el-option v-for="(so, s) in source" :key="s" :label="so.label" :value="so.label"></el-option>
+          </el-select>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
@@ -65,7 +68,7 @@
     <el-row>
       <el-col :span="23">
         <el-form-item label="内容摘要">
-          <el-input :readonly="readonlyStatus" v-model="questionForm.problem_summary"></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 3 }" :readonly="readonlyStatus"  v-model="questionForm.problem_summary"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -335,6 +338,35 @@ export default {
         },
         {
           label: '予以了结'
+        }
+      ],
+      source: [
+        {
+          label: '信访举报'
+        },
+        {
+          label: '上级交办'
+        },
+        {
+          label: '公检法机关移送'
+        },
+        {
+          label: '监督检查中发现'
+        },
+        {
+          label: '审查调查中发现'
+        },
+        {
+          label: '审计中发现'
+        },
+        {
+          label: '巡视巡察中发现'
+        },
+        {
+          label: '其它行政执法机关移送'
+        },
+        {
+          label: '其他'
         }
       ],
       userList: [],

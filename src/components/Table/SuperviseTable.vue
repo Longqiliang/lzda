@@ -42,7 +42,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import TableSearch from './TableSearch'
 import SuperviseDialog from '@/components/Dialog/SuperviseDialog'
 import {
@@ -73,7 +72,7 @@ export default {
       archive_type_id: 3,
       listQuery: {
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 20
       },
       total: null,
       tableVal: null,

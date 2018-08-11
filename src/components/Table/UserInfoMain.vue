@@ -105,7 +105,7 @@ export default {
       },
       listQuery: {
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 20
       },
       total: null,
       loading: false,
@@ -124,8 +124,8 @@ export default {
     },
     getPersonList(
       param = {
-        unitId: this.unitId,
-        deptId: this.deptId,
+        unit_id: this.unitId,
+        dept_id: this.deptId,
         name: this.name
       }
     ) {

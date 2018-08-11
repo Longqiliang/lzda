@@ -8,8 +8,10 @@
     <div class="content-nav">
       <ul class="content-menu">
         <li class="menu-item">
+          <router-link to="/system">
           <i class="iconfont icon-setting"></i>
           系统设置
+          </router-link>         
         </li>
         <li class="menu-item">
           <i class="iconfont icon-user"></i>

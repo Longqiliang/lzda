@@ -1,15 +1,15 @@
 <template>
   <div>
      <TableSearch @handleSearch="handleSearch" :isCreate="false"/>
-      <el-row :gutter="10">
+      <el-row :gutter="10" >
         <el-col :xl="4" :lg="6" :md="8" v-for="(li,i) in list" :key="i">
           <div class="person-card" @click="jumpTo(li)">
             <div class="person-img">
-              <template v-if="li.sex === '1'">
-                <img src="../../assets/images/man.png">
+              <template v-if="li.sex === '2'">
+                <img src="../../assets/images/women.png">
               </template>
               <template v-else>
-                <img src="../../assets/images/women.png">
+                <img src="../../assets/images/man.png">
               </template>
             </div>
             <div class="person-info">
@@ -37,7 +37,7 @@ export default {
     return {
       listQuery: {
         pageIndex: 1,
-        pageSize: 20
+        pageSize: 30
       },
       total: null,
       list: null
@@ -85,8 +85,8 @@ export default {
       this.getPersonList()
     },
     getPersonList(param = {
-      unitId: this.unitId,
-        deptId: this.deptId,
+      unit_id: this.unitId,
+        dept_id: this.deptId,
         name: this.name
     }) {
       let query = Object.assign(param, this.listQuery)

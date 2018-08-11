@@ -10,7 +10,8 @@
         </router-link>
       </template>
     </template>
-    <a href="http://172.16.64.43:8087/ps_bigdata/login/index" target="_blank">
+    <!-- <a href="http://172.16.64.43:8087/ps_bigdata/login/index" target="_blank"> -->
+    <a href="http://192.168.0.202:9009/ps_bigdata/login/index" target="_blank">
       <el-menu-item index="index">
         <span slot="title">
           <i class="iconfont icon-ptsy"></i>平台首页
@@ -42,13 +43,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$font: 19px;
+$icon-font: 26px;
 .el-menu--horizontal {
   padding-left: 2%;
   border-bottom: none;
   .el-menu-item {
     float: left;
     margin: 0;
-    font-size: 17px;
+    font-size: $font;
     padding: 0 1%;
     height: 40px;
     line-height: 40px;
@@ -62,7 +65,7 @@ export default {
     }
     i {
       color: #fff;
-      font-size: 24px;
+      font-size: $icon-font;
       margin-right: 3px;
       font-weight: normal;
     }

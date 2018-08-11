@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible.sync="dialogTableVisible" width="600px" center :before-close="closeDialog" v-el-drag-dialog>
+  <el-dialog :visible.sync="dialogTableVisible" width="1000px" center :before-close="closeDialog" v-el-drag-dialog>
     <div slot="title">
       <template v-if="status === 'create'">
         <el-select v-model="recordSelect" placeholder="请选择档案名称" @change="changeSelect">

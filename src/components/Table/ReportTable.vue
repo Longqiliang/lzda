@@ -75,7 +75,7 @@ export default {
       archive_type_id: 2,
       listQuery: {
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 20
       },
       total: null,
       tableVal: null,

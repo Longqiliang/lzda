@@ -19,6 +19,10 @@ export default {
     },
     options: {
       type: Object
+    },
+    isStock: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -32,10 +36,6 @@ export default {
   methods: {
     initChart() {
       this.chart = new Highcharts.Chart(this.$el, this.options)
-      console.log(this.options)
-    },
-    text() {
-      console.log(text)
     }
   }
 }

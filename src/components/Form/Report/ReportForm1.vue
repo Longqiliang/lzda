@@ -76,7 +76,7 @@
     </el-row>
     <el-row>
       <el-col :span="23">
-        <el-form-item label="本人是否存在问题">
+        <el-form-item label="本人是否存在问题" label-width="120px">
           <el-radio-group v-model="reportForm.flag">
             <el-radio label="是">是</el-radio>
             <el-radio label="否">否</el-radio>
@@ -87,7 +87,7 @@
     <el-row>
       <el-col :span="23">
         <el-form-item label="内容">
-          <el-input type="textarea" autosize v-model="reportForm.problem"></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 3 }" v-model="reportForm.problem"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
