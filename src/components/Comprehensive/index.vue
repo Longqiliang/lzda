@@ -23,6 +23,8 @@ export default {
   data () {
     return {
       query:{
+        archive_type_id:1,
+        archive_id: 1
       }
     }
   },

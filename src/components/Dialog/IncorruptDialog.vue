@@ -120,6 +120,15 @@
             {{errorText}}
           </template>
         </p>
+        <p class="card-content">
+          <span class="text-red">6.其他喜庆报告</span>
+          <template v-if="formVal.data.xholding_time ">
+            {{formVal.data.xholding_time}}，在{{formVal.data.xholding_address}}举办喜庆事宜
+          </template>
+          <template v-else>
+            {{errorText}}
+          </template>
+        </p>
 
         <h4 class="card-content-tit">四、日常监督情况</h4>
         <p class="card-content">
@@ -144,6 +153,15 @@
           <span class="text-red">3.会议监督情况</span>
           <template v-if="formVal.data.pmeeting_time">
             {{formVal.data.pmeeting_time}}，参加{{formVal.data.pmeeting_content}}会议，发现{{formVal.data.pmeeting_problem}}问题
+          </template>
+          <template v-else>
+            {{errorText}}
+          </template>
+        </p>
+        <p class="card-content">
+          <span class="text-red">4.监督检查情况</span>
+          <template v-if="formVal.data.ysupervision_reasons">
+            {{formVal.data.ysupervision_reasons}}作监督检查，发现{{formVal.data.ysupervision_reasons }}问题
           </template>
           <template v-else>
             {{errorText}}

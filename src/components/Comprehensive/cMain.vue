@@ -10,7 +10,7 @@
             {{scope.row.unit_name}}{{scope.row.position}}
           </template>
         </el-table-column>
-        <el-table-column label="档案类型" prop="archive_name" align="center" min-width="120"></el-table-column>
+        <el-table-column label="档案类型" prop="archive_type_name" align="center" min-width="120"></el-table-column>
         <el-table-column label="档案名称" prop="archive_name" align="center" min-width="120"></el-table-column>
       
         <el-table-column label="操作" align="center" min-width="120">
@@ -26,6 +26,9 @@
         </el-pagination>
       </div>
     </div>
+    <QuestionDialog />
+    <ReportDialog />
+    <SuperviseDialog />
   </div>
 </template>
 
@@ -41,7 +44,10 @@ import {
 } from '@/api/article'
 export default {
   components: {
-    TableSearch
+    TableSearch,
+    QuestionDialog,
+    ReportDialog,
+    SuperviseDialog
   },
   data() {
     return {
@@ -91,23 +97,23 @@ export default {
       setSuperviseForm: 'supervise/setSuperviseForm',
       setSuperviseFormVal: 'supervise/setFormVal'
     }),
-    checkRecord(type) {
+    checkRecord(type, row, data) {
       switch (type) {
         case '1':
           this.setQuestionStatus('detail')
-          this.setQuestionForm(row.archive_id)
+          this.setQuestionForm(row.archiveid)
           this.setQuestionFormVal(data.data)
           this.toggleQuestionDialog()
           break
         case '2':
           this.setReportStatus('detail')
-          this.setReportForm(row.archive_id)
+          this.setReportForm(row.archiveid)
           this.setReportFormVal(data.data)
           this.toggleReportDialog()
           break
         case '3':
           this.setSuperviseStatus('detail')
-          this.setSuperviseForm(row.archive_id)
+          this.setSuperviseForm(row.archiveid)
           this.setSuperviseFormVal(data.data)
           this.toggleSuperviseDialog()
           break
@@ -117,12 +123,10 @@ export default {
       param = this.query) {
       this.loading = true
       let query = Object.assign(param, this.listQuery)
-      console.log(query)
       queryAllArchives(query).then(res => {
           let data = res.data
           this.loading = false
           if (data.success) {
-            console.log(data)
             if (data.data.length > 0) {
               this.tableVal = data.data
               this.total = data.pageInfo.totalRecord
@@ -144,14 +148,14 @@ export default {
       let query = {
         archive_type_id: row.archive_type_id,
         person_id: row.person_id,
-        archive_id: row.archive_id,
-        buss_id: row.bussid
+        archive_id: row.archiveid,
+        buss_id: row.id
       }
       queryRecordDetails(query).then(res => {
         let data = res.data
         if (data.success) {
           let type = row.archive_type_id
-          this.checkRecord(type)
+          this.checkRecord(type, row, data)
         }
       })
     },
@@ -160,8 +164,9 @@ export default {
       this.getList()
     },
     handleSearch(query) {
-      console.log(query)
-      // this.getList(query)
+      // console.log(query)
+      let param = Object.assign(this.query, query)
+      this.getList(param)
     }
   }
 }

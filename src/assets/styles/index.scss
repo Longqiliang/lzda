@@ -156,25 +156,31 @@ a:hover {
         margin-right: -18px;
         width: calc(100% + 18px);
       }
-      .el-tree {
-        $tree-lineheight-bg: #90b6fd;
-        background: transparent;
-        color: $black;
-        width: 100%;
-        &-node {
-          &.is-current{
-            >.el-tree-node__content {
-            background-color: $tree-lineheight-bg;
+       @at-root{
+        .el-tree {
+          background: transparent;
+          color: $black;
+          width: 100%;
+          .el-tree-node {
+            &.is-current{
+              >.el-tree-node__content {
+              background-color: $tree-lineheight-bg!important;
+              }
+              // &.is-checked{
+              //   >.el-tree-node__content {
+              //     background-color: $tree-lineheight-bg;
+              //     }
+              // }
             }
-          }
-          &__content {
-            &:hover {
-              background-color: $tree-lineheight-bg;
+            &__content {
+              &:hover {
+                background-color: $tree-lineheight-bg;
+              }
             }
-          }
-          &:focus {
-            >.el-tree-node__content {
-              background-color: $tree-lineheight-bg;
+            &:focus {
+              >.el-tree-node__content {
+                background-color: $tree-lineheight-bg;
+              }
             }
           }
         }
@@ -242,6 +248,7 @@ a:hover {
       height: 100%; // width: 100%;
       margin-right: -17px;
       overflow-y: scroll;
+      padding: 15px 0;
     }
   }
   .setting-dialog {
@@ -438,8 +445,10 @@ a:hover {
         }
       }
       .el-tree {
-        padding: 15px 20px 0 20px;
-        max-width: 280px; // overflow-x: scroll;
+        // padding: 15px 20px 0 20px;
+        // max-width: 280px; 
+        // overflow-x: scroll;
+        padding-left: 15px;
         flex: 1;
         color: $black;
         .el-tree-node__expand-icon {

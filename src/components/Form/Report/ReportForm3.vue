@@ -224,6 +224,7 @@ export default {
             this.closeDialog()
             this.closeDetail()
           } else {
+            this.$emit('closeLoad')
             this.$notify({
               title: '失败',
               message: '创建失败，请重试！',
@@ -233,6 +234,7 @@ export default {
           }
         })
         .catch(err => {
+          this.$emit('closeLoad')
           this.$notify({
             title: '失败',
             message: '创建失败，请重试！',

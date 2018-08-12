@@ -9,7 +9,7 @@
             </el-select>
           </template>
           <template v-else>
-            <span>{{questionForm.name}}</span>
+            <span>{{questionForm.problemClues.name}}</span>
           </template>
         </el-form-item>
 
@@ -20,7 +20,7 @@
             <span class="txt-number">{{questionForm.person_id | showInfo(userList, 'idcard')}}</span>
           </template>
           <template v-else>
-            <span>{{questionForm.id_card}}</span>
+            <span>{{questionForm.problemClues.id_card}}</span>
           </template>
 
         </el-form-item>
@@ -33,7 +33,7 @@
             <span>{{questionForm.person_id | showInfo(userList, 'unitname')}}</span>
           </template>
           <template v-else>
-            <span>{{questionForm.unit_name}}</span>
+            <span>{{questionForm.problemClues.unit_name}}</span>
           </template>
 
         </el-form-item>
@@ -44,7 +44,7 @@
             <span>{{questionForm.person_id | showInfo(userList, 'position')}}</span>
           </template>
           <template v-else>
-            <span>{{questionForm.position}}</span>
+            <span>{{questionForm.problemClues.position}}</span>
           </template>
 
         </el-form-item>
@@ -54,131 +54,111 @@
       <el-col :span="11">
         <el-form-item label="线索来源">
           <!-- <el-input :readonly="readonlyStatus" v-model="questionForm.rules_source"></el-input> -->
-          <el-select v-model="questionForm.rules_source" :disabled="readonlyStatus">
-            <el-option v-for="(so, s) in source" :key="s" :label="so.label" :value="so.label"></el-option>
-          </el-select>
+         
+          <template v-if="status === 'detail'">
+            <span>{{questionForm.problemClues.ajly}}</span>
+          </template>
+          <template v-else>
+            <el-select v-model="questionForm.ajly" :disabled="readonlyStatus">
+              <el-option v-for="(so, s) in source" :key="s" :label="so.label" :value="so.label"></el-option>
+            </el-select>
+          </template>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="收件时间">
-          <el-date-picker type="date" placeholder="选择日期" v-model="questionForm.accept_time" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
+           <template v-if="status === 'detail'">
+            <el-date-picker type="date" placeholder="选择日期" v-model="questionForm.problemClues.slsj" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
+          </template>
+          <template v-else>
+            <el-date-picker type="date" placeholder="选择日期" v-model="questionForm.slsj" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
+          </template>
         </el-form-item>
+         
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
         <el-form-item label="内容摘要">
-          <el-input type="textarea" :autosize="{ minRows: 3 }" :readonly="readonlyStatus"  v-model="questionForm.problem_summary"></el-input>
+          <template v-if="status === 'detail'">
+            <el-input type="textarea" :autosize="{ minRows: 3 }" :readonly="readonlyStatus"  v-model="questionForm.problemClues.zywtxs"></el-input>
+          </template>
+          <template v-else>
+            <el-input type="textarea" :autosize="{ minRows: 3 }" :readonly="readonlyStatus"  v-model="questionForm.zywtxs"></el-input>
+          </template>
         </el-form-item>
+         
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="23">
         <el-form-item label="调查情况（基本事实摘要）">
-          <el-input :readonly="readonlyStatus" type="textarea" :autosize="{ minRows: 2 }" v-model="questionForm.investigation"></el-input>
+          <template v-if="status === 'detail'">
+            <el-input :readonly="readonlyStatus" type="textarea" :autosize="{ minRows: 3 }" v-model="questionForm.problemClues.czqkbg"></el-input>
+          </template>
+          <template v-else>
+            <el-input :readonly="readonlyStatus" type="textarea" :autosize="{ minRows: 3 }" v-model="questionForm.czqkbg"></el-input>
+          </template>
+          
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
         <el-form-item label="承办部门">
-          <el-input :readonly="readonlyStatus" v-model="questionForm.organizer"></el-input>
+          <template v-if="status === 'detail'">
+            <el-input :readonly="readonlyStatus" v-model="questionForm.problemClues.bljg"></el-input>
+          </template>
+          <template v-else>
+            <el-input :readonly="readonlyStatus" v-model="questionForm.bljg"></el-input>
+          </template>
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
         <el-form-item label="办结时间">
-          <el-date-picker type="date" placeholder="选择日期" v-model="questionForm.completion_time" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
+          <template v-if="status ==='detail'">
+            <el-date-picker type="date" placeholder="选择日期" v-model="questionForm.problemClues.pzsj1" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
+          </template>
+          <template v-else>
+            <el-date-picker type="date" placeholder="选择日期" v-model="questionForm.pzsj1" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
+          </template>
+          
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="11">
-        <el-form-item label="查处情况">
-          <el-select :disable="readonlyStatus" v-model="questionForm.true_degree">
-            <el-option v-for="degree in true_degree" :key="degree.label" :label="degree.label" :value="degree.label"></el-option>
-          </el-select>
+        <el-form-item label="是否属实">
+          <template v-if="status === 'detail'">
+            <span>{{questionForm.problemClues.sfss}}</span>
+            <!-- <el-select :disable="readonlyStatus" v-model="questionForm.problemClues.sfss">
+              <el-option v-for="degree in true_degree" :key="degree.label" :label="degree.label" :value="degree.label"></el-option>
+            </el-select> -->
+          </template>
+          <template v-else>
+            <el-select :disable="readonlyStatus" v-model="questionForm.sfss">
+              <el-option v-for="degree in true_degree" :key="degree.label" :label="degree.label" :value="degree.label"></el-option>
+            </el-select>
+          </template>
+         
           <!-- <el-input :readonly="readonlyStatus" v-model="questionForm.true_degree"></el-input> -->
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
-        <el-form-item label="线索类型/违纪类型" label-width="140px">
-          <el-input :readonly="readonlyStatus" v-model="questionForm.problem_type"></el-input>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="11">
         <el-form-item label="是否立案">
-          <el-radio-group v-model="questionForm.flag">
-            <el-radio label="1">是</el-radio>
-            <el-radio label="2">否</el-radio>
-          </el-radio-group>
-        </el-form-item>
-      </el-col>
-      <el-col :span="11" :offset="1">
-        <el-form-item label="立案时间">
-          <el-date-picker type="date" placeholder="选择日期" v-model="questionForm.filing_time" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="11">
-        <el-form-item label="四种形态类型">
-          <el-input :readonly="readonlyStatus" v-model="questionForm.shape_type"></el-input>
-        </el-form-item>
-      </el-col>
-      <el-col :span="11" :offset="1">
-        <el-form-item label="处置方式">
-          <el-select v-model="questionForm.disposing_type" placeholder="" :disabled="readonlyStatus">
-            <el-option v-for="dt in disposing_type" :key="dt.label" :label="dt.label" :value="dt.label"></el-option>
-          </el-select>
-          <!-- <el-input :readonly="readonlyStatus" v-model="questionForm.shape_type"></el-input> -->
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="23">
-        <el-form-item label="办理情况">
-          <el-input :readonly="readonlyStatus" v-model="questionForm.handle_situation"></el-input>
-        </el-form-item>
-      </el-col>
-    </el-row>
-
-    <el-row>
-      <el-col :span="11">
-        <el-form-item label="处理机关">
-          <el-input :readonly="readonlyStatus" v-model="questionForm.handle_agency"></el-input>
-        </el-form-item>
-      </el-col>
-      <el-col :span="11" :offset="1">
-        <el-form-item label="处分文号">
-          <el-input :readonly="readonlyStatus" v-model="questionForm.publish_number"></el-input>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="11">
-        <el-form-item label="处分起始时间">
-          <el-date-picker type="date" placeholder="选择日期" v-model="questionForm.publish_starttime" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
-        </el-form-item>
-      </el-col>
-      <el-col :span="11" :offset="1">
-        <el-form-item label="处分终止时间">
-          <el-date-picker type="date" placeholder="选择日期" v-model="questionForm.publish_endtime" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="23">
-        <el-form-item label="附件">
-          <el-upload action="https://jsonplaceholder.typicode.com/posts/" ref="upload" :on-error="errorUpload" :on-success="successUpload" :on-remove="removeFile">
-            <el-col :span="15">
-              <el-input v-model="fileUpload" readonly></el-input>
-            </el-col>
-            <el-col :span="9">
-              <el-button>上传附件</el-button>
-            </el-col>
-          </el-upload>
+          <template v-if="status === 'detail'">
+            <el-radio-group v-model="questionForm.problemClues.sfla">
+              <el-radio label="1">是</el-radio>
+              <el-radio label="2">否</el-radio>
+            </el-radio-group>
+          </template>
+          <template v-else>
+            <el-radio-group v-model="questionForm.sfla ">
+              <el-radio label="1">是</el-radio>
+              <el-radio label="2">否</el-radio>
+            </el-radio-group>
+          </template>
+          
         </el-form-item>
       </el-col>
     </el-row>
@@ -277,6 +257,7 @@ export default {
       const item = user.find(item => {
         return item.id === id
       })
+      console.log(item)
       return item[arg]
     }
   },
@@ -439,9 +420,11 @@ export default {
               type: 'error',
               duration: 2000
             })
+            this.$emit('closeLoad')
           }
         })
         .catch(err => {
+          this.$emit('closeLoad')
           this.$notify({
             title: '失败',
             message: '创建失败，请重试！',
@@ -455,8 +438,8 @@ export default {
         archive_id: this.archive_id
       }
       let query = Object.assign(this.questionForm, param)
-      console.log(query)
-      return
+      // console.log(query)
+      // return
       updateRecord(query).then(res => {
         const data = res.data
         if (data.success) {

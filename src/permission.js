@@ -11,6 +11,10 @@ router.beforeEach((to, from, next) => {
       if (store.getters.organizes.length === 0) {
         store.dispatch('GetOrganize').then(v => {
           next({ ...to, replace: true })
+        }).catch(err => {
+          if(err){
+            next('/login')
+          }
         })
       } else {
         next()

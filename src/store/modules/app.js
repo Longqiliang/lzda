@@ -54,7 +54,7 @@ const APP = {
             commit('SET_ORGANIZE', data.data)
             resolve(res)
           } else {
-            resolve('error')
+            reject(res)
           }
         }).catch(err => {
           reject(err)

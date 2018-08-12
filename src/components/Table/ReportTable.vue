@@ -252,30 +252,43 @@ export default {
         buss_id: row.id
       }
       console.log(query)
-      if (query.archive_id === '9') {
-        queryPersonInfoDetailed(query).then(res => {
-          console.log(res.data)
-          let data = res.data
+      queryRecordDetails(query).then(res => {
+        let data = res.data
+        if (query.archive_id === '9') {
           data.data.person_id = row.person_id
-          if (data.success) {
-            this.setStatus('detail')
-            this.setReportForm(parseInt(row.archiveid))
-            this.setFormVal(data.data)
-            this.toggleDialog()
-          }
-        })
-      } else {
-        queryRecordDetails(query).then(res => {
-          console.log(res.data)
-          let data = res.data
-          if (data.success) {
-            this.setStatus('detail')
-            this.setReportForm(parseInt(row.archiveid))
-            this.setFormVal(data.data)
-            this.toggleDialog()
-          }
-        })
-      }
+        }
+        if (data.success) {
+          this.setStatus('detail')
+          this.setReportForm(parseInt(row.archiveid))
+          this.setFormVal(data.data)
+          this.toggleDialog()
+        }
+      })
+      // if (query.archive_id === '9') {
+      //   queryPersonInfoDetailed(query).then(res => {
+      //     console.log(res.data)
+      //     let data = res.data
+      //     data.data.person_id = row.person_id
+      //     if (data.success) {
+      //       this.setStatus('detail')
+      //       this.setReportForm(parseInt(row.archiveid))
+      //       this.setFormVal(data.data)
+      //       this.toggleDialog()
+      //     }
+      //   })
+      // } else {
+      //   queryRecordDetails(query).then(res => {
+      //     console.log(res.data)
+      //     let data = res.data
+          
+      //     if (data.success) {
+      //       this.setStatus('detail')
+      //       this.setReportForm(parseInt(row.archiveid))
+      //       this.setFormVal(data.data)
+      //       this.toggleDialog()
+      //     }
+      //   })
+      // }
     },
     handleRemove(row) {
       let query = {
